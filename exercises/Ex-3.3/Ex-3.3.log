@@ -1,0 +1,222 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-3.3/Ex-3.3.log
+  log type:  text
+ opened on:  23 Feb 2016, 14:02:09
+
+. 
+. * JPotthoff & Roy jaw growth data
+. * use http://www.stata-press.com/data/mlmus3/growth, clear
+. * saveold growth.dta12, version(12)
+. 
+. use growth.dta12, replace
+
+. 
+. 
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        idnr |        108          14    7.825193          1         27
+       indiv |        108    7.481481    4.283159          1         16
+         age |        108          11    2.246493          8         14
+         sex |        108    1.407407    .4936425          1          2
+     measure |        108    24.02315    2.928577       16.5       31.5
+
+. 
+. * 3.3.1
+. twoway (scatter measure age, sort)
+
+. 
+. sort idnr age
+
+. twoway (line measure age, connect(ascending))
+
+. 
+. twoway (line measure age, connect(ascending)), by(sex)
+
+. * want to label "1" and "2" in plot
+. 
+. * Go back and label the data
+. label define sex 1 "boy" 2 "girl"
+
+. label values sex sex
+
+. 
+. 
+. twoway (line measure age, connect(ascending)), by(sex)
+
+. 
+. * 3.3.2
+. 
+. xtmixed measure age i2.sex || idnr: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -217.42824  
+Iteration 1:   log likelihood = -217.42824  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        108
+Group variable: idnr                            Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          4
+                                                              avg =        4.0
+                                                              max =          4
+
+                                                Wald chi2(2)      =     126.31
+Log likelihood = -217.42824                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     measure |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   .6601852   .0612245    10.78   0.000     .5401875    .7801829
+             |
+         sex |
+       girl  |  -2.321023   .7326736    -3.17   0.002    -3.757037   -.8850088
+       _cons |   17.70671   .8199153    21.60   0.000     16.09971    19.31372
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+idnr: Identity               |
+                   sd(_cons) |   1.730078    .276195      1.265253     2.36567
+-----------------------------+------------------------------------------------
+                sd(Residual) |   1.422728   .1117801      1.219678    1.659581
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 45.83         Prob >= chibar2 = 0.0000
+
+. 
+. 
+. * 3.3.3
+. 
+. xtmixed measure c.age##i2.sex || idnr: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -214.31953  
+Iteration 1:   log likelihood = -214.31953  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        108
+Group variable: idnr                            Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          4
+                                                              avg =        4.0
+                                                              max =          4
+
+                                                Wald chi2(3)      =     142.05
+Log likelihood = -214.31953                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     measure |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |    .784375   .0765383    10.25   0.000     .6343626    .9343874
+             |
+         sex |
+       girl  |   1.032102   1.508864     0.68   0.494    -1.925217    3.989422
+             |
+   sex#c.age |
+       girl  |  -.3048295   .1199125    -2.54   0.011    -.5398537   -.0698054
+             |
+       _cons |   16.34063   .9630849    16.97   0.000     14.45301    18.22824
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+idnr: Identity               |
+                   sd(_cons) |   1.740851   .2743507       1.27825    2.370868
+-----------------------------+------------------------------------------------
+                sd(Residual) |   1.369159   .1075713      1.173754    1.597095
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 49.60         Prob >= chibar2 = 0.0000
+
+. 
+. 
+. xtmixed measure c.age##i2.sex || idnr:, reml
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log restricted-likelihood = -216.87862  
+Iteration 1:   log restricted-likelihood = -216.87862  
+
+Computing standard errors:
+
+Mixed-effects REML regression                   Number of obs     =        108
+Group variable: idnr                            Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          4
+                                                              avg =        4.0
+                                                              max =          4
+
+                                                Wald chi2(3)      =     138.05
+Log restricted-likelihood = -216.87862          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     measure |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |    .784375   .0775011    10.12   0.000     .6324756    .9362744
+             |
+         sex |
+       girl  |   1.032102   1.537421     0.67   0.502    -1.981187    4.045392
+             |
+   sex#c.age |
+       girl  |  -.3048295   .1214209    -2.51   0.012    -.5428101   -.0668489
+             |
+       _cons |   16.34062   .9813122    16.65   0.000     14.41729    18.26396
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+idnr: Identity               |
+                   sd(_cons) |   1.816214   .2950188      1.320994    2.497082
+-----------------------------+------------------------------------------------
+                sd(Residual) |   1.386382   .1102946      1.186219     1.62032
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 49.80         Prob >= chibar2 = 0.0000
+
+. 
+. * 3.3.4
+. 
+. predict m1, xb
+
+. * Want better color control, not getting on  lines
+. twoway (line measure age, connect(ascending) lcolor("gs10")) (line m1 age, con
+> nect(ascending))
+
+. * Apparently, quotes optional
+. twoway (line measure age, connect(ascending) lcolor(gs10)) (line m1 age, conne
+> ct(ascending)), by(sex)
+
+. 
+. predict m1re, reffects
+
+. 
+. 
+. gen m1gp = m1re + m1
+
+. twoway (line m1gp age, connect(ascending) lcolor("pink"))
+
+. 
+. twoway (line measure age, connect(ascending) lcolor("gs10")) ///
+>     (line m1 age, connect(ascending)) ///
+>     (line m1gp age, connect(ascending) lcolor("pink"))
+
+. 
+end of do-file
+
+. exit, clear
