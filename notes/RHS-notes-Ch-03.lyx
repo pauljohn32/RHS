@@ -1,0 +1,2424 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 3 Linear Mixed Models with Covariates
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+Since this book uses unfamiliar notation I'll never remember....
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The combined error term has two variance components
+\begin_inset Formula 
+\begin{equation}
+\xi_{ij}=\zeta_{j}+\epsilon_{ij}\label{eq:components}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Highlights
+\end_layout
+
+\begin_layout Enumerate
+Running example: Study babies grouped by mothers.
+\end_layout
+
+\begin_layout Enumerate
+Standard deviation
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Overall: deviations of cases about overall (grand mean)
+\end_layout
+
+\begin_layout Enumerate
+Between standard deviation: Deviations of group means around overall (grand)
+ mean
+\end_layout
+
+\begin_layout Enumerate
+Within standard deviation: Deviations of individual row values from group
+ means
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Linear Random Intercept model
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=\beta_{1}+\beta_{2}x_{2ij}+\ldots+\beta_{p}x_{pij}+\xi_{ij},\,\xi_{ij}=\zeta_{j}+\epsilon_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two interesing rearrangements
+\end_layout
+
+\begin_layout Enumerate
+A two level residual
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=\beta_{1}+\beta_{2}x_{2ij}+\ldots+\beta_{p}x_{pij}+(\zeta_{j}+\epsilon_{ij})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+A random intercept
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=(\beta_{1}+\epsilon_{ij})+\beta_{2}x_{2ij}+\ldots+\beta_{p}x_{pij}+\epsilon_{ij})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Remember assumptions, all the errors are well behaved.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Independently drawn observations within each level
+\end_layout
+
+\begin_layout Enumerate
+Uncorrelated with across levels
+\end_layout
+
+\begin_layout Enumerate
+Uncorrelated with predictors 
+\end_layout
+
+\begin_layout Enumerate
+Homoskedastic
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 130.
+ The Population Model.
+ When we let 
+\begin_inset Formula $\zeta_{j}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{ij}=0$
+\end_inset
+
+, we have the baseline population model.
+ I think of this as the 
+\begin_inset Quotes eld
+\end_inset
+
+most likely
+\begin_inset Quotes erd
+\end_inset
+
+ or modal district.
+ Some call it the 
+\begin_inset Quotes eld
+\end_inset
+
+population averaged
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+marginal regression
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Intraclass correlation
+\begin_inset Formula 
+\begin{equation}
+\rho=\frac{\psi}{\psi+\theta}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This is a theoretical quantity, the description of group effects versus
+ individual random effects.
+\end_layout
+
+\begin_layout Enumerate
+We can get various estimates of these quantities, use as guides on guessing
+ that the group random effects are important.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 131.
+ 
+\series bold
+Love that Graph!!
+\end_layout
+
+\begin_layout Enumerate
+The 
+\begin_inset Quotes eld
+\end_inset
+
+empty
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+null
+\begin_inset Quotes erd
+\end_inset
+
+ model, AKA 
+\begin_inset Quotes eld
+\end_inset
+
+Unconditional model
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Include only the intercept and the random effects, no covariates.
+ That gives a baseline view.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Note Note
+status open
+
+\begin_layout Enumerate
+There's a valuable observation had from reading this.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Characterizing level 2 predictor variables.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The 
+\begin_inset Quotes eld
+\end_inset
+
+level 2 variables
+\begin_inset Quotes erd
+\end_inset
+
+ are defined as things that are the same for all elements in a group.
+\end_layout
+
+\begin_layout Enumerate
+May be 
+\begin_inset Quotes eld
+\end_inset
+
+fixed
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+contextual
+\begin_inset Quotes erd
+\end_inset
+
+ variables that affect all members of a group
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Individual level predictors
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The uncomfortable differentiation between level 1 and level 2.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+If an individual variable does not vary across rows within a group
+\end_layout
+
+\begin_layout Enumerate
+And there is not much diversity within that group
+\end_layout
+
+\begin_layout Enumerate
+then that individual variable will not be distinguishable from a level 2
+ predictor
+\end_layout
+
+\end_deeper
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 135 Variance explained: Things like 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Honestly: why don't we take the simple approach of calculating Pearson's
+ R between observed and predicted values, and square that?
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 135: Snidjers and Bosker proposal compares the 
+\begin_inset Quotes eld
+\end_inset
+
+null model
+\begin_inset Quotes erd
+\end_inset
+
+ estimates and the fitted model estimates.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+R^{2}=\frac{\hat{\psi}_{0}-\hat{\psi_{1}}+\hat{\theta}_{0}-\hat{\theta}_{1}}{\hat{\psi}_{0}+\hat{\theta}_{0}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+answers question: How much less unexplained variance is there in the fitted
+ model 
+\begin_inset Formula $1$
+\end_inset
+
+ than in the empty model 
+\begin_inset Formula $0$
+\end_inset
+
+?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 136: Raudenbush and Bryk instead propose focus on the reduction in variance
+ components separately, look for proportional decline in 
+\begin_inset Formula $\hat{\psi}_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\theta}_{0}$
+\end_inset
+
+ separately.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:p.-137.-level_1_decomposition"
+
+\end_inset
+
+p.
+ 137.
+ 
+\emph on
+Here's a neat observation
+\emph default
+.
+ 
+\series bold
+This is worth the price of admission by itself.
+
+\series default
+ 
+\begin_inset Quotes eld
+\end_inset
+
+...
+ adding level-1 covariates can reduce both variances, as we can see by comparing
+ the estimates for the above model with the full model.
+ The reason is that many level-1 covariates vary both within and between
+ clusters and can be decomposed as 
+\begin_inset Formula $x_{ij}=(x_{ij}-\bar{x}_{.j})+\bar{x}_{.j},$
+\end_inset
+
+ where 
+\begin_inset Formula $x_{ij}-\bar{x}_{.j}$
+\end_inset
+
+ only varies at level-1 and 
+\begin_inset Formula $\bar{x}_{.j}$
+\end_inset
+
+only varies at level-2.
+ Note that the estimated level-2 variance can increase when adding level-1
+ covariates, potentially producing a negative 
+\begin_inset Formula $R_{2}^{2}$
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Whats so neat? This explains why we can take a predictor and divide it into
+ the within and between effects.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 137: Small 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+ does not mean 
+\begin_inset Quotes eld
+\end_inset
+
+this is the wrong model.
+\begin_inset Quotes erd
+\end_inset
+
+ The true model might have high error variance
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 137: 
+\series bold
+Warning
+\series default
+: Calculate the ICC with the null model, 0.
+ Calculate ICC with model that has predictors.
+ The ICC may change in hard-to-understand ways.
+ Both variances may shrink, but if the relative shrinkage differs, then
+ ICC may rise or fall after adding predictors.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 138: Hypothesis Tests
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $z$
+\end_inset
+
+ tests on individual fixed coefficients
+\end_layout
+
+\begin_layout Enumerate
+LR test can also be used to test individual or groups of coefficients
+\end_layout
+
+\begin_layout Enumerate
+Tests like 
+\begin_inset Formula $H_{0}:\beta_{2}=\beta_{3}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This is the same test we would do in ordinary regression.
+ Could fit model with and without those and do LR test on difference.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 139 creates a Wald type test that is usually similar/identical.
+ See the testparm function in stata.
+\end_layout
+
+\begin_layout Enumerate
+The LR test requires calculation of both models.
+\end_layout
+
+\begin_layout Enumerate
+The Wald test can be calculated if we just fit the bigger model.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 142.
+ LR test is used to decide if a variance of a random effect is actually
+ 0.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Between and within effects.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Between regression: regression of means on means.
+ xtreg , re
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 145.
+ SEE big table, comparing RE, Between, Within estimates.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Within-mother effecs.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+re-code each variable as deviation from the group mean
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula $(y_{ij}-\bar{y}_{.j})=\beta_{2}(x_{2ij}-\bar{x}_{2.j})+\beta_{3}(x_{3ij}-\bar{x}_{3.j})+\ldots+\epsilon_{ij}-\bar{\epsilon}_{.j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+WOW! Look, the intercept 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+ and the group random effect 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+canceled out
+\begin_inset Quotes erd
+\end_inset
+
+, disappeared!
+\end_layout
+
+\begin_layout Enumerate
+This is IDENTICAL to a Fixed Effects regression, that includes all of the
+ group dummy-variable intercepts as predictors.
+\end_layout
+
+\begin_layout Enumerate
+The fixex effects model has lots of dummy variable coefficient estimates.
+\end_layout
+
+\begin_layout Enumerate
+Output has 
+\begin_inset Quotes eld
+\end_inset
+
+sigma_u
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+sigma_e
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Sigma u looks like a random effect standard deviation, but it is not, it
+ is just the deviation observed among intercepts (p.
+ 147).
+ I am pretty sure.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 147 Random intercept model 
+\begin_inset Quotes eld
+\end_inset
+
+can be expressed as a weighed average of the within estimator and the between
+ estimator.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Goes into discussion of random effect fixed effects estimator from FGLS,
+ which I expect is not well understood here because many readers don't know
+ about FGLS.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 149.
+ Confounding: Omitted covariates, level-2 
+\begin_inset Quotes eld
+\end_inset
+
+endogeneity
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is interesting, not entirely understandable to me.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Mothers who smoke engage in other risky behaviors.
+ What is the damage of these unmeasured variables?
+\end_layout
+
+\begin_layout Enumerate
+Smoking is measured, it gets blamed for damage caused by other behaviors.
+\end_layout
+
+\begin_layout Enumerate
+Within model not affected because all level-2 variables that don't vary
+ are 
+\begin_inset Quotes eld
+\end_inset
+
+canceled out
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+absorbed into the intercept.
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+The between estimate is probably corrupted, however.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 150.
+ Ecological fallacy plot just like mine
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 150, 
+\begin_inset Quotes eld
+\end_inset
+
+cluster level confounding
+\begin_inset Quotes erd
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+can be described as correlations between the level-1 variable of interest--such
+ as smoking 
+\begin_inset Formula $x_{2ij}$
+\end_inset
+
+--and the random intercept 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, which represents the effects of omitted level-2 covariates.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 151: compositional effect: clustering of high SES within a school.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+CLAIM
+\series default
+: p.
+ 151 The 
+\begin_inset Quotes eld
+\end_inset
+
+so-called contextual effect 
+\begin_inset Formula $\beta_{2}^{B}-\beta_{2}^{2}$
+\end_inset
+
+, an additional increase of the second shcool's mean 
+\begin_inset Formula $\bar{y}_{.j}$
+\end_inset
+
+ after allowing for the within (or compositional) effect 
+\begin_inset Formula $\beta_{2}^{W}$
+\end_inset
+
+.
+ The contextual effect could be due to nonrandom assignment of the high
+ SES students to better schools (confounding), as well as direct peer effects.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+P.
+ 151.
+ 
+\series bold
+WARNING
+\series default
+, same as in DeLeuw and Kreft book.
+ Don't make mistake (many have) of including a predictor 
+\begin_inset Formula $(x-within\,group\,mean)$
+\end_inset
+
+ without including the 
+\begin_inset Formula $within\,group\,mean$
+\end_inset
+
+ in the model as well.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 151.
+ TODO.
+ Find 
+\begin_inset Quotes eld
+\end_inset
+
+compositional effect
+\begin_inset Quotes erd
+\end_inset
+
+ term/definition in broader literature.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 152, Allowing different within and between (continues point p.
+ 151)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fit a model including both group mean and x deviation from group mean 
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=\beta_{1}+\beta_{2}^{W}(x_{2ij}-\bar{x}_{2.j})+\beta_{2}^{B}\bar{x}_{2.j}+\ldots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+PJ: explain to class about mean-centering.
+ Help to explain point bottom p.152 that it is NOT necessary to subtract
+ term, it only affects cluster mean estimate.
+ Like intercept interpretation with mean centered regression.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 154.
+ NEW focus: 
+\begin_inset Quotes eld
+\end_inset
+
+However, 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ may be correlated with another within-mother covariate 
+\begin_inset Formula $x_{3ij}$
+\end_inset
+
+ and the inconsitency in estimating the corresponding regression coefficient
+ 
+\begin_inset Formula $\beta_{3}$
+\end_inset
+
+ can be transmitted to the estimator for 
+\begin_inset Formula $\beta_{2}^{W}$
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Suggested fix (Mundlak, 1978).
+ Include the within-group means as predictors for ALL of the individual
+ level predictors.
+ Nice use of foreach loop p.
+ 154.
+\end_layout
+
+\begin_layout Enumerate
+p 156.
+ Here's a happy message and a warning.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+A great advantage of clustered or multilevel data is that we can investigate
+ and address level-2-endogeneity of level-1 covariates (correlation between
+ 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+).
+ However, the approaches considered in this chapter do not produce consistent
+ estimates of the coefficients of level-2 covariates and the random-intercept
+ variance in this case.
+ Furthermore, the approaches cannot handle level-2 endogeneity of level-2
+ covariates (correlation between 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+).
+ Both problems are addressed in an approach suggested by Hausman and Taylor
+ (1981), which we describe in section 5.2.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Hausman endogeneity test.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Demin Wu was professor at KU, he is the Wu in 
+\begin_inset Quotes eld
+\end_inset
+
+Durbin-Wu-Hausman
+\begin_inset Quotes erd
+\end_inset
+
+ test.
+\end_layout
+
+\begin_layout Enumerate
+Commonly described as a check for endogenous predictors.
+ Are some predictors correlated with the error term in a way that causes
+ spurious correlation in the estimates (radios cause mental illness).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Specification test: Can we say there is a difference between the fixed effects
+ model (estimates 
+\begin_inset Formula $\hat{\beta}^{W}$
+\end_inset
+
+) and the FGLS estimates 
+\begin_inset Formula $\hat{\beta}^{FGLS}$
+\end_inset
+
+ .
+ I
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+if the random-intercept model is correctly specified
+\begin_inset Quotes erd
+\end_inset
+
+...
+ 2 estimators should be same.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Fixed Effects vs Random Effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fixed Effects model: dummy variables BLOCK any group-level fixed predictors.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Random Effects model: allows group-level fixed predictors.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+An advantage of the random-effects model is that it can be used to estimate
+ the effects of cluster-level covariates, in contrast to the fixed-effects
+ model, although consistent estimation requires both level-1 and level-2
+ exogeneity.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 159).
+\end_layout
+
+\begin_layout Enumerate
+Please see table 159.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top" width="3.5cm">
+<column alignment="center" valignment="top" width="1.5in">
+<column alignment="center" valignment="top" width="2in">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Questions
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Answers
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Inference for population clusters
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Minimum n of clusters required
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Any
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+> 10 or 20
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Assumptions for 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Level-2 exogeneity, constant variance
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Cluster-level covariates allowed
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Inference for clusters in particular sample?
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No, but can get EB statements about 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+ (PJ: PLS view may help here)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Minimum cluster size required
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Need large for estimate of fixed intercepts
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Parsimonious
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No, one param per intercept
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes, one variance param per random effect (PJ: PLS view may alter this)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Within-cluster effects of covariates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes, by including cluster means.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 160: Residual diagnostics: Spot outliers.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+standardized residuals
+\end_layout
+
+\begin_layout Enumerate
+xtmixed shows how to get standardized residuals at level 2 and 2.
+ See below, 
+\begin_inset Quotes eld
+\end_inset
+
+predict xxx, reses
+\begin_inset Quotes erd
+\end_inset
+
+.
+ RSES: 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+More on Statistical Inference.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This book takes 
+\begin_inset Quotes eld
+\end_inset
+
+old school
+\begin_inset Quotes erd
+\end_inset
+
+ approach of characterizing mixed model estimation as an exercise in Generalized
+ Least Squares (GLS)
+\end_layout
+
+\begin_layout Enumerate
+OLS
+\begin_inset Formula 
+\begin{equation}
+\hat{\beta}^{OLS}=(X'X)^{-1}X'y
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+GLS: Suppose 
+\begin_inset Formula $V$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+variance covariance
+\begin_inset Quotes erd
+\end_inset
+
+ matrix of the error terms.
+ Aitken's GLS estimator has been recognized since the 1930s.
+ 
+\begin_inset Formula 
+\begin{equation}
+\hat{\beta}^{GLS}=(X'V^{-1}X)^{-1}X'V^{-1}y
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+FGLS (Feasible): IGLS: (Iterative GLS) If 
+\begin_inset Formula $V$
+\end_inset
+
+ is unknown, we estimate it from data, say the residuals of 
+\begin_inset Formula $\hat{\beta}^{OLS}$
+\end_inset
+
+.
+ Then fit the GLS model, get the residuals, re-estimate 
+\begin_inset Formula $V$
+\end_inset
+
+, re fit.
+ As Bates mentioned in many of his projects, this math can be done in more
+ graceful way by solving 
+\begin_inset Formula $\hat{\beta}^{GLS}$
+\end_inset
+
+ for 
+\begin_inset Formula $V$
+\end_inset
+
+ and then iterating on 
+\begin_inset Formula $V$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 165.
+ Theorize to make 
+\begin_inset Formula $V$
+\end_inset
+
+ as simple as possible.
+ Note, as long as the clusters are not correlated to each other, then V
+ is 
+\series bold
+block diagonal
+\series default
+:
+\begin_inset Formula 
+\begin{equation}
+\vb V=\left[\begin{array}{cccc}
+\vb V_{1} & 0 & 0 & 0\\
+0 & \vb V_{2} & 0 & 0\\
+ &  & \ddots\\
+ &  &  & \vb V_{J}
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Then within each block, in a cross-sectional case, the covariances between
+ rows are all of the 
+\begin_inset Quotes eld
+\end_inset
+
+exchangeable
+\begin_inset Quotes erd
+\end_inset
+
+ variety.
+ We don't have any reason to say row 1 is different than row 3
+\begin_inset Formula 
+\begin{equation}
+\vb V_{j}=\left[\begin{array}{ccc}
+\psi+\theta & \psi & \psi\\
+\psi & \psi+\theta & \psi\\
+\psi & \psi & \psi+\theta
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Maximum Likelihood Analysis would derive estimates of 
+\begin_inset Formula $\hat{\beta}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\psi}$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{\theta}$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Enumerate
+REML: an adjusted method for estimating variance parameters.
+ I can't describe any better than the authors, p.
+ 166.
+ TODO: Find a more clear explanation that I actually understand.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 167.
+ Bias of the mis-specified pooled OLS estimators.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 169.
+ Power and sample size determination.
+ This is a pretty big problem, I don't have energy to write the whole lecture
+ here.
+ In practice, the real question is 
+\begin_inset Quotes eld
+\end_inset
+
+if you can collect N observations, would you rather divide them among 
+\begin_inset Formula $J$
+\end_inset
+
+ or 
+\begin_inset Formula $P$
+\end_inset
+
+ groups, knowing that the sample within each group must shrink if you opt
+ for more groups.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+In past, I Did work on MLPowSim and PINT as estimators, literature on this
+ is pretty clear.
+ We'd rather have a handful of observations within lots of groups, rather
+ than lots and lots of observations within a few groups.
+\end_layout
+
+\begin_layout Standard
+Admittedly, I need to justify this with some actual math.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Stata code
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 125.
+ xtsum gives SUPER CONVENIENT group level summaries of the outcome.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtset momid
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtsum birwt smoke black
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 126.
+ What is the purpose here:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen pickone = tag(momid)
+\end_layout
+
+\begin_layout Plain Layout
+
+summarize black if pickone == 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 127.
+ children per mother
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen num = count(birwt), by(momid)
+\end_layout
+
+\begin_layout Plain Layout
+
+tabulate num if pickone == 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 127.
+ Between-within-overall summary of a categorical variable
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset momid
+\end_layout
+
+\begin_layout Plain Layout
+
+xttab smoke
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I don't understand what is 
+\begin_inset Quotes eld
+\end_inset
+
+Within
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Maybe you can tell me what this is good for.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 131.
+ Estimation.
+ Lets concentrate on xtmixed.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed y x1 x2 x3 x4 x5 || groupvar: , mle
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gives maximum likelihood estimates.
+\end_layout
+
+\begin_layout Enumerate
+replace mle with 
+\begin_inset Quotes eld
+\end_inset
+
+reml
+\begin_inset Quotes erd
+\end_inset
+
+ for REML estimates.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+vce(robust)
+\end_layout
+
+\end_inset
+
+.
+ There is is again.
+ vague.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 139.
+ Stata testparm
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+xtreg -> testparm.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Can get robust version with robust standard errors.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 140.
+ LR test for variance component
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset 
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store full
+\end_layout
+
+\begin_layout Plain Layout
+
+xtset momid
+\end_layout
+
+\begin_layout Plain Layout
+
+xtreg ...[all same stuff], mle
+\end_layout
+
+\begin_layout Plain Layout
+
+lrtest full .
+\end_layout
+
+\begin_layout Plain Layout
+
+/* "." is last fitted model.
+ could instead do
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store small
+\end_layout
+
+\begin_layout Plain Layout
+
+lrtest full small
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Predicted values: Stata margins command.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+margins
+\end_layout
+
+\end_inset
+
+ only works if model used factor notation
+\end_layout
+
+\begin_layout Enumerate
+This is like predict with 
+\begin_inset Quotes eld
+\end_inset
+
+newdata
+\begin_inset Quotes erd
+\end_inset
+
+, the rockchalk package has a lot of stuff like this.
+\end_layout
+
+\begin_layout Enumerate
+Fit a model with lots of predictors, then set some variables in margins
+ to get predicted values for them.
+\end_layout
+
+\begin_layout Enumerate
+margins i.x1#i.x2
+\end_layout
+
+\begin_layout Enumerate
+Note the output uses 
+\begin_inset Quotes eld
+\end_inset
+
+Delta method
+\begin_inset Quotes erd
+\end_inset
+
+ standard errors.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+marginsplot, xdimension(education)
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 154.
+ Uses 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+lincom
+\end_layout
+
+\end_inset
+
+ to test that 2 fixed params are equal.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lincom mn_smok - dev_smok
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 154.
+ Generate a LOT of group-mean-centered variables
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Run lots of egen statements like
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+egen mn_male = mean(male), by(momid)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Use 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+foreach
+\end_layout
+
+\end_inset
+
+ loop as follows
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+foreach var of varlist male mage kessner* novisit pretri* {
+\end_layout
+
+\begin_layout Plain Layout
+
+    egen mn_'var' = mean('var'), by(momid)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I'm pretty sure the single quotes are not correct, I think I've seen others
+ do a grave on the left, 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+`var'
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 148 Hausman test.
+ Use xj for predcitors and zzz for grouping var
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset zzz
+\end_layout
+
+\begin_layout Plain Layout
+
+xtreg y x1 x2 x3 x4 x5, fe
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store fixed
+\end_layout
+
+\begin_layout Plain Layout
+
+xtreg y x1 x2 x3 x4 x5, re
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store random
+\end_layout
+
+\begin_layout Plain Layout
+
+hausman fixed random
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+in example, RHS say 
+\begin_inset Quotes eld
+\end_inset
+
+strong evidenc e of mis-specification
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Standardized residuals.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Start like this:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed y x1 x2 x3 || momid: , mle
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Get the level 2 standardized residuals with some hackery
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict lev2, reffects
+\end_layout
+
+\begin_layout Plain Layout
+
+predict comp_se, rses
+\end_layout
+
+\begin_layout Plain Layout
+
+generate diag_se = sqrt(exp(2*[lns1_1_1]_cons - comp_se^2)
+\end_layout
+
+\begin_layout Plain Layout
+
+replace lev2 = lev2/diag_se
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Level 1 standardized residuals come out for free if you ask correctly
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict lev1, rstandard
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Then use histograms or such to see them.
+ Inspect the data structure, see some frustrating aspects of the Stata 
+\begin_inset Quotes eld
+\end_inset
+
+only one data set at a time
+\begin_inset Quotes erd
+\end_inset
+
+ mentality.
+ Second command here is workaround for that.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+histogram lev1, normal xtitle(Std level 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+histogram lev2 if idx==1, normal xtitle(Std level 2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Key point here is that the 
+\begin_inset Quotes eld
+\end_inset
+
+idx
+\begin_inset Quotes erd
+\end_inset
+
+ variable exists and is used to grab one obs from each group.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 163.
+ Again with 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+vce(robust)
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Need to get to the bottom of what that's doing.
+\end_layout
+
+\end_body
+\end_document

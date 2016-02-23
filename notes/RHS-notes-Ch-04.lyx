@@ -1,0 +1,2451 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 4 Random Coefficient Models
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+New in this chapter: Separate random effects applied to intercept and slope.
+ 
+\end_layout
+
+\begin_layout Standard
+Notation continuing from previous
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ total (or combined) individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The combined error term has two variance components
+\begin_inset Formula 
+\begin{equation}
+\xi_{ij}=\zeta_{j}+\epsilon_{ij}\label{eq:components}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Highlights
+\end_layout
+
+\begin_layout Enumerate
+Notation is tricky because in matrix algebra the first subscript is supposed
+ to be the row variable and the second subscript is the columns.
+ In this book, however, they write the intercept random error as 
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+ and the slope error 
+\begin_inset Formula $\zeta_{2j}$
+\end_inset
+
+, but if you put those in a matrix, you see the subscripts are clearly backwards
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+intercept 
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+slope
+\begin_inset Formula $\zeta_{2j}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+group 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{11}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{21}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+group 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{12}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{22}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdots$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+group J
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{1J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\zeta_{2J}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+whereas, in proper matrix algebra, the first subscript would be 
+\begin_inset Formula $j$
+\end_inset
+
+ and the second would be the column number.
+\end_layout
+
+\begin_layout Standard
+If you find other notes I've written in the past, you will notice I hate
+ these backward subscripts and so I'd rather refer to the intercept and
+ slope errors as, for example, 
+\begin_inset Formula $\zeta1_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $\zeta2_{j}$
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 182.
+ Within school model.
+ Take each school as isolated subset.
+ Or could estimate unique intercept and slope for each in one big model
+ (using factor notation).
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 188.
+ Specification.
+ Assert that the intercept is 
+\begin_inset Formula $(\beta_{1}+\zeta_{1j})$
+\end_inset
+
+ while the sloe is 
+\begin_inset Formula $(\beta_{2}+\zeta_{2j})$
+\end_inset
+
+.
+ That means the regression is
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\{\beta_{1}+\zeta_{1j}\}+\{\beta_{2}+\zeta_{2j}\}x_{ji}+\epsilon_{ji}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{eqnarray*}
+y_{ji} & = & \beta_{1}+\beta_{2}x_{ji}+\{\zeta_{1j}+\zeta_{2j}x_{ji}+\epsilon_{ji}\}\\
+ & = & \{fixed\,predictors\}+\{random\,effects\}
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assumptions
+\end_layout
+
+\begin_layout Enumerate
+error terms have expected values 0.
+ Given the value of the group level variables, 
+\begin_inset Formula $E[\zeta_{j}|X]=E[\zeta_{2j}|X]=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+variance/covariance of errors 
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+ and 
+\begin_inset Formula $\zeta_{2j}$
+\end_inset
+
+.
+ This is more difficult for me to tease out of RHS p.
+ 190.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+TODO: return and figure out way to explain this to students.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Skip to p.
+ 210: Two Stage Model Formulation
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Multi-level models are all estimated at one level: the individual level.
+ Group variables and random effects enter the analysis because they are
+ 
+\begin_inset Quotes eld
+\end_inset
+
+copied
+\begin_inset Quotes erd
+\end_inset
+
+ among all the rows in a group.
+ In a sense, there is really no such thing as a multi-level model because,
+ when the rubber hits the road, everything is written out at the individual
+ level.
+ 
+\end_layout
+
+\begin_layout Standard
+Nevertheless, there are benefits to thinking through the problem with several
+ levels.
+ The most famous way of doing this is popularized in the famous book Hierarchica
+l Linear Models by Raudenbush and Bryk.
+ The main idea is that we formulate a models for the intercept and slope
+ coefficients at the group level (
+\begin_inset Quotes eld
+\end_inset
+
+level 2
+\begin_inset Quotes erd
+\end_inset
+
+) and then we insert them into the individual regression model.
+ 
+\end_layout
+
+\begin_layout Standard
+I think the notation in the RHS book is somewhat baffling, so I'll write
+ it in a way I understand and we can talk over the differences.
+ I'll still use their 1, 2 subscripts for groups, I just don't want to introduce
+ 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ as a separate layer of unneeded notation.
+\end_layout
+
+\begin_layout Enumerate
+Level 1 (individual level) regression.
+ Start with the idea that there is a regression model that has different
+ intercept 
+\begin_inset Formula $\beta_{0j}^{*}$
+\end_inset
+
+ and slope 
+\begin_inset Formula $\beta_{1j}^{*}$
+\end_inset
+
+ for each group 
+\begin_inset Formula $j$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1j}^{*}+\beta_{2j}^{*}x_{ji}+\varepsilon_{ji}\label{eq:betastar}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+The modeling procedure is 
+\end_layout
+
+\begin_layout Enumerate
+step 1.
+ create a separate model for the level 2 variables, the ones subscripted
+ by j
+\end_layout
+
+\begin_layout Enumerate
+step 2.
+ algebraically insert them into the level 1 model (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:betastar"
+
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Enumerate
+step 3.
+ rearrange to re-group the fixed coefficients and random effect coefficients.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random intercept model.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Level 2 model: the intercept does vary, but the slope is the same for all.
+ How to write that out?
+\end_layout
+
+\begin_layout Standard
+Level 2 Slope model: Simple! (same for all)
+\begin_inset Formula 
+\begin{equation}
+\beta_{2j}^{*}=\beta_{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Level 2 Intercept model: Suppose there is normal random noise added to a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+mean of the intercepts
+\begin_inset Quotes erd
+\end_inset
+
+ (expected value, population value) 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\beta_{1j}^{*}=\beta_{1}+\zeta_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Insert those into the regression model in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:betastar"
+
+\end_inset
+
+) 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\zeta_{j}+\beta_{2}x_{ji}+\varepsilon_{ji}\label{eq:betastar-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Rearrange to see that you get back the model we've been discussing
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\beta_{2}x_{ji}+\{\varepsilon_{ji}+\zeta_{j}\}\label{eq:betastar-1-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The combined error term is thus heteroskedastic, 
+\begin_inset Formula 
+\begin{equation}
+\xi_{ji}=\zeta_{j}+\varepsilon_{ji}.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You could estimate that with OLS regression, but you are violating some
+ assumptions, which means 1) the OLS estimates of the 
+\begin_inset Formula $\beta$
+\end_inset
+
+'s have higher variance than the alternative GLS estimator and 2) the standard
+ errors from OLS are wrong.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random intercept and random slope
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Level 2 model: We need two random effects, one for the intercept (
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+) and one for the slope (
+\begin_inset Formula $\zeta_{2j}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Level 2 Intercept model: Lets say that is the same as previous, except we
+ need 
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+ rather than 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{equation}
+\beta_{1j}^{*}=\beta_{1}+\zeta_{1j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Level 2 Slope model: let the group 
+\begin_inset Formula $j$
+\end_inset
+
+ slope be a common element 
+\begin_inset Formula $\beta_{2}$
+\end_inset
+
+ plus a random shock 
+\begin_inset Formula 
+\begin{equation}
+\beta_{2j}^{*}=\beta_{2}+\zeta_{2j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\zeta_{1j}+(\beta_{2}+\zeta_{2j})x_{ji}+\varepsilon_{ji}\label{eq:betastar-1-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\beta_{2}x_{ji}+\{\varepsilon_{ji}+\zeta_{1j}+\zeta_{2j}x_{ji}\}\label{eq:betastar-1-1-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The combined error term is thus heteroskedastic (and a little horrible,
+ actually): 
+\begin_inset Formula 
+\begin{equation}
+\xi_{ji}=\zeta_{1j}+\zeta_{2j}x_{ji}+\varepsilon_{ji}.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again, you could estimate that with OLS, but the GLS model would have lower
+ variance of parameter estimates.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+How go get a fancier looking model with predictors at level 2.
+ This is where the two stage model notation can help us.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fancier Level 2 intercept model.
+ Let a group level predictor 
+\begin_inset Formula $x3{}_{j}$
+\end_inset
+
+ exist.
+ The value of this is the same for all observations in group j.
+ This thing is predictive of the intercept as
+\begin_inset Formula 
+\begin{equation}
+\beta_{1j}^{*}=\beta_{1}+\beta_{3}x3_{j}+\zeta_{1j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+We have to cheat on notation now.
+ This variable 
+\begin_inset Formula $x3_{j}$
+\end_inset
+
+ does not vary within group, but I need to have an 
+\begin_inset Formula $i$
+\end_inset
+
+-subscripted version of it.
+ So let 
+\begin_inset Formula $x3_{ji}=x3_{j}$
+\end_inset
+
+.
+ For all 
+\begin_inset Formula $i$
+\end_inset
+
+ in 
+\begin_inset Formula $j$
+\end_inset
+
+, the value is the same thing.
+ We need 
+\begin_inset Formula $x3_{ji}$
+\end_inset
+
+ when we do step 3 in the analysis procedure 
+\end_layout
+
+\begin_layout Enumerate
+Insert that group intercept model into (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:betastar"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\beta_{3}x3_{ji}+\zeta_{1j}+\beta_{2j}^{*}x_{ji}+\varepsilon_{ji}\label{eq:betastar-2}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\beta_{3}x3_{ji}+\beta_{2j}^{*}x_{ji}+\zeta_{1j}+\varepsilon_{ji}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The end result of inserting a level-2 predictor in the intercept model ()
+ is that a new predictor appears in the final regression model.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Now watch what (bad thing) happens when we say there is a level 2 predictor
+ in the slope model:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\beta_{2j}^{*}=\beta_{2}+\beta_{4}x4_{j}+\zeta_{2j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Insert that in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:betastar-2"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ji}=\beta_{1}+\beta_{3}x3_{ji}+\zeta_{1j}+\{\beta_{2}+\beta_{4}x4_{j}+\zeta_{2j}\}x_{ji}+\varepsilon_{ji}\label{eq:betastar-2-1}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+=\beta_{1}+\beta_{3}x3_{ji}+\beta_{2}x_{ji}+\beta_{4}x4_{ji}x_{ji}+\{\zeta_{1j}+\zeta_{2j}x_{ji}+\varepsilon_{ji}\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+OUT POPS an interaction! 
+\begin_inset Formula $\beta_{4}x4_{ji}x_{ji}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1.5in
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Now back to RHS p.
+ 191.
+ We want to show that the variance of the intercept, and the covariance
+ of the intercept with the slope random errors, are ill defined in some
+ sense.
+ They are both dependent on the scaling of the 
+\begin_inset Formula $x$
+\end_inset
+
+ predictor, which is arbitrary.
+ Hence, any changes in estimates that flow by adding or substracting from
+ 
+\begin_inset Formula $x$
+\end_inset
+
+ are purely superficial changes, they don't solve anything, but they may
+ make the estimates easier to understand.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The combined error is
+\begin_inset Formula 
+\begin{equation}
+\xi_{ji}=\zeta_{1j}+\zeta_{2j}x_{ji}+\varepsilon_{ji}.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Variance 
+\begin_inset Formula $Var(\xi_{ji})=\psi_{11}+2\psi_{21}x_{ij}+\psi_{22}x_{ij}^{2}+\theta$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Recall 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\theta=Var(\varepsilon_{ji})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\psi_{11}=Var(\zeta_{1j})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\psi_{21}=Cov(\zeta_{1j},\zeta_{2j})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Background.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Remember fundamental law 
+\begin_inset Formula 
+\begin{equation}
+Var(k_{1}X+k_{2}Y)=k_{1}^{2}Var(X)+k_{2}^{2}Var(Y)+2k_{1}k_{2}Cov(X,Y)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+For constants 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $k_{2}$
+\end_inset
+
+ and random variables 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Remember in (), that 
+\begin_inset Formula $x_{ji}$
+\end_inset
+
+ is a constant, it is a pre-determined value.
+ The randoms are the 
+\begin_inset Formula $\zeta$
+\end_inset
+
+s and 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+VERY VITAL graph on p.
+ 193.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The variance of the slope exaggerates the variance of the intercept,
+\end_layout
+
+\begin_layout Enumerate
+Even if intercept variance is 0, the slope variance causes apparent variation
+ in the intercept.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Depending on where you draw the 
+\begin_inset Formula $y$
+\end_inset
+
+ axis, the intercept's variance appears larger or smaller.
+\end_layout
+
+\begin_layout Enumerate
+IMPLICATIONS
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Centering (subtract a constant from 
+\begin_inset Formula $x_{ji}$
+\end_inset
+
+) causes an apparent 
+\begin_inset Quotes eld
+\end_inset
+
+shift
+\begin_inset Quotes erd
+\end_inset
+
+ in y axis and a change in calculated intercept.
+ CLEARLY, this is not a substantively important change, it should not alter
+ our conclusions at all.
+ But it alters the calculations in an entirely superficial/frustrating way
+ that confuses many researchers.
+\end_layout
+
+\begin_layout Enumerate
+But it does alter the observed diversity among intercepts of the true regression
+ lines for the subgroups.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 192 RHS emphasize 
+\begin_inset Quotes eld
+\end_inset
+
+lack of invariance
+\begin_inset Quotes erd
+\end_inset
+
+ in variance estimates.
+ These estimates from random intercept variance is changed by centering
+ 
+\begin_inset Formula $x$
+\end_inset
+
+, and the estimated covariance between 
+\begin_inset Formula $\zeta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\zeta_{s}$
+\end_inset
+
+ is altered as well.
+ This is the same old 
+\begin_inset Quotes eld
+\end_inset
+
+mean-centering does not matter
+\begin_inset Quotes erd
+\end_inset
+
+ debate combing back.
+ THESE ESTIMATE CHANGES ARE ENTIRELY SUPERFICIAL and NOT WORTH EMPHASIZING,
+ they don't solve any statistical problems and they don't make one model
+ more precise than the other.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Other implications
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+IF you fit a model that includes a random slope, it is NECESSARY to include
+ a random intercept as well.
+\end_layout
+
+\begin_layout Enumerate
+Why? Draw a graph of a random slope when the intercept is the same for all
+ groups.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 194.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+To make 
+\begin_inset Formula $\psi_{11}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{21}$
+\end_inset
+
+interpretable, it makes sense to translate 
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+ so that the value 
+\begin_inset Formula $x_{ij}=0$
+\end_inset
+
+ is a useful reference point in some way.
+ Typical choices are either mean-centering (as for lrt) or, if 
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+ is time, as in growth-curve models, defining 0 to be the initial time in
+ some sense.
+ Because the magnitude and interpretation of 
+\begin_inset Formula $\psi_{21}$
+\end_inset
+
+depend on the location (or translation) of 
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+, which is often arbitrary, it generally does not make sense to set 
+\begin_inset Formula $\psi_{12}$
+\end_inset
+
+to 
+\begin_inset Formula $0$
+\end_inset
+
+ by specifying uncorrelated intercepts and slopes.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Test slope variance
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Use an LR test of the model with random slope compared with one that omits
+ this.
+\end_layout
+
+\begin_layout Enumerate
+MUST not use REML estimates for this test.
+ Only MLE will do.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\begin_inset Formula $\chi^{2}$
+\end_inset
+
+ value and 
+\begin_inset Formula $p$
+\end_inset
+
+ values are not exactly correct, but we believe they are 
+\begin_inset Quotes eld
+\end_inset
+
+conservative
+\begin_inset Quotes erd
+\end_inset
+
+ in the sense that the 
+\begin_inset Formula $p$
+\end_inset
+
+ value is larger than it ought to be.
+ Hence, if we reject the null, we are probably correct.
+\end_layout
+
+\begin_layout Enumerate
+However, suppose p=0.06.
+ Temptation is to say we ought to still reject, since 
+\begin_inset Formula $p$
+\end_inset
+
+ estimate is larger than it ought to be.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 199.
+ Interpreting variance estimates.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Calculate the variance of the error given 
+\begin_inset Formula $X$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Enumerate
+Graph on p.
+ 200 perhaps not so informative, should make an hourglass sort of plot.
+ Will draw on board.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 1.5in
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Estimating random intercepts and slopes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+RHS says 
+\begin_inset Quotes eld
+\end_inset
+
+likelihood
+\begin_inset Quotes erd
+\end_inset
+
+ because of interpretation difficulty.
+\begin_inset Quotes eld
+\end_inset
+
+In general, we therefore donot recommend using this method and suggest using
+ empirical Bayes prediction instead.
+\begin_inset Quotes erd
+\end_inset
+
+ So lets don't bother with this.
+\end_layout
+
+\begin_layout Enumerate
+Rather use Empriical Bayes estimates, they are conditional modes.
+ See Stata codes below.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Stata code
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 182: plot predicted value from a single regression.
+ TODO: See why the sort is needed in here? Let z be a grouping variable
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+regress y x if z == 1
+\end_layout
+
+\begin_layout Plain Layout
+
+predict yhat, xb
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (scatter y x)(line yhat x, sort) if z == 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That's for group z == 1 only
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Trellis Graphic.
+ Stata's implementation uses twoway, but with a by statement so that many
+ separate models are plotted.
+ I understand how the scatters are produced, but don't fully understand
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+lfit
+\begin_inset Quotes erd
+\end_inset
+
+ keyword in the code 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway (scatter y x)(lfit y x, sort lpatt(solild)), ///
+\end_layout
+
+\begin_layout Plain Layout
+
+by(z, compact legend(off) cols(5)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle(whatever) ytitle(somethingelse) ysize(3) xsize(2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO.
+ find out
+\end_layout
+
+\begin_layout Enumerate
+if twoway with lfit can do this, why did they do the other way with just
+ one school?
+\end_layout
+
+\begin_layout Enumerate
+what is the effect of ysize and xsize?
+\end_layout
+
+\begin_layout Enumerate
+What are possible other settings for lpatt? 
+\end_layout
+
+\begin_layout Enumerate
+Test variations with legend off, on.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 185 Fit an OLS regression within each grouping
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+count number within each sub-group
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen num = count(y), by(z)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+output a new data set ols.dta that has slopes and coefficients
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+statsby inter=_b[_cons] slope=_b[lrt], by(z) saving(ols): ///
+\end_layout
+
+\begin_layout Plain Layout
+
+regress y x if num>4
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: find out about inter and slope arguments of statsby
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+I suggest we inspect ols.dta by itself.
+ But Stata still has tragic 
+\begin_inset Quotes eld
+\end_inset
+
+one data set at a time
+\begin_inset Quotes erd
+\end_inset
+
+ policy so we have close what we are doing to inspect ols.dta.
+ I still do that, but RHS goes other way
+\end_layout
+
+\begin_layout Enumerate
+Merge the OLS estimate from the groups back onto the individual level data
+ set
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sort z
+\end_layout
+
+\begin_layout Plain Layout
+
+merge M:1 z using ols
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That's a many-to-one merge, matching observations on the grouping variable
+ z.
+\end_layout
+
+\begin_layout Enumerate
+NOTE WELL: that leaves behind a variable 
+\begin_inset Quotes eld
+\end_inset
+
+_merge
+\begin_inset Quotes erd
+\end_inset
+
+ that will be in the way if we try more merges in future.
+ Stata will refuse until we drop 
+\begin_inset Quotes eld
+\end_inset
+
+_merge
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 186 RHS create a scatter of slope on intercept
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway scatter slope inter, xtitle(Intercept) ytitle(Slope)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PJ Notes: that plots individual points piled on top of one another.
+\end_layout
+
+\begin_layout Standard
+Cleaner approach would open ols.dta and plot that.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 186 This method is used to find one respondent within each group.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen pickone = tag(z)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Here is another relic of Stata's stubborn insistence on one data set at
+ a time.
+ We have individual data, but are going to use one row per group.
+\end_layout
+
+\begin_layout Enumerate
+I suggest instead analyzing ols.dta directly
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 187 Spaghetti plot: This one plots predicted values for the various groups.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate pred = inter + slope*x
+\end_layout
+
+\begin_layout Plain Layout
+
+sort z x
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line pred x, connect(ascending)), xtitle(LRT) ytitle(Fitted)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO: 
+\end_layout
+
+\begin_layout Enumerate
+Remember the connect(ascending) argument.
+ See what happens without it
+\end_layout
+
+\begin_layout Enumerate
+In p.
+ 187, why don't all of the lines have same left and right end points?
+\end_layout
+
+\begin_layout Enumerate
+Same question over again.
+ What if we open ols.dta and draw lines with indicated slope and intercept?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 194-6 Using xtmixed
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Random intercept.
+ Create label 
+\begin_inset Quotes eld
+\end_inset
+
+ri
+\begin_inset Quotes erd
+\end_inset
+
+ for saved fit
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed y x || z:, mle
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store ri
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random slope
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed y x || z:x, covariance(unstructured) mle
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store rc
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Default display from xtmixed includes estimated standard deviation and correlati
+on of random effects.
+\end_layout
+
+\begin_layout Enumerate
+Want Variance and Covariance instead? Can 
+\begin_inset Quotes eld
+\end_inset
+
+replay
+\begin_inset Quotes erd
+\end_inset
+
+ the model (p.
+ 196)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed,variance
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+or use the postestimation command
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estat recovariance
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO: Find how to make Stata tell me the full list of things that estat
+ can do for a fitted model of a given type.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+NOTE: Necessary to run 
+\begin_inset Quotes eld
+\end_inset
+
+estimates store rc
+\begin_inset Quotes erd
+\end_inset
+
+ after either of these changes.
+\end_layout
+
+\begin_layout Enumerate
+What about 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+covariance(unstructured)
+\end_layout
+
+\end_inset
+
+?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Means that the covariance of 
+\begin_inset Formula $\zeta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\zeta_{2}$
+\end_inset
+
+ is 
+\begin_inset Quotes eld
+\end_inset
+
+freely estimated
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Alternative variance structures are discussed later in book.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+LR Test 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lrtest rc ri
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 201 Random effect estimates
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+likelihood
+\begin_inset Quotes erd
+\end_inset
+
+ p.
+ 201 
+\begin_inset Quotes eld
+\end_inset
+
+In general, we therefore donot recommend using this method and suggest using
+ empirical Bayes prediction instead.
+\begin_inset Quotes erd
+\end_inset
+
+ So lets don't bother with this.
+\end_layout
+
+\begin_layout Enumerate
+Empirical Bayes
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estimates restore rc
+\end_layout
+
+\begin_layout Plain Layout
+
+predict ebs ebi, reffects
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The predict method knows there are 2 columns of random effects, it expects
+ 2 names for them.
+ (p.
+ 202 explains why intercept is last).
+\end_layout
+
+\begin_layout Standard
+PJ: This notation will become terrible when there are more random effects
+ to track.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Visualization of estimated lines:Spaghetti plots of predicted lines
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict yhatre, fitted
+\end_layout
+
+\begin_layout Plain Layout
+
+sort z x
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line yhatre, connect(ascending), xtitle(x) ytitle(y) 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Regression Diagnostics.
+ Suppose the random effect estimates are epi and ebs, saved in data frame.
+ We can't just plot them as they are, since there are 
+\begin_inset Quotes eld
+\end_inset
+
+repeats
+\begin_inset Quotes erd
+\end_inset
+
+ in the data frame.
+ Need only one individual per group.
+ Hence use pickone.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+histogram ebi if pickone==1, normal xtitle(whatever)
+\end_layout
+
+\begin_layout Plain Layout
+
+histogram ebs if pickone==1, normal xtitle(whatever)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 206 has a very fancy graph that puts histograms on sides of a scatterplot.
+ The code (p.
+ 205) uses 
+\begin_inset Quotes eld
+\end_inset
+
+saving(name_me, replace)
+\begin_inset Quotes erd
+\end_inset
+
+ as function argument, so that the graph is not drawn separately, but later
+ is added in with the 
+\begin_inset Quotes eld
+\end_inset
+
+graph combine
+\begin_inset Quotes erd
+\end_inset
+
+ function.
+ Study this sequence
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+scatter ebs ebi if pickone==1, saving(yx, replace) xtitle(x) ytitle(y) ylabel(,
+ nogrid)
+\end_layout
+
+\begin_layout Plain Layout
+
+histogram ebs if pickone==1, freq horizontal saving(hy, replace) normal
+ yscale(alt) ytitle(" ") fxsize(35) ylabel(,nogrid)
+\end_layout
+
+\begin_layout Plain Layout
+
+histogram ebi if pickone==1, freq saving(hx, replace) normal xscale(alt)
+ xtitle(" ") fysize(35) ylabel(,nogrid)
+\end_layout
+
+\begin_layout Plain Layout
+
+graph combine hx.gph yx.gph hy.gph, hole(2) imargin(0 0 0 0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 206.
+ Histogram of residuals
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict res1, residuals
+\end_layout
+
+\begin_layout Plain Layout
+
+histogram res1, normal xtitle(blah)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 207-209.
+ Caterpillar plot for group level estimates.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The standard errors of the random slope and intercept can be produced with
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+reses
+\begin_inset Quotes erd
+\end_inset
+
+ argument to predict
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estimates restore rc
+\end_layout
+
+\begin_layout Plain Layout
+
+predict slope_se inter_se, reses
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note User duty to name the things in the right order.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 208: Don't know what gsort + in this code does.
+ TODO: Find out.
+ Perhaps is typographical error?
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+gsort + ebi - pickone
+\end_layout
+
+\begin_layout Plain Layout
+
+generate rank = sum(pickone)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+twoway CATERPILLAR plot
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+serrbar ebi inter_se rank if pickone == 1, addplot(scatter labpos rank,
+ mlabel(school) msymbol(none) mlabpos(0)) scale(1.96) xtitle(Rank) ytitle(pred)
+ legend(off)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 209.
+ Previous requires magic serrbar function.
+ Here's one I actually understand, I could produce on my own:.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+An alternative method for producing a caterpillar plot is to first generate
+ the confidence limits lower and upper and then use the rcap plot type to
+ produce the intervals
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate lower = ebi - 1.96*inter_se
+\end_layout
+
+\begin_layout Plain Layout
+
+generate upper = epi + 1.96*inter_se
+\end_layout
+
+\begin_layout Plain Layout
+
+towway(rcap lower upper rank, blpatt(solid) lcol(black)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+  (scatter ebi rank) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+  (scatter labpos rank, mlabel(school) msymbol(none) mlabpos(0) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+  mlabcol(black) mlabsize(medium)), ///
+\end_layout
+
+\begin_layout Plain Layout
+
+  xtitle(Rank) ytitle(Pred) legend (off) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+  xscale(range(1 65)) xlabel(1/65) ysize(1) 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 209.
+ WARNING Estimates of standard errors of predictions from Stata assume the
+ benchmark value of 
+\begin_inset Formula $x^{0}$
+\end_inset
+
+.
+ RHS claim that the gllamm package can provide se estimates for various
+ values of 
+\begin_inset Formula $x^{0}$
+\end_inset
+
+ but Stata does not.
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

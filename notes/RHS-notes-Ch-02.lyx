@@ -1,0 +1,1502 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 2 Variance Components
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+Since this book uses unfamiliar notation I'll never remember....
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The combined error term has two variance components
+\begin_inset Formula 
+\begin{equation}
+\xi_{ij}=\zeta_{j}+\epsilon_{ij}\label{eq:components}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Highlights
+\end_layout
+
+\begin_layout Enumerate
+These are all ANOVA models, in which we aren't primarily interested.
+ Still, need to pick up ideas as they carry over to linear mixed effects.
+\end_layout
+
+\begin_layout Enumerate
+variance component: pieces in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:components"
+
+\end_inset
+
+) above.
+ Could have more components, wish we could disentangle their variances.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 78: Directed Acyclic Graph representation.
+ Seems unhelpful in this context, but it probably makes psychologists happy.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 79: Variance of the total error term is the sum of the variances of the
+ components.
+ Because 
+\begin_inset Formula $E[y]=\beta,$
+\end_inset
+
+ 
+\begin_inset Formula $Var(y_{ij})=E[(y_{ij}-\beta)^{2}]=E[\xi_{ij}^{2}]=\ldots=Var(\zeta_{j})+Var(\epsilon_{ij})=\psi+\theta$
+\end_inset
+
+.
+ This works because we assume the 2 variance components are uncorrelated,
+ so the covariance part 
+\begin_inset Formula $Cov(\zeta_{j},\epsilon_{ij})=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 79-80.
+ ICC: Fraction of variance that is between grouping units 
+\begin_inset Formula 
+\begin{equation}
+\rho=\frac{\psi}{\psi+\theta}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+p.
+ 80.
+ The same number can mean the 
+\begin_inset Quotes eld
+\end_inset
+
+within-cluster correlation
+\begin_inset Quotes erd
+\end_inset
+
+ of observations.
+ The more tightly inter-dependent are the observations within a cluster,
+ the more distinctive the clusters ought to be.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 82: Pearson correlation compared to ICC.
+\end_layout
+
+\begin_layout Enumerate
+Hypothesis Tests: Fixed Effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 85.
+ Output includes a 
+\begin_inset Quotes eld
+\end_inset
+
+z test
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\hat{\beta}/SE(\hat{\beta})$
+\end_inset
+
+.
+ Its not a 
+\begin_inset Formula $t$
+\end_inset
+
+ stat.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+It is an 
+\begin_inset Quotes eld
+\end_inset
+
+asymptotically valid
+\begin_inset Quotes erd
+\end_inset
+
+ test, not precise for a finite sample.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 85.
+ Other software packages offer finite approximations.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Can construct a confidence interval for 
+\begin_inset Formula $\beta$
+\end_inset
+
+ in usual way, something like 
+\begin_inset Formula $\hat{\beta}\pm1.96std.err.(\hat{\beta})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Estimating the standard errors.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+model based
+\begin_inset Quotes erd
+\end_inset
+
+ (assuming homogeneous errors within groups, and that across-groups variance
+ is homoskedastic).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+robust
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+sandwich
+\begin_inset Quotes erd
+\end_inset
+
+ estimates.
+ (STATA: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+vce(robust)
+\end_layout
+
+\end_inset
+
+.
+ Disturbingly vague.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Warning: robust behaves badly in small samples.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+NOTE to self: work out explanation of the 
+\begin_inset Quotes eld
+\end_inset
+
+degrees of freedom
+\begin_inset Quotes erd
+\end_inset
+
+ problem and what other software does with finite degrees of freedom.
+ Why is there some 
+\begin_inset Quotes eld
+\end_inset
+
+monkey business
+\begin_inset Quotes erd
+\end_inset
+
+ going on? 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Suppose there are 
+\begin_inset Formula $m$
+\end_inset
+
+ groups and we fit a dummy variable fixed effects regression.
+ Then do a t-test
+\begin_inset Formula 
+\begin{equation}
+\frac{\hat{\beta}_{1}}{std.err(\hat{\beta}_{1})}\sim t\,with\,df=N-2-m
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+As there are more groups, the subtraction for 
+\begin_inset Formula $df$
+\end_inset
+
+ grows more extreme and the required 
+\begin_inset Formula $t$
+\end_inset
+
+ value for statistical significance grows larger and larger.
+ The fixed effect becomes 
+\begin_inset Quotes eld
+\end_inset
+
+less and less
+\begin_inset Quotes erd
+\end_inset
+
+ significant.
+\end_layout
+
+\begin_layout Enumerate
+We avoid that 
+\begin_inset Quotes eld
+\end_inset
+
+loss of degrees of freedom
+\begin_inset Quotes erd
+\end_inset
+
+ by estimating a single variance parameter 
+\begin_inset Formula $\psi$
+\end_inset
+
+.
+ How many degrees of freedom should be subtracted in order to take that
+ into account? Just 
+\begin_inset Formula $1$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Enumerate
+Here's what is misleading.
+ The random effects model necessarily entails prediction/estimation of the
+ random effects 
+\begin_inset Formula $\zeta_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\zeta_{2}$
+\end_inset
+
+,
+\begin_inset Formula $\ldots$
+\end_inset
+
+, 
+\begin_inset Formula $\zeta_{m}$
+\end_inset
+
+, so in a way, we really are using up degrees of freedom and we should subtract
+ something from the degrees of freedom.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 88.
+ Hypothesis Tests: Random Effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Is the true 
+\begin_inset Formula $Var(\zeta_{j})=\psi=0?$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+We estimate that with Maximum Likelihood.
+ Then estimate a model without 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+ A Likelihood ratio test compares 2 models (LR test).
+ Students should remember this from ML applications like logistic regression.
+ 
+\end_layout
+
+\begin_layout Enumerate
+In ML, for a large sample tending to infinity, this number tends to be 
+\begin_inset Formula $\chi^{2}$
+\end_inset
+
+ distributed with 
+\begin_inset Formula $\nu$
+\end_inset
+
+ = the difference in number of estimated parameters.
+ (In my mind, the words are 
+\begin_inset Quotes eld
+\end_inset
+
+minus two times the log of the ratio of the likelihoods
+\begin_inset Quotes erd
+\end_inset
+
+.
+\begin_inset Formula 
+\begin{equation}
+-2ln(\frac{L_{0}}{L_{1}})=-2\{ln(L_{0})-ln(L_{1})\}=2\{ln(L_{1})-ln(L_{0})\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Note 1: any estimate based on data is surely to be bigger than zero, 
+\begin_inset Formula $\hat{\psi}>0$
+\end_inset
+
+.
+ , and it could only be exactly 0 if the data was freakishly empty.
+ So the estimated 
+\begin_inset Formula $\hat{\psi}$
+\end_inset
+
+ is ALWAYS greater than 0.
+ We mean to ask 
+\begin_inset Quotes eld
+\end_inset
+
+is it enough greater than 0 to believe that the true 
+\begin_inset Formula $\psi$
+\end_inset
+
+ is not 0.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Note 2: The theoretical complication: the estimator is on the boundary of
+ the sampling distribution.
+ The usual LR test is not exactly correct.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 89: RHS say that the p value from the LR test is 2 times larger than it
+ ought to be.
+ I have no evidence this is right or wrong.
+ I have heard the argument in other materials that the p value from the
+ LR test is 
+\begin_inset Quotes eld
+\end_inset
+
+conservative
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 91.
+ SCORE test versus LR test versus Wald test.
+ I thought I understood these things until I read this passage.
+ Now I don't understand.
+ Will stick to the LR test, most people do.
+\end_layout
+
+\begin_layout Enumerate
+F test can be used in GLS-based estimator in 
+\begin_inset Quotes eld
+\end_inset
+
+xtreg, fe
+\begin_inset Quotes erd
+\end_inset
+
+.
+ p.
+ 92: TODO.
+ figure out what Stata output 
+\begin_inset Quotes eld
+\end_inset
+
+sigma_u
+\begin_inset Quotes erd
+\end_inset
+
+ means.
+ Suspect: standard deviation of intercept estimates in FE model.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 92-93: DISREGARD or BE CAUTIOUS about Stata output on standard errors and
+ Confidence Intervals output by xtmixed.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 94: 
+\begin_inset Quotes eld
+\end_inset
+
+superpopulation
+\begin_inset Quotes erd
+\end_inset
+
+ inference, just as I preached it in class.
+ No such thing as having a data set that includes the 
+\begin_inset Quotes eld
+\end_inset
+
+whole population.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 95.
+ Fixed Effects vs Random Effects.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Target of inference: These particular groups or groups that might be drawn?
+\end_layout
+
+\begin_layout Enumerate
+Exchangable group random effects: Subjectively, given groups 
+\begin_inset Formula $j=1,2,\ldots$
+\end_inset
+
+, do we believe it could be that they are assigned 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ at 
+\begin_inset Quotes eld
+\end_inset
+
+random
+\begin_inset Quotes erd
+\end_inset
+
+, equally likely, without regard to their index value.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 99-101.
+ Review assumptions about variance of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, 
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+, the lack of covariance between them.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 101.
+ Different Estimation methods
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+ML.
+ p.101.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+The idea is to find parameter estimates 
+\begin_inset Formula $\hat{\beta}$
+\end_inset
+
+, 
+\begin_inset Formula $\hat{\psi}$
+\end_inset
+
+, and 
+\begin_inset Formula $\hat{\theta}$
+\end_inset
+
+ that maximize the likelihood function, thus making the responses appear
+ as likely as possible
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Get an intuition from the ANOVA style variance estimates for J groups, n
+ responses (balanced groups).
+ the ML estimators:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+within cluster variance: Based on squared deviations of individual scores
+ around within-group means.
+ It is 
+\begin_inset Quotes eld
+\end_inset
+
+Mean Squared Error
+\begin_inset Quotes erd
+\end_inset
+
+, variance of the residuals.
+\begin_inset Formula 
+\begin{eqnarray}
+\hat{\theta} & = & \frac{1}{J(n-1)}\left\{ \sum_{j=1}^{J}\sum_{i=1}^{n}(y_{ij}-\bar{y}_{.j})^{2}\right\} \\
+ &  & \frac{1}{J(n-1)}SSE=MSE
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+ML estimate of group random effect.
+ The Model Sum of Squares (MSS) is the squared deviations of group means
+ around the overall 
+\begin_inset Quotes eld
+\end_inset
+
+grand mean
+\begin_inset Quotes erd
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\hat{\psi}=\begin{cases}
+\frac{MSS}{Jn}-\frac{\hat{\theta}}{n} & if\,positive\\
+0 & if\,line\,1\,<0
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+An 
+\begin_inset Quotes eld
+\end_inset
+
+unbiased
+\begin_inset Quotes erd
+\end_inset
+
+ correction of this from ANOVA = REML
+\begin_inset Formula 
+\begin{equation}
+\hat{\psi}^{M}=\frac{MSS}{(J-1)n}-\frac{\hat{\theta}}{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 102 
+\begin_inset Quotes eld
+\end_inset
+
+The estimate an be negative, making unbiasedness less attractive than it
+ seems.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Unbalanced: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 102 
+\begin_inset Quotes eld
+\end_inset
+
+Contrary to popular belief, REML is not unbiased for 
+\begin_inset Formula $\psi$
+\end_inset
+
+ when data are unbalanced.
+ Furthermore, it is not clear which method has the smallest mean squared
+ error (MSE).
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 109.
+ Predicting (or estimating?) 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+In the way of estimating that RHS consider (NOT the PLS way), the GLS or
+ ML fitting process is geared to give estimates of 
+\begin_inset Formula $\hat{\beta}$
+\end_inset
+
+, 
+\begin_inset Formula $\hat{\psi}$
+\end_inset
+
+, 
+\begin_inset Formula $\hat{\theta}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+From those, we formulate a statement about the values of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ that are most likely to have produced 
+\begin_inset Formula $y_{ij}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+EMPIRICAL Bayes.
+ Prior
+\begin_inset Formula $(\zeta_{j})$
+\end_inset
+
+ is 
+\begin_inset Formula $Normal(0,\hat{\psi}$
+\end_inset
+
+) .
+ Result.
+ The Empirical Bayes estimate is a 
+\begin_inset Quotes eld
+\end_inset
+
+shrunken
+\begin_inset Quotes erd
+\end_inset
+
+ version of the 
+\begin_inset Formula $ML$
+\end_inset
+
+ estimate.
+ 
+\begin_inset Formula 
+\begin{equation}
+\hat{\zeta}_{j}^{EB}=\frac{\hat{\psi}}{\hat{\psi}+\hat{\theta}/n_{j}}\hat{\zeta}_{j}^{ML}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The shrinkage coefficient, 
+\begin_inset Formula $\hat{R}_{j}=\frac{\hat{\psi}}{\hat{\psi}+\hat{\theta}/n_{j}}$
+\end_inset
+
+ is similar to the ICC, but the individual error is down weighted because
+ it is divided by the number of observations within group 
+\begin_inset Formula $j$
+\end_inset
+
+ .
+ 
+\end_layout
+
+\begin_layout Enumerate
+If a group has LOTS of observations, not much shrinkage is applied.
+ But, when FEW observations, then much shrinkage is applied.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 113.
+ Empirical Bayes standard errors.
+ I am pretty sure all of this applies only to Variance Components models,
+ not necessarily to regression models.
+ I'll dog ear this, maybe come back later.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Comparative standard errors.
+ Think this through.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Suppose a score 
+\begin_inset Formula $y$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+pops out
+\begin_inset Quotes erd
+\end_inset
+
+ from nature.
+ After that, we can triangulate on 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, say some values are more likely than others.
+ 
+\begin_inset Formula 
+\begin{equation}
+Var(\zeta_{j}|y_{1j},y_{2j})=\frac{\theta/n_{j}}{\psi+\theta/n_{j}}\psi=(1-R_{j})\psi
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+CLAIM p.
+ 113.
+ The variance of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+is also the conditional variance of the prediction errors 
+\begin_inset Formula $\hat{\zeta}_{j}^{EB}-\zeta_{j},$
+\end_inset
+
+given the observed 
+\begin_inset Formula $y$
+\end_inset
+
+.
+ The variance of our prediction of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ given the observed data, 
+\begin_inset Formula $Var(\hat{\zeta}_{j}^{EB}-\zeta_{j}|y_{1j},y_{2j})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Mean Squared Error of Prediction.
+ See Stata below: RSES=random effect standard errors
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Diagnostic Standard Errors: spot outliers in 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The variance of EB predictions (over repeated samples)
+\begin_inset Formula 
+\begin{equation}
+Var(\hat{\zeta}_{j}^{EB})=\frac{\psi}{\psi+\theta/n_{j}}\psi
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+That's the same shrinkage factor
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 114: used to spot 
+\begin_inset Quotes eld
+\end_inset
+
+outliers
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If a 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ is outside 2 standard deviations, it is in the extreme zone.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Stata notes
+\end_layout
+
+\begin_layout Enumerate
+xtreg.
+ Requires xtset first to specify grouping.
+ Less well integrated with new stata tools.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+FGLS: Feasible generalized least squares is an option for xtreg, re.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Requires 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtset id
+\end_layout
+
+\end_inset
+
+ , so following xtreg knows the grouping indicator on rows
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+xtmixed.
+ Grouping set as part of the command.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+reml mle option: ML estimate
+\end_layout
+
+\begin_layout Enumerate
+reml option: REML
+\end_layout
+
+\begin_layout Enumerate
+Notation: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtmixed y x || id: , mle
+\end_layout
+
+\end_inset
+
+ fits y with predictor x and random effect with variable named 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The empty space after colon means no slopes depend on 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 83: Data Preparation
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+reshape long wp wm, i(id) j(occasion)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 83.
+ Note Stata uses 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ BACKWARDS from this book.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 85.
+ In time series tools, Stata uses 
+\begin_inset Formula $t$
+\end_inset
+
+ for rows within group i.
+\end_layout
+
+\begin_layout Enumerate
+Stata uses 
+\begin_inset Formula $u$
+\end_inset
+
+ to refer to the grouped random effects in the model, and 
+\begin_inset Formula $e$
+\end_inset
+
+ for the individual row random errors.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 85.
+ Note ICC is not included in xtreg output, user can calculate from random
+ effects.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p 112.
+ POST estimation extraction of estimated values
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+_b[varname]
+\end_layout
+
+\end_inset
+
+ retrieves an estimated fixed effect
+\end_layout
+
+\begin_layout Enumerate
+To estimate standard deviations, fit differently
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtmixed wm || id: , mle estmetric
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Extract 
+\begin_inset Formula $ln(\sigma)$
+\end_inset
+
+ like this
+\end_layout
+
+\begin_layout Standard
+p.
+ 112.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+The estimation metric for each standard deviation is the logarithm of the
+ standard deviation.
+ We can access the estimated logarithms by using the syntax 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+[lns1_1_1]_cons
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+[lnsig_e]_cons
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+TODO: Find out how to make a Stata session tell me all of the things 
+\begin_inset Quotes eld
+\end_inset
+
+out there in memory
+\begin_inset Quotes erd
+\end_inset
+
+ that I can retrieve.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Use the predict with reffects to pull out guesses about random effects,
+ group-by-group
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+pp.
+ 112 shows "manually calculated" EB and compares 
+\end_layout
+
+\begin_layout Standard
+results from Stata predict method.
+ Same idea as lme4 "ranef"
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict eb2, reffects
+\end_layout
+
+\begin_layout Plain Layout
+
+sort id
+\end_layout
+
+\begin_layout Plain Layout
+
+format eb1 eb2 %8.2f
+\end_layout
+
+\begin_layout Plain Layout
+
+list id eb1 eb2 if occasion==1, clean noobs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 114.
+ Stata 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+predict_se, rses
+\end_layout
+
+\end_inset
+
+.
+ RSES=random effect standard errors
+\end_layout
+
+\end_deeper
+\end_body
+\end_document

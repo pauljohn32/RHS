@@ -1,0 +1,2390 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 1 Linear Regression
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a nice survey of regression for students who are already familiar
+ with regression.
+\end_layout
+
+\begin_layout Section
+Highlights
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 12: population 
+\begin_inset Quotes eld
+\end_inset
+
+infinite population from which the data can be be viewed as sampled or to
+ the statistical model that is viewed as the data-generating mechnanism...
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Vital to disconnect ordinary word 
+\begin_inset Quotes eld
+\end_inset
+
+population
+\begin_inset Quotes erd
+\end_inset
+
+ from this infinite 
+\begin_inset Quotes eld
+\end_inset
+
+super-population
+\begin_inset Quotes erd
+\end_inset
+
+ way of thinking.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 13 OLS definition.
+ As a conditional probability model, could say 
+\begin_inset Quotes eld
+\end_inset
+
+y given x is Normal
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+y_{i}|x_{i}\sim N(\mu_{x},\sigma_{x}^{2})\label{eq:conditional y}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Researcher has to supply a model to predict the mean and variance.
+ In the Normal, this is direct and easy to see:
+\begin_inset Formula 
+\begin{equation}
+\mu_{x}\equiv E[y_{i}|x_{i}]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sigma_{x_{i}}^{2}\equiv Var(y|x_{i})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note: 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ means 
+\begin_inset Quotes eld
+\end_inset
+
+is defined as
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Terminology: 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ = 
+\begin_inset Quotes eld
+\end_inset
+
+response variable
+\begin_inset Quotes erd
+\end_inset
+
+ (dependent, criterion) or endogenous: 
+\begin_inset Quotes eld
+\end_inset
+
+determined inside
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $x_{i}$
+\end_inset
+
+= 
+\begin_inset Quotes eld
+\end_inset
+
+explanatory variable or covariate
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+independent
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+predictor
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+regressor
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 15.
+ t-test.
+ Given data for 2 groups, with hypothesized 
+\begin_inset Formula $\mu_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mu_{1}$
+\end_inset
+
+, does the data lead us to suspect that 
+\begin_inset Formula $\mu_{0}\neq\mu_{1}$
+\end_inset
+
+?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Variance assumption issue
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+It was common to assume the variance within each group is the same, that
+ 
+\begin_inset Formula $\sigma_{0}^{2}=\sigma_{1}^{2}$
+\end_inset
+
+.
+ If we assume that, we can calculate sample variance using whole sample
+ as if they are equal.
+ 
+\end_layout
+
+\begin_layout Standard
+In R, in about 2000, they dropped the common variance default and started
+ using Welch's correction.
+ Stata allows same with 
+\begin_inset Quotes eld
+\end_inset
+
+unequal
+\begin_inset Quotes erd
+\end_inset
+
+ option (p.
+ 16)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Null hypothesis
+\begin_inset Formula 
+\begin{eqnarray}
+H_{0} & = & \mu_{0}=\mu_{1}\\
+ & \Rightarrow & \mu_{o}-\mu_{1}=0
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Notational wrinkle
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+In my notes on the t-test, I write this
+\begin_inset Formula 
+\begin{equation}
+\hat{t}=\frac{\hat{\mu}_{0}-\hat{\mu}_{1}}{std.err.(\hat{\mu}_{0}-\hat{\mu}_{1})}=\frac{\hat{\mu}_{0}-\hat{\mu}_{1}}{\widehat{std.dev.(\hat{\mu}_{0}-\hat{\mu}_{1})}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That is to say, the denominator is an 
+\begin_inset Quotes eld
+\end_inset
+
+estimate of the standard deviation
+\begin_inset Quotes erd
+\end_inset
+
+ of a quantity, and, in my opinion, the standard error is an 
+\emph on
+estimate of the standard deviation
+\emph default
+.
+ Hence, I do not have a hat on 
+\begin_inset Formula $std.err.$
+\end_inset
+
+ because it is, by definition, an estimate!
+\end_layout
+
+\begin_layout Standard
+In contrast, this book puts a hat on the standard error, which I cannot
+ quite understand, and they don't put a hat on 
+\begin_inset Formula $t$
+\end_inset
+
+ , which seems wrong to me.
+ See p.
+ 16
+\begin_inset Formula 
+\begin{equation}
+t=\frac{\hat{\mu}_{0}-\hat{\mu}_{1}}{\mathrm{\widehat{SE}}(\hat{\mu}_{0}-\hat{\mu}_{1})}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Wald-type 
+\begin_inset Quotes eld
+\end_inset
+
+95% confidence interval
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 17.
+ Assumption that 
+\begin_inset Formula $y$
+\end_inset
+
+ is normal is needed for a t-test, except if the sample is large enough
+ to invoke the Central Limit Theorem.
+ That's what they mean about 
+\begin_inset Quotes eld
+\end_inset
+
+large samples.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+A regression of same will lead to identical conclusions.
+ Seems to me the t-test was introduced here with the idea that students
+ are likely to be familiar with it.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 17 One-Way Anova
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+My advisors said to me in 1981, ANOVA is not useful anymore, just get good
+ at doing regression with dummy variables.
+ As a result, I do not have patience to exert much energy on this.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 17.
+ The partitioning of the sum of squares (variance decomposition)
+\begin_inset Formula 
+\begin{equation}
+TSS=MSS+SSE
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The 
+\begin_inset Quotes eld
+\end_inset
+
+between group
+\begin_inset Quotes erd
+\end_inset
+
+ sum of squares is the difference between the 
+\emph on
+center
+\emph default
+ of the group and the whole data collection.
+ ANOVA is about finding whether the group's center is far from the whole
+ data center.
+ Of course, quantifying 
+\begin_inset Quotes eld
+\end_inset
+
+far
+\begin_inset Quotes erd
+\end_inset
+
+ is the problem and that's mostly what ANOVA is about.
+ Is the gap from group-to-whole data large compared to the individual level
+ noise observed within each group.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 19.
+ F test
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The null hypo is that the mean within each group is the same 
+\begin_inset Formula 
+\begin{equation}
+H_{0}=\mu_{0}=\mu_{1}=\mu_{2}\ldots=\mu_{g}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+F=\frac{MMS}{MSE}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+with degrees of freedom 
+\begin_inset Formula $g-1$
+\end_inset
+
+ and 
+\begin_inset Formula $n-g$
+\end_inset
+
+ (n = number of rows in data, 
+\begin_inset Formula $g$
+\end_inset
+
+ is number of groups).
+ 
+\end_layout
+
+\begin_layout Standard
+MMS summarizes the difference of group means from the whole data center
+ value.
+ 
+\end_layout
+
+\begin_layout Standard
+MSE is 
+\begin_inset Quotes eld
+\end_inset
+
+within group variance
+\begin_inset Quotes erd
+\end_inset
+
+, it is variation left over after taking into account the group center position.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why did my advisors say ANOVA is not worth studying?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Cannot include numeric predictors
+\end_layout
+
+\begin_layout Enumerate
+Rejecting null is uninformative.
+ Is group 2 different from group 3? Maybe, we need a follow-up test to find
+ out.
+ Why not learn to do those followup t or F tests with regression? They can
+ co-exist with continuous predictors.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Remember the laws of logarithyms, where I write 'log' to mean 
+\begin_inset Formula $log_{e}$
+\end_inset
+
+ or 
+\begin_inset Formula $ln$
+\end_inset
+
+, the 
+\begin_inset Quotes eld
+\end_inset
+
+natural logarithm
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $log(xyz)=log(x)+log(y)+log(z)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $log(z-y)=log(z)-log(y)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $log(e^{x})=x$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 19 Linear Regression
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Remember conditional y in equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:conditional y"
+
+\end_inset
+
+).
+ That is restated on p.
+ 20, except with assumption that variance of 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ conditional on 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is same for all 
+\begin_inset Formula $i$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+y_{i}|x_{i}\sim N(\mu_{x_{i}},\sigma^{2})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 20.
+ Now you supply a more interesting prediction formula
+\begin_inset Formula 
+\begin{equation}
+\mu_{x_{i}}=E[y_{i}|x_{i}]=\beta_{1}+\beta_{2}x_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Notation difference.
+ In my notes I always write 
+\begin_inset Formula $\beta_{0}+\beta_{1}x_{i}$
+\end_inset
+
+ .
+ That's used more broadly in the literature, IMHO.
+\end_layout
+
+\begin_layout Enumerate
+It is mathematically equivalent to write
+\begin_inset Formula 
+\begin{equation}
+y_{i}=\beta_{1}+\beta_{2}x_{i}+\epsilon_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Thats the 
+\begin_inset Quotes eld
+\end_inset
+
+fixed
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+systematic
+\begin_inset Quotes erd
+\end_inset
+
+ part plus the 
+\begin_inset Quotes eld
+\end_inset
+
+stochastic
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+random
+\begin_inset Quotes erd
+\end_inset
+
+ part.
+\end_layout
+
+\begin_layout Standard
+RHS uses 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ for random error that is centered on 
+\begin_inset Formula $0$
+\end_inset
+
+ , as in 
+\begin_inset Formula 
+\begin{equation}
+\epsilon_{i}|x_{i}\sim N(0,\sigma^{2})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Recall the law of variance calculations.
+ For some constants 
+\begin_inset Formula $k_{j}$
+\end_inset
+
+ and variables 
+\begin_inset Formula $u$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $v$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\begin_inset Formula 
+\begin{equation}
+Var(k_{1}+k_{2}v_{i}+k_{3}u_{i})=k_{2}^{2}Var(v_{i})+k_{3}^{2}Var(u_{i})+2k_{2}k_{3}Cov(u_{i},v_{i})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+That's always correct, whether variables are normal or not.
+ This is written out in my probability notes for the regression course.
+\end_layout
+
+\begin_layout Enumerate
+The variance of a constant 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+ is 
+\begin_inset Formula $0$
+\end_inset
+
+, 
+\begin_inset Formula $Var(k_{i})=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The variance of a constant times a variable is the constant squared time
+ variance, 
+\begin_inset Formula $Var(k_{2}v_{i})=k_{2}^{2}Var(v_{i})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The variance of a sum is the variance of each individual term plus the 2
+ times the covariance with the constants multiplied together.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 20.
+ For a given value of 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+, then 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ is treated as a constant.
+ Thus they claim toward the bottom of the page:
+\begin_inset Formula 
+\begin{equation}
+Var(y_{i}|x_{i})=Var(\epsilon_{i}|x_{i})=\sigma^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+That is derived keeping 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ as fixed, as though it is a constant.
+ So 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{2}x_{i}$
+\end_inset
+
+ are seen as constants applying rules above, so 
+\begin_inset Formula 
+\begin{equation}
+Var(\beta_{1}+\beta_{2}x_{i}+\epsilon_{i}|x_{i})=Var(\epsilon_{i})=\sigma_{\epsilon}^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Predicted value
+\begin_inset Formula 
+\begin{equation}
+\hat{y}_{i}=\hat{\beta}_{1}+\hat{\beta}_{2}x_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Ordinary Least Squares versus Maximum Likelihood
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+OLS derives estimate as minimizer of
+\begin_inset Formula 
+\begin{equation}
+Sum\,of\,Squared\,Errors(\hat{\beta})=\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^{2}=\sum_{i=1}^{n}(y_{i}-\hat{\beta}_{1}+\hat{\beta}_{2}x_{i})^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The estimate of the variance of the error term is usually taken as
+\begin_inset Formula 
+\begin{equation}
+\widehat{\sigma_{\epsilon}^{2}}^{OLS}=Mean\,Squared\,Error=\frac{\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^{2}}{n-2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 21.
+ Maximum Likelihood derives the estimators from different premise, MLE:
+ choose parameter estimates for 
+\begin_inset Formula $\sigma^{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{j}$
+\end_inset
+
+ that make the sample 
+\emph on
+most likely
+\emph default
+ to have been produced by the estimated model you propose.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Likelihood is the PRODUCT of probabilities that your model produced the
+ data.
+\end_layout
+
+\begin_layout Enumerate
+If you say 
+\begin_inset Formula $y_{i}|x_{i}$
+\end_inset
+
+ is Normal, then you know the probability of observing one particular case
+ is something like
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{some\,constant}e^{-\frac{1}{2}\left(\frac{y_{i}-\hat{y}_{i}}{\sigma}\right)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+If you multiply together a lot of terms like that, you end up with a very
+ unstable calculation.
+\end_layout
+
+\begin_layout Enumerate
+So log that and maximize the 
+\emph on
+Log Likelihood.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+With those laws in mind, the big product of individual probabilities boils
+ down to a sum
+\begin_inset Formula 
+\begin{equation}
+\frac{1}{some\,constant}e^{-\frac{1}{2}\left(\frac{y_{1}-\hat{y}_{1}}{\sigma}\right)^{2}}\times\frac{1}{some\,constant}e^{-\frac{1}{2}\left(\frac{y_{2}-\hat{y}_{2}}{\sigma}\right)^{2}}\ldots(n\,terms)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+and the log of that boils down to 
+\begin_inset Formula 
+\begin{equation}
+\sum n\times\frac{1}{some\,constant}+\sum-\frac{1}{2}\left(\frac{y_{i}-\hat{y}_{i}}{\sigma}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+And when you throw out the constants, you see the numerator boils down to
+ the same objective as OLS.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Compared to OLS
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The MLE slope estimates are identical
+\end_layout
+
+\begin_layout Enumerate
+The estimate of the variance of the error term from MLE is different.
+ It is known to be biased because it does not subtract from the denominator
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\widehat{\sigma_{\epsilon}^{2}}^{MLE}=\frac{\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^{2}}{n}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+It turns out that this difference b/t MLE variance estimates and other 
+\begin_inset Quotes eld
+\end_inset
+
+unbiased
+\begin_inset Quotes erd
+\end_inset
+
+ ones is an enduring, troublesome issue that shapes a huge investment in
+ research, debate, and vitriolic dispute about ML versus REML that we'll
+ see later.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Note: it is possible to derive OLS estimates without assuming 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is Normal.
+ It is NOT POSSIBLE to derive MLE without giving a particular distribution
+ to 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+or 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 22.
+ Coefficient of determination, 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+, is 
+\begin_inset Quotes eld
+\end_inset
+
+not a measure of model fit
+\begin_inset Quotes erd
+\end_inset
+
+ and is 
+\begin_inset Quotes eld
+\end_inset
+
+not a meaure of the magnitude of the effect of 
+\begin_inset Formula $x_{i}$
+\end_inset
+
+ (or effect size)
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 25.
+ Mean Centering a numeric predictor.
+ When does it help? God, what a mess this has become.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Scaling is not helpful and does not matter generally.
+ Look down to item 7 in this lecture
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/guides/stat/Regression/ElementaryOLS/Regression-2-lectur
+e.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Mean-Centering is thought to be helpful by people who don't understand much
+ about regression
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/guides/stat/Regression-Nonlinear/Interaction-Continuous/
+Interaction-Continuous-1-lecture.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+In the vignette for rockchalk, this is all beaten to death, over and over:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/R/rockchalk.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+I don't mind if you center or subtract something from a predictor to bring
+ the y-axis into view in a plot.
+ I do object if you think this is somehow making a regression 
+\begin_inset Quotes eld
+\end_inset
+
+better
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 25.
+ Don't use standardized regression coefficients
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 28: SOMETHING I WANT TO POINT OUT
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+model matrix, AKA design matrix.
+ This is the numeric matrix used in calculating regression coefficients.
+ 
+\end_layout
+
+\begin_layout Enumerate
+always an intercept, column of 1's 
+\end_layout
+
+\begin_layout Enumerate
+If we want a prediction using one 
+\begin_inset Quotes eld
+\end_inset
+
+dummy variable
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $x_{i}\in\{male,female\}$
+\end_inset
+
+.
+ We can choose to estimate coefficients for 2 out of these 3 columns.
+ 
+\begin_inset Formula 
+\begin{equation}
+\left[\begin{array}{ccc}
+"intercept" & x_{i}=male & x_{i}=female\\
+1 & 1 & 0\\
+1 & 1 & 0\\
+1 & 0 & 1\\
+1 & 0 & 1
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Use columns 1 and 2, then the estimate of the intercept is the 
+\begin_inset Quotes eld
+\end_inset
+
+baseline
+\begin_inset Quotes erd
+\end_inset
+
+ value that applies to all cases and coefficient on second column is 
+\begin_inset Quotes eld
+\end_inset
+
+difference from the baseline
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Use columns 1 and 3, then baseline is compared against the group defined
+ by 
+\begin_inset Formula $x_{i}=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Suppress the intercept? OK, use columns 2 and 3
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 29: 
+\begin_inset Quotes eld
+\end_inset
+
+robust
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\emph on
+sandwich estimator
+\emph default
+ of standard error.
+ vce(robust) 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This may deserve more caution, most Stata users seem to place a lot more
+ faith in these things than they ought to.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Reasons for caution related to asymptotic assumptions.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 30: Multiple regression
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+add more predictors
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{i}=\beta_{1}+\beta_{2}x_{2i}+\beta_{3}x_{3i}+\epsilon_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In my course notes, I instead write about columns 
+\begin_inset Formula $x1$
+\end_inset
+
+, 
+\begin_inset Formula $x2$
+\end_inset
+
+, 
+\begin_inset Formula $x3$
+\end_inset
+
+ like this
+\begin_inset Formula 
+\begin{equation}
+y_{i}=\beta_{0}+\beta_{1}x1_{i}+\beta_{2}x2_{i}+\beta_{3}x3_{i}+\varepsilon_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+controlling for
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+adjusting for
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+partialling out
+\begin_inset Quotes erd
+\end_inset
+
+, or 
+\begin_inset Quotes eld
+\end_inset
+
+keeping constant
+\begin_inset Quotes erd
+\end_inset
+
+ other predictors.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Other things equal
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 31.
+ Nice parallel lines graph! You understand that, you understand this section.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 32.
+ See elaborate use of twoway.
+ Achieves same result as R rockchalk::plotSlopes.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 32: Foreshadow 
+\begin_inset Quotes eld
+\end_inset
+
+causality
+\begin_inset Quotes erd
+\end_inset
+
+ discussion, 
+\begin_inset Quotes eld
+\end_inset
+
+matching models
+\begin_inset Quotes erd
+\end_inset
+
+ with terminology 
+\begin_inset Quotes eld
+\end_inset
+
+overlap
+\begin_inset Quotes erd
+\end_inset
+
+.
+ I'll sketch something to explain.
+ I don't understand what we are supposed to conclude from graph on p.
+ 33.
+ Except to note that Stata can make density plots with twoway, which is
+ a good thing.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Randomized Treatment assignment would solve everything, but we don't generally
+ get to assign predictors in quasi-experimental data.
+ (Can't make 435 randomly chosen people into House of Representatives, can
+ we? Or assign membership in Republican party to Representatives).
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 33.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+confounding
+\begin_inset Quotes erd
+\end_inset
+
+ p.
+ 34.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+spurious
+\begin_inset Quotes erd
+\end_inset
+
+ relationship.
+ The effect we think is 
+\begin_inset Quotes eld
+\end_inset
+
+Treatment
+\begin_inset Quotes erd
+\end_inset
+
+ is really due to an unmeasured confounding variable.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Omitted variable bias versus
+\end_layout
+
+\begin_layout Enumerate
+Too many variables cause inflated standard errors
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Remember: If columns are orthogonal, there is no danger here.
+\end_layout
+
+\begin_layout Enumerate
+Only if columns share variance is this a concern (
+\begin_inset Quotes eld
+\end_inset
+
+multicollinearity
+\begin_inset Quotes erd
+\end_inset
+
+) and it is a dicey problem.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Manual recoding or factor variables?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+R uses an automatic 
+\begin_inset Quotes eld
+\end_inset
+
+factor variable
+\begin_inset Quotes erd
+\end_inset
+
+ framework, some are very enthusiastic about it
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+We have a variable declared as categorical (factor, ordered) and R manufactures
+ the model matrix that goes with it.
+\end_layout
+
+\begin_layout Enumerate
+eliminates the danger that a categorical variable like 
+\begin_inset Quotes eld
+\end_inset
+
+gender
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Formula $x_{i}=0$
+\end_inset
+
+ or 
+\begin_inset Formula $x_{i}=1$
+\end_inset
+
+, will be mistaken for a numeric thing.
+\end_layout
+
+\begin_layout Enumerate
+eliminates the danger/confusion that results when one person wants to use
+ coding 
+\begin_inset Formula $1$
+\end_inset
+
+ and 
+\begin_inset Formula $2$
+\end_inset
+
+ rather than 
+\begin_inset Formula $0$
+\end_inset
+
+ and 
+\begin_inset Formula $1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+May 
+\begin_inset Quotes eld
+\end_inset
+
+automatically
+\begin_inset Quotes erd
+\end_inset
+
+ give better labels in output, like 
+\begin_inset Formula $genderMale$
+\end_inset
+
+ and 
+\begin_inset Formula $genderFemale$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Other stat packs, incl Stata 11, have inserted ability to use 
+\begin_inset Quotes eld
+\end_inset
+
+factors
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Interactions
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+moderator, same as 
+\begin_inset Quotes eld
+\end_inset
+
+effect modifier
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 37: see make as moderator 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Stata Commands I circled
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 12: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+use http://
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 13: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+graph box
+\end_layout
+
+\end_inset
+
+ (box plots)
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 14: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+histogram y, by(x, rows(), xtitle().
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 14: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+generate
+\end_layout
+
+\end_inset
+
+ to transform/recode a variable
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 15: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ttest y, by (x)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 24: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+regress y x
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 26: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+predict yhat, xb
+\end_layout
+
+\end_inset
+
+ (yhat is the new name for predicted values, will appear in data, whereas
+ is xb is short name)
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 26: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+twoway (scatter y x) (line yhat x, sort), ytitle(yname here), xtitle(x name
+ here
+\end_layout
+
+\end_inset
+
+).
+ Don't know why 
+\begin_inset Quotes eld
+\end_inset
+
+sort
+\begin_inset Quotes erd
+\end_inset
+
+ there.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 30: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+tabstat x1, by (x2) statistics(mean, sd)
+\end_layout
+
+\end_inset
+
+ produced aggregates for subgroups.
+ Handy!
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 32-33: more elaborate uses of 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+twoway
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 39: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+lincom
+\end_layout
+
+\end_inset
+
+.
+ Can be used with regressions to test hypos about linear predictions involving
+ coefficients.
+ Have not seen this before, looks handy.
+ Additional usage p.
+ 46.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 39: please DO NOT use twoway with typed-in coefficients as on bottom of
+ page.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 40: please DO access coefficients with 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+_b[]
+\end_layout
+
+\end_inset
+
+ notation.
+ Another good usage of same p.
+ 42.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 43: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+tabulate x, generate(r)
+\end_layout
+
+\end_inset
+
+ , a way of manually creating the dummy-variable columns in the data frame,
+ will be in design matrix.
+ This is better than crude generate (p.
+ 42), but I'd suggest doing neither.
+ Let the factor facility in Stata handle it.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 47: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+testparm i.x 
+\end_layout
+
+\end_inset
+
+carries out the F test that all of the dummy columns have 0 slope coefficients.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 56: Causality and Treatment
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+This is valuable, but probably out of place
+\end_layout
+
+\begin_layout Enumerate
+There are other books about checking for causal effects and synthetically
+ balancing treatment and non-treatment subjects.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Claims that econometrics books are more likely to venture into discussion
+ of causality and assumptions needed to achieve it.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+strict exogeneity
+\begin_inset Quotes erd
+\end_inset
+
+: treatment and error are uncorrelated is one sufficient assumption.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Factor Variables.
+\end_layout
+
+\begin_layout Enumerate
+Software that can handle categorical variables gracefully will notice the
+ scores of gender are 
+\begin_inset Formula $\{male,female,female,male,\ldots\}$
+\end_inset
+
+ and then manufacture a suitable design matrix for us.
+\end_layout
+
+\begin_layout Enumerate
+If a predictor has 
+\begin_inset Formula $g$
+\end_inset
+
+ categories, it will manufacture 
+\begin_inset Formula $g-1$
+\end_inset
+
+ categories.
+ See:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Categorical Predictors
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/guides/stat/Regression/CategoricalPredictors
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Interactions: Continuous
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/guides/stat/Regression-Nonlinear/Interaction-Continuous/
+Interaction-Continuous-1-lecture.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Interactions: Categorical
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://pj.freefaculty.org/guides/stat/Regression-Nonlinear/Interaction-Categorical
+/Interaction-Categorical-1-lecture.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Stata has ways to do same, since version 11
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Consider a variable 
+\begin_inset Quotes eld
+\end_inset
+
+gender
+\begin_inset Quotes erd
+\end_inset
+
+ coded 1 for male and 2 for female.
+ 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.gender 
+\end_layout
+
+\end_inset
+
+If we enter 
+\begin_inset Quotes eld
+\end_inset
+
+i.gender
+\begin_inset Quotes erd
+\end_inset
+
+ as a predictor, then Stata will try to do the right thing (add the correct
+ columns to the design matrix).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+c.yearsdg
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Generally, it is not needed to do this with numeric predictors, except when
+ they are interacted with categorical predictors.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Rather than manually manufacturing an interaction, as RHS suggest p.
+ 38 with
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+generate male_years = male*yearsdg
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Instead we add into the regression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.male##c.yearsdg
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+##
+\end_layout
+
+\end_inset
+
+ usage is quivalent to R's 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+*
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+, where, for example,
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ x1*x2
+\end_layout
+
+\end_inset
+
+ would cause the insertion of x1, x2, and x1:x2 (where x1:x2 is the product
+ of x1 and x2).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 31 Stata allows # notation, i.x1#c.x2 meaning 
+\begin_inset Quotes eld
+\end_inset
+
+product of following terms
+\begin_inset Quotes erd
+\end_inset
+
+, but it does not include 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+i.x1
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+c.x2
+\end_layout
+
+\end_inset
+
+ in the regression model for us.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+I believe using # is bad form and won't do it, note danger in RHS p.
+ 41 that the variable 
+\begin_inset Quotes eld
+\end_inset
+
+male
+\begin_inset Quotes erd
+\end_inset
+
+ is treated as numeric while 
+\begin_inset Quotes eld
+\end_inset
+
+i.male
+\begin_inset Quotes erd
+\end_inset
+
+ is treated as a factor.
+ Could cause miscoding if male = 1,2, for example.
+\end_layout
+
+\begin_layout Enumerate
+The R equivalent for this would be y ~ x1 + x2 + x1:x2.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 46.
+ Determine the baseline category:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ib3.rank
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+b3.rank
+\end_layout
+
+\end_inset
+
+ are equally good? b is the base level.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+TODO list: find out how to see the model matrix from a fitted Stata regression.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 46: RHS luke warm on factors: 
+\begin_inset Quotes eld
+\end_inset
+
+Although factors are very convenient, an advantage of constructing your
+ own dummy variables is that you can give them meaningful names.
+\begin_inset Quotes erd
+\end_inset
+
+ Seems week to me, especially if categorical variables have value labels.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 50, 51: have both styles, the old-fashioned 
+\begin_inset Quotes eld
+\end_inset
+
+recode your own columns
+\begin_inset Quotes erd
+\end_inset
+
+ approach and the Stata factor variables approach.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 54: Note multiple interactions in ## model formula
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
