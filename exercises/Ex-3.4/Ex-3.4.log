@@ -1,0 +1,332 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-3.4/Ex-3.4.log
+  log type:  text
+ opened on:  23 Feb 2016, 14:03:52
+
+.  
+. * Dempster Rat-pups data
+. * use http://www.stata-press.com/data/mlmus3/pups, clear
+. * saveold pups.dta12, version(12)
+. * or
+. use pups.dta12, replace
+
+. 
+. 
+. sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         dam |        321    13.38318    7.400986          1         27
+         sex |        321    .4672897    .4997079          0          1
+         rat |        321    4.193146    2.632742          1         13
+        dose |        321    .7943925    .7550453          0          2
+           w |        321    6.081246    .6485308       3.68       8.33
+
+. 
+. * 3.4.1. 
+. 
+. egen size = count(w), by(dam)
+
+. 
+. * 3.4.2
+. egen wmn = mean(w), by(dam)
+
+. 
+. * 3.4.3
+. 
+. twoway (scatter wmn size), ytitle("Mean of Litter")
+
+. * Need different symbols
+. 
+. * Do they want wmn horiz or vert?
+. 
+. * See: http://www.ats.ucla.edu/stat/stata/faq/graph_sep.htm
+. twoway (scatter wmn size if dose == 0, msymbol(0h)) ///
+>     (scatter wmn size if dose == 1, msymbol(S)) ///
+>     (scatter wmn size if dose == 2, msymbol(0)), ///
+>     ytitle("Mean of Litter") ///
+>     legend(label(1 "0") label(2 "1") label(3 "2"))
+(note:  named style 0h not found in class symbol, default attributes used)
+(note:  named style 0 not found in class symbol, default attributes used)
+
+.     
+.     
+. *3.4.4
+. 
+. xtmixed w i.sex i2.dose size|| dam: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood =  -193.9586  
+Iteration 1:   log likelihood =  -193.9586  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        321
+Group variable: dam                             Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          2
+                                                              avg =       11.9
+                                                              max =         18
+
+                                                Wald chi2(3)      =      96.45
+Log likelihood =  -193.9586                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+           w |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       1.sex |   -.369079   .0476581    -7.74   0.000    -.4624872   -.2756708
+      2.dose |   -.639724   .1788735    -3.58   0.000    -.9903095   -.2891384
+        size |  -.1273957   .0204095    -6.24   0.000    -.1673977   -.0873938
+       _cons |   8.074321   .2816494    28.67   0.000     7.522299    8.626344
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+dam: Identity                |
+                   sd(_cons) |   .3448632   .0526473      .2556827    .4651494
+-----------------------------+------------------------------------------------
+                sd(Residual) |    .403652   .0166193      .3723584    .4375756
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 122.25        Prob >= chibar2 = 0.0000
+
+. 
+. label define dose 0 "control" 1 "low" 2 "high"
+
+. label values dose dose
+
+. label define sex 0 "male" 1 "female"
+
+. label values sex sex
+
+. 
+. 
+. xtmixed w i.sex i.dose size|| dam: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -189.74455  
+Iteration 1:   log likelihood = -189.74455  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        321
+Group variable: dam                             Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          2
+                                                              avg =       11.9
+                                                              max =         18
+
+                                                Wald chi2(4)      =     117.42
+Log likelihood = -189.74455                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+           w |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         sex |
+     female  |  -.3606255   .0475851    -7.58   0.000    -.4538907   -.2673604
+             |
+        dose |
+        low  |  -.4422784   .1401334    -3.16   0.002    -.7169348   -.1676219
+       high  |  -.8729375   .1700605    -5.13   0.000     -1.20625    -.539625
+             |
+        size |  -.1297784   .0178468    -7.27   0.000    -.1647575   -.0947992
+       _cons |   8.321449   .2598461    32.02   0.000      7.81216    8.830738
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+dam: Identity                |
+                   sd(_cons) |   .2872853   .0460919      .2097718     .393441
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .4036584   .0166188      .3723657    .4375808
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 85.13         Prob >= chibar2 = 0.0000
+
+. estimates store xtm1
+
+. 
+.  
+. xtset dam 
+       panel variable:  dam (unbalanced)
+
+. xtreg w i.sex i.dose size, fe
+note: 1.dose omitted because of collinearity
+note: 2.dose omitted because of collinearity
+note: size omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs     =        321
+Group variable: dam                             Number of groups  =         27
+
+R-sq:                                           Obs per group:
+     within  = 0.1720                                         min =          2
+     between = 0.1066                                         avg =       11.9
+     overall = 0.0417                                         max =         18
+
+                                                F(1,293)          =      60.88
+corr(u_i, Xb)  = -0.1087                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+           w |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         sex |
+     female  |  -.3752769   .0480948    -7.80   0.000    -.4699319   -.2806219
+             |
+        dose |
+        low  |          0  (omitted)
+       high  |          0  (omitted)
+             |
+        size |          0  (omitted)
+       _cons |   6.256609   .0318638   196.35   0.000     6.193898     6.31932
+-------------+----------------------------------------------------------------
+     sigma_u |  .61786598
+     sigma_e |  .40469463
+         rho |  .69978569   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(26, 293) = 19.02                    Prob > F = 0.0000
+
+. reg w i.sex i.dose i.dam size
+note: 20.dam omitted because of collinearity
+note: 27.dam omitted because of collinearity
+note: size omitted because of collinearity
+
+      Source |       SS           df       MS      Number of obs   =       321
+-------------+----------------------------------   F(27, 293)      =     19.58
+       Model |  86.6026222        27  3.20750452   Prob > F        =    0.0000
+    Residual |  47.9868795       293  .163777746   R-squared       =    0.6435
+-------------+----------------------------------   Adj R-squared   =    0.6106
+       Total |  134.589502       320  .420592193   Root MSE        =    .40469
+
+------------------------------------------------------------------------------
+           w |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         sex |
+     female  |  -.3752769   .0480948    -7.80   0.000    -.4699319   -.2806219
+             |
+        dose |
+        low  |  -.7862384   .1545583    -5.09   0.000    -1.090424   -.4820533
+       high  |   -.903889   .1784536    -5.07   0.000    -1.255102   -.5526757
+             |
+         dam |
+          2  |  -.5396362   .1592101    -3.39   0.001    -.8529767   -.2262958
+          3  |   .5725462    .233788     2.45   0.015     .1124295    1.032663
+          4  |  -.5199736   .1592719    -3.26   0.001    -.8334355   -.2065116
+          5  |   .0596296   .1620263     0.37   0.713    -.2592533    .3785125
+          6  |   .1205556   .1784536     0.68   0.500    -.2306577    .4717689
+          7  |  -.5474538   .1510336    -3.62   0.000    -.8447022   -.2502055
+          8  |  -.8772986    .152876    -5.74   0.000    -1.178173   -.5764244
+          9  |  -1.517086   .1526577    -9.94   0.000    -1.817531   -1.216641
+         10  |  -.2334047   .1623076    -1.44   0.151    -.5528413    .0860319
+         11  |  -.3134282   .1454601    -2.15   0.032    -.5997073   -.0271491
+         12  |   1.501423   .3050058     4.92   0.000     .9011431    2.101703
+         13  |  -.2629283   .1545583    -1.70   0.090    -.5671135    .0412569
+         14  |  -.2157431   .1454513    -1.48   0.139    -.5020048    .0705186
+         15  |   .0655047   .1511679     0.43   0.665    -.2320077    .3630172
+         16  |    .112513   .1522954     0.74   0.461    -.1872186    .4122446
+         17  |  -.5455011    .148225    -3.68   0.000    -.8372218   -.2537804
+         18  |   .2610344   .1468756     1.78   0.077    -.0280305    .5500992
+         19  |   .2053123   .1634961     1.26   0.210    -.1164634     .527088
+         20  |          0  (omitted)
+         21  |  -.7429296   .1729992    -4.29   0.000    -1.083408   -.4024511
+         22  |  -.4715648    .186117    -2.53   0.012    -.8378606   -.1052691
+         23  |   1.420648   .2702723     5.26   0.000     .8887266    1.952569
+         24  |   .0635877   .1795752     0.35   0.724     -.289833    .4170085
+         25  |   .6382755   .1966565     3.25   0.001     .2512372    1.025314
+         26  |   .5234565   .1919687     2.73   0.007     .1456443    .9012688
+         27  |          0  (omitted)
+             |
+        size |          0  (omitted)
+       _cons |   6.970092   .1179201    59.11   0.000     6.738014     7.20217
+------------------------------------------------------------------------------
+
+. 
+. 
+. *3.4.5
+. estimates restore xtm1
+(results xtm1 are active now)
+
+. predict lev2, reffects
+
+. predict compse, reses
+
+. generate diagse = sqrt(exp(2*[lns1_1_1]_cons) - compse^2)
+
+. gen lev2s=lev2/diagse
+
+. twoway (scatter lev2 lev2s)
+
+. hist(lev2s)
+(bin=17, start=-2.1932089, width=.22538215)
+
+. 
+. predict lev1, rstandard
+
+. hist(lev1)
+(bin=17, start=-7.5740137, width=.62507349)
+
+. 
+. 
+. 
+. xtmixed w i.sex i.dose size|| dam: , mle vce(robust)
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log pseudolikelihood = -189.74455  
+Iteration 1:   log pseudolikelihood = -189.74455  
+
+Computing standard errors:
+
+Mixed-effects regression                        Number of obs     =        321
+Group variable: dam                             Number of groups  =         27
+
+                                                Obs per group:
+                                                              min =          2
+                                                              avg =       11.9
+                                                              max =         18
+
+                                                Wald chi2(4)      =     161.81
+Log pseudolikelihood = -189.74455               Prob > chi2       =     0.0000
+
+                                   (Std. Err. adjusted for 27 clusters in dam)
+------------------------------------------------------------------------------
+             |               Robust
+           w |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         sex |
+     female  |  -.3606255   .0517147    -6.97   0.000    -.4619844   -.2592667
+             |
+        dose |
+        low  |  -.4422784   .1382607    -3.20   0.001    -.7132643   -.1712925
+       high  |  -.8729375   .1609761    -5.42   0.000    -1.188445   -.5574301
+             |
+        size |  -.1297784   .0164994    -7.87   0.000    -.1621165   -.0974402
+       _cons |   8.321449   .1991237    41.79   0.000     7.931174    8.711724
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+                             |               Robust           
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+dam: Identity                |
+                   sd(_cons) |   .2872853   .0405282      .2178872    .3787869
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .4036584   .0637384      .2962154     .550073
+------------------------------------------------------------------------------
+
+. estimates store xtm2
+
+. 
+end of do-file
+
+. exit, clear
