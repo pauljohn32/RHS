@@ -1,0 +1,399 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-4.3/Ex-4.3.log
+  log type:  text
+ opened on:  23 Feb 2016, 13:52:20
+
+. 
+. * Kreft and de Leew (1998) homework data
+. * Download OR use previously saved version
+. * use http://www.stata-press.com/data/mlmus3/homework, clear
+. * saveold homework.dta12, version(12) replace
+. * or
+. use homework.dta12
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. * 4.3.1
+. 
+. * math_ji = beta_0 + beta_1 homework_ji + beta_2 white_ji + beta_3 ratio
+. *           + b0_j + b1_j homework + e_ji
+. 
+. 
+. * 4.3.2
+. 
+. mixed math homework white ratio || schid: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -1858.5037  
+Iteration 1:   log likelihood = -1858.5037  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        519
+Group variable: schid                           Number of groups  =         23
+
+                                                Obs per group:
+                                                              min =          5
+                                                              avg =       22.6
+                                                              max =         67
+
+                                                Wald chi2(3)      =      92.88
+Log likelihood = -1858.5037                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    homework |   2.330408   .2748435     8.48   0.000     1.791725    2.869092
+       white |   4.147582   1.088655     3.81   0.000     2.013857    6.281306
+       ratio |  -.1433672   .1830593    -0.78   0.434    -.5021569    .2154225
+       _cons |   45.86668   3.364739    13.63   0.000     39.27192    52.46145
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schid: Identity              |
+                  var(_cons) |   13.91931   5.296938      6.602317    29.34533
+-----------------------------+------------------------------------------------
+               var(Residual) |   70.23038   4.463482      62.00505    79.54686
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 54.71         Prob >= chibar2 = 0.0000
+
+. estimates store m0
+
+. 
+. mixed math homework white ratio || schid: homework, mle covar(unstructured)
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -1813.6309  
+Iteration 1:   log likelihood = -1813.6309  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        519
+Group variable: schid                           Number of groups  =         23
+
+                                                Obs per group:
+                                                              min =          5
+                                                              avg =       22.6
+                                                              max =         67
+
+                                                Wald chi2(3)      =      17.39
+Log likelihood = -1813.6309                     Prob > chi2       =     0.0006
+
+------------------------------------------------------------------------------
+        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    homework |    1.90915    .894741     2.13   0.033     .1554895     3.66281
+       white |   3.394819   .9751601     3.48   0.000     1.483541    5.306098
+       ratio |  -.1440846   .1847356    -0.78   0.435    -.5061597    .2179905
+       _cons |    46.4417   3.626853    12.80   0.000      39.3332     53.5502
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schid: Unstructured          |
+               var(homework) |   16.34964   5.694789      8.260829    32.35881
+                  var(_cons) |   55.07154   18.77696      28.22962    107.4359
+         cov(homework,_cons) |  -25.76305   9.549346     -44.47942   -7.046676
+-----------------------------+------------------------------------------------
+               var(Residual) |   52.58012   3.422369      46.28263    59.73449
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(3) = 144.46                Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. estimates store m1
+
+. 
+. lrtest m1 m0
+
+Likelihood-ratio test                                 LR chi2(2)  =     89.75
+(Assumption: m0 nested in m1)                         Prob > chi2 =    0.0000
+
+Note: The reported degrees of freedom assumes the null hypothesis is not on
+      the boundary of the parameter space.  If this is not true, then the
+      reported test is conservative.
+
+. 
+. 
+. * 4.3.3
+. * variance of math conditional on predictors. That's just the variance
+. * of the combined errors.
+. *
+. * If only random intercept, easy:
+. * combined error is {b0_j + e_ji}.
+. * Var(b0_j) + Var(e_ji) + 2 Cov(b0_j, e_ji)
+. * Assert Cov(b0_j, e_ji) = 0
+. *
+. * Random slope is more work. See RHS p. 191. I refuse to write zeta, though :)
+. * Combined error is {b0_j + b1_j homework + e_ji}
+. * Apply the variance law to terms grouped like this (b0_j + b1_j homework) + e
+> _ji)
+. * Var(b0_j + b1_j homework + e_ji) = Var(b0_j + b1_j homework) + Var(e_ji)
+. *   + 2 Cov(b1_j, e_ji)
+. * < Last term is equal to 0 because b's and e are uncorrelated>*
+. *  Now solve
+. *  Var(b0_j + b1_j homework) + Var(e_ji)
+. * = Var(b0_j)  + homework^2 Var(b1_j) + 2 homework Cov(b0_j, b1_j) + Var(e_ji)
+. 
+. 
+. 
+. * 4.3.4
+. *  math = beta*_0 + beta*_1 homework + beta_2 white + beta_3 ratio + e
+. *
+. *  beta*_0 = beta_0 + b0_j
+. *  beta*_1 = beta_1 + beta_5 meanses + b1_j
+. *
+. *  math = beta_0 +  (beta_1 + beta_5 meanses + b1_j) homework + 
+. *         beta_2 white + beta_3 ratio + b0_j + e
+. *
+. *       = beta_0 +  beta_1 homework + beta_5 meanses homework + beta_2 white
+. *                + beta_3 ratio + b0_j  + b1_j homework +  e
+. *
+. 
+. 
+. *4.3.5
+. 
+. mixed math homework c.homework#c.meanses white ratio || schid: homework, mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -1826.2164  
+Iteration 1:   log likelihood = -1826.2164  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        519
+Group variable: schid                           Number of groups  =         23
+
+                                                Obs per group:
+                                                              min =          5
+                                                              avg =       22.6
+                                                              max =         67
+
+                                                Wald chi2(4)      =      15.43
+Log likelihood = -1826.2164                     Prob > chi2       =     0.0039
+
+------------------------------------------------------------------------------
+        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    homework |   1.970192   .8001468     2.46   0.014     .4019333    3.538451
+             |
+  c.homework#|
+   c.meanses |   .6261543   1.407001     0.45   0.656    -2.131516    3.383825
+             |
+       white |   3.029962   1.019558     2.97   0.003     1.031664    5.028259
+       ratio |  -.0958036    .311293    -0.31   0.758    -.7059267    .5143195
+       _cons |   46.01789   5.620507     8.19   0.000      35.0019    57.03389
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schid: Independent           |
+               var(homework) |   12.19193   4.523976      5.891459    25.23027
+                  var(_cons) |   43.08413   15.31613      21.46449    86.47965
+-----------------------------+------------------------------------------------
+               var(Residual) |   53.34153   3.528952      46.85457     60.7266
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(2) = 88.33                 Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. estimates store m3
+
+. 
+. 
+. * I think we need to insert main effect of meanses
+. mixed math c.homework##c.meanses white ratio || schid: homework, mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -1825.0746  
+Iteration 1:   log likelihood = -1825.0746  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        519
+Group variable: schid                           Number of groups  =         23
+
+                                                Obs per group:
+                                                              min =          5
+                                                              avg =       22.6
+                                                              max =         67
+
+                                                Wald chi2(5)      =      18.36
+Log likelihood = -1825.0746                     Prob > chi2       =     0.0025
+
+------------------------------------------------------------------------------
+        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    homework |    1.97359   .7866738     2.51   0.012     .4317376    3.515442
+     meanses |   4.116118   2.635728     1.56   0.118    -1.049814     9.28205
+             |
+  c.homework#|
+   c.meanses |   .4054292   1.389929     0.29   0.771    -2.318782     3.12964
+             |
+       white |   2.915928   1.021643     2.85   0.004     .9135446     4.91831
+       ratio |   .0186849   .3029815     0.06   0.951     -.575148    .6125178
+       _cons |   44.54374   5.389595     8.26   0.000     33.98033    55.10715
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schid: Independent           |
+               var(homework) |   11.72168   4.424397      5.593717    24.56289
+                  var(_cons) |   37.49185   13.90233      18.12605    77.54798
+-----------------------------+------------------------------------------------
+               var(Residual) |   53.47202   3.551912      46.94453    60.90714
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(2) = 69.78                 Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. 
+. 
+. estimates store m4
+
+. 
+. egen pickone = tag(schid)
+
+. predict eb0 eb1, reffects
+
+. 
+. predict m4hat, fitted
+
+. sort schid homework
+
+. predict b0_se b1_se, reses
+
+. 
+. * what is this? see p. 208. read help gsort
+. 
+. gsort + eb0 - pickone
+
+. generate rank = sum(pickone)
+
+. 
+. serrbar eb0 b0_se rank
+
+. * See how to elaborate that p. 208
+. gen labpos = eb0 + 1.96 * b0_se + 1
+
+. serrbar eb0 b0_se rank, scale (1.96) ///
+> addplot(scatter labpos rank, mlabel(schid) msymbol(none) mlabpos(0))
+
+. 
+. 
+. 
+. 
+. gsort + eb1 - pickone
+
+. generate rank_b1 = sum(pickone)
+
+. 
+. serrbar eb1 b1_se rank_b1
+
+. * See how to elaborate that p. 208
+. gen labpos_b1 = eb1 + 1.96 * b1_se + 1
+
+. serrbar eb1 b1_se rank_b1, scale(1.96) ///
+> addplot(scatter labpos_b1 rank_b1, mlabel(schid) msymbol(none))
+
+. 
+. * Don't understand why following fails, don't know rules on "m" notation
+. * serrbar eb1 b1_se rank_b1, scale(1.96) ///
+> * addplot(scatter labpos_b1 rank_b1, mlabel(schid) msymbol(none) mlabpos_b1(0)
+> )
+. 
+. 
+. 
+. * Horrible
+. hist eb0 if pickone==1
+(bin=4, start=-5.997335, width=2.636449)
+
+. hist eb1 if pickone==1
+(bin=4, start=-8.5722094, width=4.494107)
+
+. 
+. * Can't make spaghetti plot unless we deal with white, ratio
+. * See the problem? Its something I deal with in rockchalk plotSlopes a lot
+. mixed math c.homework##c.meanses || schid: homework, mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood =  -1829.132  
+Iteration 1:   log likelihood =  -1829.132  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =        519
+Group variable: schid                           Number of groups  =         23
+
+                                                Obs per group:
+                                                              min =          5
+                                                              avg =       22.6
+                                                              max =         67
+
+                                                Wald chi2(3)      =       9.83
+Log likelihood =  -1829.132                     Prob > chi2       =     0.0201
+
+------------------------------------------------------------------------------
+        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    homework |   2.046041   .7957887     2.57   0.010     .4863238    3.605758
+     meanses |   4.654497   2.607217     1.79   0.074    -.4555545    9.764548
+             |
+  c.homework#|
+   c.meanses |   .3900578    1.40682     0.28   0.782    -2.367259    3.147374
+             |
+       _cons |   46.96294   1.474616    31.85   0.000     44.07274    49.85313
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schid: Independent           |
+               var(homework) |   12.02636   4.514274      5.762662    25.09836
+                  var(_cons) |    39.5949   14.55458      19.26409    81.38232
+-----------------------------+------------------------------------------------
+               var(Residual) |   54.20814   3.596985      47.59737    61.73708
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(2) = 84.17                 Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. predict m4hat2, fitted
+
+. twoway(line m4hat2 homework, connect(ascending))
+
+. 
+. 
+. 
+. 
+. 
+end of do-file
+
+. exit, clear
