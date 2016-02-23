@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-3.2/Ex-3.2.log
+  log type:  text
+ opened on:  23 Feb 2016, 14:00:35
+
+. 
+. * Joop Hox's data
+. * use http://www.stata-press.com/data/mlmus3/gpa, clear
+. * save gpa.dta
+. use gpa.dta, replace
+
+. saveold gpa.dta12, version(12)
+(saving in Stata 12 format, which can be read by Stata 11 or 12)
+file gpa.dta12 already exists
+r(602);
+
+end of do-file
+r(602);
