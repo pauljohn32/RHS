@@ -14,11 +14,6 @@ use homework.dta12
 
 
 
-
-
-
-
-
 * 4.3.1
 
 * math_ji = beta_0 + beta_1 homework_ji + beta_2 white_ji + beta_3 ratio

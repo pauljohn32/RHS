@@ -24,10 +24,14 @@ dotplot(ranef(m2, condVar = TRUE))
 
 ## Here's a shocker
 anova(m2, m1)
-## Really?
+## Really? Look at the pictures! 
 
+## Here's a spaghetti plot. 
 plot(m2)
 m2coef <- coef(m2)[["varietyf"]]
 m2coef$variety <- rownames(m2coef)
 plot(yield ~ moist, data = dat, col = dat$variety)
 apply(m2coef, 1, function(x){ browser();  abline(a = x[1], b = x[2], col = x["variety"])})
+
+## If Var(e) is small enough, even trivial slope differences are
+## "statistically significant".

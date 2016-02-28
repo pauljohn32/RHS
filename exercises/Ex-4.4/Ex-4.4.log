@@ -1,103 +1,32 @@
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-4.4/Ex-4.4.log
   log type:  text
- opened on:  23 Feb 2016, 13:53:40
+ opened on:  24 Feb 2016, 11:07:49
 
 . 
-. * Wheat data
-. * use http://www.stata-press.com/data/mlmus3/wheat, clear
-. * saveold wheat.dta12, version(12) replace
+end of do-file
+
+. do "/tmp/SD09373.000000"
+
 . use wheat.dta12
 
 . 
-. * Comment: This data has the smallest error variance I've ever seen
-. * in supposedly "real" empirical data.
-. 
-. 
-. 
-. * 4.4.1
-. 
-. 
-. * 4.4.2
-. 
-. * May need several models. First, just fixed effects
-. 
-. xtset variety
-       panel variable:  variety (balanced)
+end of do-file
 
-. xtreg yield moist, mle
-
-Fitting constant-only model:
-Iteration 0:   log likelihood =  -229.0959
-Iteration 1:   log likelihood =   -229.084
-Iteration 2:   log likelihood = -229.08398
-
-Fitting full model:
-Iteration 0:   log likelihood = -120.97316
-Iteration 1:   log likelihood = -111.42322
-Iteration 2:   log likelihood = -111.42256
-Iteration 3:   log likelihood = -111.42256
-
-Random-effects ML regression                    Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-Random effects u_i ~ Gaussian                   Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                LR chi2(1)        =     235.32
-Log likelihood  = -111.42256                    Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6731315   .0147105    45.76   0.000     .6442994    .7019636
-       _cons |   32.94774   1.340335    24.58   0.000     30.32073    35.57475
--------------+----------------------------------------------------------------
-    /sigma_u |   3.852903   .8857246                      2.455329    6.045978
-    /sigma_e |   1.510232          .                             .           .
-         rho |   .8668197          .                             .           .
-------------------------------------------------------------------------------
-LR test of sigma_u=0: chibar2(01) = 109.24             Prob >= chibar2 = 0.000
-
-. estimates store xt1
+. do "/tmp/SD09373.000000"
 
 . 
-. * Can use mixed to fit model with no random effects
-. mixed yield moist, mle stddev
-
-Mixed-effects ML regression                     Number of obs     =         60
-
-                                                Wald chi2(1)      =     536.30
-Log likelihood = -166.04356                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .7373937   .0318416    23.16   0.000     .6749852    .7998022
-       _cons |   30.66107   1.237332    24.78   0.000     28.23595     33.0862
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-                sd(Residual) |   3.851467   .3515893      3.220494    4.606064
-------------------------------------------------------------------------------
-
-. estimates store m1
-
-. 
-. * Can't figure out why that slightly different from this
-. mixed yield moist || variety: , mle  stddev
+. mixed yield c.moist##i.variety || variety:moist, mle stddev
 
 Performing EM optimization: 
 
 Performing gradient-based optimization: 
 
-Iteration 0:   log likelihood = -100.12929  
-Iteration 1:   log likelihood = -100.12929  
+Iteration 0:   log likelihood = -42.123671  
+Iteration 1:   log likelihood = -41.540417  
+Iteration 2:   log likelihood = -41.520012  
+Iteration 3:   log likelihood = -41.520012  
 
 Computing standard errors:
 
@@ -109,199 +38,54 @@ Group variable: variety                         Number of groups  =         10
                                                               avg =        6.0
                                                               max =          6
 
-                                                Wald chi2(1)      =    6429.93
-Log likelihood = -100.12929                     Prob > chi2       =     0.0000
+                                                Wald chi2(19)     =   37795.42
+Log likelihood = -41.520012                     Prob > chi2       =     0.0000
 
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6715811   .0083752    80.19   0.000      .655166    .6879962
-       _cons |   33.00291   1.271344    25.96   0.000     30.51112     35.4947
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-variety: Identity            |
-                   sd(_cons) |   3.892558   .8781672      2.501513    6.057139
------------------------------+------------------------------------------------
-                sd(Residual) |   .8590415   .0859177      .7061234    1.045076
-------------------------------------------------------------------------------
-LR test vs. linear model: chibar2(01) = 131.83        Prob >= chibar2 = 0.0000
-
-. estimates store m2
-
-. lrtest m1 m2
-
-Likelihood-ratio test                                 LR chi2(1)  =    131.83
-(Assumption: m1 nested in m2)                         Prob > chi2 =    0.0000
-
-Note: The reported degrees of freedom assumes the null hypothesis is not on
-      the boundary of the parameter space.  If this is not true, then the
-      reported test is conservative.
-
-. 
-. * Here's the one the question asks for
-. mixed yield moist || variety: moist, mle covariance(unstructured)  stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -91.027788  
-Iteration 1:   log likelihood = -91.027788  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-                                                Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                Wald chi2(1)      =    1737.56
-Log likelihood = -91.027788                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6619952   .0158813    41.68   0.000     .6308685    .6931219
-       _cons |   33.42029   1.327296    25.18   0.000     30.81884    36.02174
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-variety: Unstructured        |
-                   sd(moist) |   .0458393   .0125294      .0268272    .0783248
-                   sd(_cons) |   4.118142   .9440067      2.627721    6.453915
-           corr(moist,_cons) |  -.3398586   .3044418     -.7733255    .3101244
------------------------------+------------------------------------------------
-                sd(Residual) |   .5936776   .0666898      .4763568    .7398931
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 150.03                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store m3
-
-. 
-. * 4.4.3
-. lrtest m2 m3
-
-Likelihood-ratio test                                 LR chi2(2)  =     18.20
-(Assumption: m2 nested in m3)                         Prob > chi2 =    0.0001
-
-Note: The reported degrees of freedom assumes the null hypothesis is not on
-      the boundary of the parameter space.  If this is not true, then the
-      reported test is conservative.
-
-. * That is difficult to believe. Wait till you see plots
-. 
-. * Considered blowing this up by excluding the covariance, but not real reason
-. mixed yield moist || variety: moist, mle  stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -91.548328  
-Iteration 1:   log likelihood = -91.548328  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-                                                Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                Wald chi2(1)      =    1813.21
-Log likelihood = -91.548328                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |    .662225   .0155519    42.58   0.000     .6317439     .692706
-       _cons |   33.39541   1.304202    25.61   0.000     30.83922     35.9516
-------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+          yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+          moist |   .6077128   .0124644    48.76   0.000      .583283    .6321425
+                |
+        variety |
+             2  |  -2.844581   .8429087    -3.37   0.001    -4.496652   -1.192511
+             3  |  -1.871277   .7903544    -2.37   0.018    -3.420343   -.3222105
+             4  |  -.3432833   .7323671    -0.47   0.639    -1.778696     1.09213
+             5  |   .2294764   1.121912     0.20   0.838     -1.96943    2.428383
+             6  |    3.46207    .690504     5.01   0.000     2.108707    4.815433
+             7  |  -12.05622   .6729943   -17.91   0.000    -13.37527   -10.73718
+             8  |   1.175528   .7302294     1.61   0.107    -.2556957    2.606751
+             9  |  -1.434985   .7917805    -1.81   0.070    -2.986846    .1168767
+            10  |   3.494313   1.392236     2.51   0.012     .7655807    6.223044
+                |
+variety#c.moist |
+             2  |  -.0354326   .0260328    -1.36   0.173    -.0864559    .0155908
+             3  |   .1297872   .0190785     6.80   0.000     .0923941    .1671804
+             4  |   .0264085   .0210603     1.25   0.210    -.0148689     .067686
+             5  |   .0284318   .0240342     1.18   0.237    -.0186744     .075538
+             6  |   .0790988   .0161154     4.91   0.000     .0475132    .1106844
+             7  |   .1164752   .0189384     6.15   0.000     .0793566    .1535938
+             8  |   .0791545   .0188487     4.20   0.000     .0422118    .1160972
+             9  |    .080266   .0190236     4.22   0.000     .0429804    .1175516
+            10  |   .0027604   .0282729     0.10   0.922    -.0526535    .0581742
+                |
+          _cons |   34.58378   .5478187    63.13   0.000     33.51007    35.65748
+---------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
 -----------------------------+------------------------------------------------
 variety: Independent         |
-                   sd(moist) |   .0447111   .0123205      .0260532    .0767309
-                   sd(_cons) |   4.044682   .9248376      2.583763    6.331638
+                   sd(moist) |   3.46e-15   2.27e-14      8.96e-21    1.34e-09
+                   sd(_cons) |   1.18e-11   1.34e-07             0           .
 -----------------------------+------------------------------------------------
-                sd(Residual) |   .5959606   .0674173      .4774483      .74389
+                sd(Residual) |   .4833867   .0441285      .4041925    .5780976
 ------------------------------------------------------------------------------
-LR test vs. linear model: chi2(2) = 148.99                Prob > chi2 = 0.0000
+LR test vs. linear model: chi2(2) = 0.00                  Prob > chi2 = 1.0000
 
 Note: LR test is conservative and provided only for reference.
 
-. 
-. 
-. * 4.4.4
-. predict b0 b1, reffects
+. estimates store m1 
 
-. 
-. egen pickone = tag(variety)
-
-. 
-. hist b0 if pickone == 1
-(bin=3, start=-.06648263, width=.04375659)
-
-. hist b1 if pickone == 1, bin(6)
-(bin=6, start=-10.536839, width=2.5301774)
-
-. twoway(scatter b0 b1)
-
-. 
-. 
-. 
-. 
-. * RHS p. 203 "fitted" includes predicted random effects
-. predict yieldfit, fitted
-
-. gsort +variety +moist 
-
-. 
-. 
-. 
-. * Start by exploring a Trellis plot of observed scores
-. * The by(variety) gives Trellis plot
-. twoway (scatter yield moist) , by(variety) 
-
-. * Restyle
-. twoway (scatter yield moist) , by(variety, compact legend(off)) 
-
-. 
-. twoway (scatter yield moist) , by(variety, compact legend(off) cols(5)) 
-
-. 
-. 
-. * Insert predicted values from mixed model
-. twoway (scatter yield moist)(line yieldfit moist, connect(ascending)), ///
->             by(variety, compact legend(off) cols(5)) 
-
-. 
-. 
-. twoway (scatter yield moist)(line yieldfit moist, connect(ascending)), ///
->             by(variety, compact legend(off) cols(5)) xtitle(Soil Moisture) ///
->             ytitle (Yield) 
-
-.             
-.             
-. 
-. twoway (scatter yield moist)(line yieldfit moist, connect(ascending)), ///
->             xtitle(Soil Moisture) ///
->             ytitle (Yield) legend(order(1 "observed" 2 "predicted"))
-
-.             
 . 
 end of do-file
 

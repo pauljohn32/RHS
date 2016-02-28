@@ -1,14 +1,15 @@
--------------------------------------------------------------------------------
+------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/TrueMounted/ps/ps909-multilevel/RHS/Ex-4.2/Ex-4.2.l
-> og
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-4.2/E
+> x-4.2.log
   log type:  text
- opened on:  23 Feb 2016, 13:30:32
+ opened on:  23 Feb 2016, 17:37:38
 
 . 
 . * High School and Beyond data
 . * Download OR use previously saved version
-. * use http://www.stata-press.com/data/mlmus3/hsb, clear
+. * use http://www.stata-press.com/data/mlmus3/hsb, cl
+> ear
 . * saveold hsb.dta12, version(12) replace
 . use hsb.dta12
 
@@ -17,88 +18,147 @@
 . * For more about the HSB, see
 . * http://pj.freefaculty.org/guides/stat/DataSets/HSB
 . * Especially:
-. *    http://pj.freefaculty.org/guides/stat/DataSets/HSB/00-README.txt
+. *    http://pj.freefaculty.org/guides/stat/DataSets/
+> HSB/00-README.txt
 . 
 . 
-. * In Hierarchical Linear Models, 2ed, Raudenbush and Bryk make an
-. * extensive investigation of the High School and Beyond data. 
+. * In Hierarchical Linear Models, 2ed, Raudenbush and
+>  Bryk make an
+. * extensive investigation of the High School and Bey
+> ond data. 
 . 
-. * Two areas of emphasis debate about their estimates project are
+. * Two areas of emphasis debate about their estimates
+>  project are
 . * 1. Substantive meaning of the predictor 
 . *    sesdev_ji = ses_ji - sesmean_j,
-. *    the deviations of individual SES about their school mean SES.
+. *    the deviations of individual SES about their sc
+> hool mean SES.
 . *
-. * There is widespread agreement that inclusion of sesdev_ji should
-. * also cause us to include sesmean_j in the model. There is a discussion
-. * of this in Rabe-Hesketh & Skrondal, 3ed, p. 151-155. Most MLM books
-. * include a discussion of this. "If one deicdes to center, the only
-. * advice we can give in this book is to add the subtracted mean to the
-. * model" (Ita Kreft and Jan De Leeuw, Introducing Multilevel Modeling,
-. * p. 191) See also Snijders and Bosker, 2ed, p. 88, where they 
-. * emphasize great caution about random slopes on group-centered predictors.
+. * There is widespread agreement that inclusion of se
+> sdev_ji should
+. * also cause us to include sesmean_j in the model. T
+> here is a discussion
+. * of this in Rabe-Hesketh & Skrondal, 3ed, p. 151-15
+> 5. Most MLM books
+. * include a discussion of this. "If one deicdes to c
+> enter, the only
+. * advice we can give in this book is to add the subt
+> racted mean to the
+. * model" (Ita Kreft and Jan De Leeuw, Introducing Mu
+> ltilevel Modeling,
+. * p. 191) See also Snijders and Bosker, 2ed, p. 88, 
+> where they 
+. * emphasize great caution about random slopes on gro
+> up-centered predictors.
 . *
-. * 2. The model for Y includes sesdev_ji as a predictor, but
-. *    sesmean_j is a predictor in the intercept and slope formulae. This
-. *    results in a combined fitting model with an interaction
+. * 2. The model for Y includes sesdev_ji as a predict
+> or, but
+. *    sesmean_j is a predictor in the intercept and s
+> lope formulae. This
+. *    results in a combined fitting model with an int
+> eraction
 . *    sesmean_j sesdev_ji 
-. *    which is extremely difficult to comprehend, since it is the school
-. *    mean SES times individual deviations about the school means.
+. *    which is extremely difficult to comprehend, sin
+> ce it is the school
+. *    mean SES times individual deviations about the 
+> school means.
 . *    See why it is baffling?
-. *    sesmean_j sesdev_ji = sesmean_j (ses_ji - sesmean_j)
-. *                        = sesmean_j ses_ji - sesmean_j* sesmean_j)
+. *    sesmean_j sesdev_ji = sesmean_j (ses_ji - sesme
+> an_j)
+. *                        = sesmean_j ses_ji - sesmea
+> n_j* sesmean_j)
 . 
 . sum
 
-    Variable |        Obs        Mean    Std. Dev.       Min        Max
--------------+---------------------------------------------------------
-    minority |      7,185     .274739    .4464137          0          1
-      female |      7,185    .5281837    .4992398          0          1
-         ses |      7,185    .0001434    .7793552     -3.758      2.692
-     mathach |      7,185    12.74785    6.878246     -2.832     24.993
-        size |      7,185    1056.862    604.1725        100       2713
--------------+---------------------------------------------------------
-      sector |      7,185    .4931106    .4999873          0          1
-      pracad |      7,185    .5344871    .2511861          0          1
-     disclim |      7,185   -.1318694    .9439882     -2.416      2.756
-     himinty |      7,185    .2800278    .4490438          0          1
-    schoolid |      7,185    5277.898    2499.578       1224       9586
--------------+---------------------------------------------------------
-        mean |      7,185    12.74785    3.005817   4.239781   19.71914
-          sd |      7,185    6.197527    .8637071    3.54102   8.481123
-       sdalt |      7,185    6.256328           0   6.256328   6.256328
-        junk |      7,185    47.31597    48.89761   .0000247   239.2892
-      sdalt2 |      7,185    48.39363           0   48.39363   48.39363
--------------+---------------------------------------------------------
-         num |      7,185    48.01628    10.82218         14         67
-          se |      7,185    .9189899    .2017056     .50586   1.823741
-       sealt |      7,185      .92463    .1291964   .7643321   1.672074
-      sealt2 |      7,185    1.028117    .1436564   .8498783   1.859217
-          t2 |      7,185     14.6558    26.41601   .0007423   195.8106
--------------+---------------------------------------------------------
-       t2alt |      7,185    8.537593    11.06274   .0007485   52.82457
-     pickone |      7,185    .0222686    .1475661          0          1
-       mmses |      7,185    .0001434    .4135432  -1.193946   .8249825
-       mnses |      7,185    .0001434    .4135432  -1.193946   .8249825
-          xb |      7,185    12.68545    2.424826   5.683861   17.52193
--------------+---------------------------------------------------------
-       resid |      7,185    .0624026    6.459459  -19.48889   16.44457
+    Variable |        Obs        Mean    Std. Dev.    
+>    Min        Max
+-------------+----------------------------------------
+> -----------------
+    minority |      7,185     .274739    .4464137     
+>      0          1
+      female |      7,185    .5281837    .4992398     
+>      0          1
+         ses |      7,185    .0001434    .7793552     
+> -3.758      2.692
+     mathach |      7,185    12.74785    6.878246     
+> -2.832     24.993
+        size |      7,185    1056.862    604.1725     
+>    100       2713
+-------------+----------------------------------------
+> -----------------
+      sector |      7,185    .4931106    .4999873     
+>      0          1
+      pracad |      7,185    .5344871    .2511861     
+>      0          1
+     disclim |      7,185   -.1318694    .9439882     
+> -2.416      2.756
+     himinty |      7,185    .2800278    .4490438     
+>      0          1
+    schoolid |      7,185    5277.898    2499.578     
+>   1224       9586
+-------------+----------------------------------------
+> -----------------
+        mean |      7,185    12.74785    3.005817   4.
+> 239781   19.71914
+          sd |      7,185    6.197527    .8637071    3
+> .54102   8.481123
+       sdalt |      7,185    6.256328           0   6.
+> 256328   6.256328
+        junk |      7,185    47.31597    48.89761   .0
+> 000247   239.2892
+      sdalt2 |      7,185    48.39363           0   48
+> .39363   48.39363
+-------------+----------------------------------------
+> -----------------
+         num |      7,185    48.01628    10.82218     
+>     14         67
+          se |      7,185    .9189899    .2017056     
+> .50586   1.823741
+       sealt |      7,185      .92463    .1291964   .7
+> 643321   1.672074
+      sealt2 |      7,185    1.028117    .1436564   .8
+> 498783   1.859217
+          t2 |      7,185     14.6558    26.41601   .0
+> 007423   195.8106
+-------------+----------------------------------------
+> -----------------
+       t2alt |      7,185    8.537593    11.06274   .0
+> 007485   52.82457
+     pickone |      7,185    .0222686    .1475661     
+>      0          1
+       mmses |      7,185    .0001434    .4135432  -1.
+> 193946   .8249825
+       mnses |      7,185    .0001434    .4135432  -1.
+> 193946   .8249825
+          xb |      7,185    12.68545    2.424826   5.
+> 683861   17.52193
+-------------+----------------------------------------
+> -----------------
+       resid |      7,185    .0624026    6.459459  -19
+> .48889   16.44457
 
 . 
 . 
 . 
-. * I don't trust the undocumented calculation columns in the hsb data, 
-. * easy enough to create new group mean and deviation SES
-. * Note my naming style. ses is the variable, the mean and group-level
-. * deviation are sesmean and sesdev. They stay together in the varlist.
+. * I don't trust the undocumented calculation columns
+>  in the hsb data, 
+. * easy enough to create new group mean and deviation
+>  SES
+. * Note my naming style. ses is the variable, the mea
+> n and group-level
+. * deviation are sesmean and sesdev. They stay togeth
+> er in the varlist.
 . egen sesmean = mean(ses), by(schoolid) 
 
 . gen sesdev = ses-sesmean
 
 . 
-. * The R&B p. 80 model, random intercept and slope given by 
+. * The R&B p. 80 model, random intercept and slope gi
+> ven by 
 . * same formula
 . *
-. * They write 2 levels out using fixed effects gamma, but there's no need 
+. * They write 2 levels out using fixed effects gamma,
+>  but there's no need 
 . * to get exotic.
 . 
 . * PJ's way of doing the 2 stage model
@@ -106,37 +166,171 @@
 . * Y = Beta0star + Beta1star sesdev_ji + error_ji
 . * j is schoolid in hsb data.
 . 
-. * ## PJ: Whenever you need a fixed parameter, number next Beta
-. * ## PJ: I won't use gammas, no need for fresh set of letters.
-. * ## PJ: I use b0 and b1 for the random effects at j level
+. * ## PJ: Whenever you need a fixed parameter, number
+>  next Beta
+. * ## PJ: I won't use gammas, no need for fresh set o
+> f letters.
+. * ## PJ: I use b0 and b1 for the random effects at j
+>  level
 . 
 . * The R&B formula for level 2 intercept and slope
-. * Beta0star = Beta0 + Beta2 sesmean_j + Beta3 sector_j + b0_j
-. * Beta1star = Beta4 + Beta5 sesmean_j + Beta6 sector_j + b1_j
+. * Beta0star = Beta0 + Beta2 sesmean_j + Beta3 sector
+> _j + b0_j
+. * Beta1star = Beta4 + Beta5 sesmean_j + Beta6 sector
+> _j + b1_j
 . * ## Insert into Y
 . * 
-. * Y = Beta0 + Beta2 sesmean_j + Beta3 sector_j + b0_j +
-. *      (Beta4 + Beta5 sesmean_j + Beta6 sector_j + b1_j) sesdev_ji + error_ji
+. * Y = Beta0 + Beta2 sesmean_j + Beta3 sector_j + b0_
+> j +
+. *      (Beta4 + Beta5 sesmean_j + Beta6 sector_j + b
+> 1_j) sesdev_ji + error_ji
 . * 
-. *   = Beta0 + Beta2 sesmean_j + Beta3 sector_j + b0_j +
-. *       Beta4 sesdev_ji + Beta5 sesmean_j sesdev_ji + 
+. *   = Beta0 + Beta2 sesmean_j + Beta3 sector_j + b0_
+> j +
+. *       Beta4 sesdev_ji + Beta5 sesmean_j sesdev_ji 
+> + 
 . *       Beta6 sector_j sesdev_ji +
 . *      
 . *   = Beta0 + Beta2 sesmean_j + Beta3 sector_j + 
-. *       Beta4 sesdev_ji + Beta5 sesmean_j sesdev_ji + 
+. *       Beta4 sesdev_ji + Beta5 sesmean_j sesdev_ji 
+> + 
 . *       Beta6 sector_j sesdev_ji +
 . *       {b0_j +   b1_j sesdev_ji  + error_ji}
 . *
-. * Hence, we need a model with a random slope on variable sesdev_ji
+. * Hence, we need a model with a random slope on vari
+> able sesdev_ji
 . 
 . 
-. * Need to declare sesmean and sesdev as continuous when used in
+. * Need to declare sesmean and sesdev as continuous w
+> hen used in
 . * interactions, else you get this error:
-. * sesmean:  factor variables may not contain noninteger values
+. * sesmean:  factor variables may not contain noninte
+> ger values
 .  
 . 
 . * Interesting to compare table R&B p. 82, p value.
 . 
+. 
+. mixed mathach c.sesmean i.sector c.sesdev c.sesmean#
+> c.sesdev ///
+>      i.sector#c.sesdev || schoolid: c.sesdev, ///
+>      mle covariance(unstructured) stddev
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -23249.407  
+Iteration 1:   log likelihood = -23248.223  
+Iteration 2:   log likelihood = -23248.215  
+Iteration 3:   log likelihood = -23248.214  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number
+>  of obs                                             
+>             =                                       
+>                    7,185
+Group variable: schoolid                        Number
+>  of groups                                          
+>             =                                       
+>                      160
+
+                                                Obs pe
+> r group:
+                                                      
+>         min                                         
+>             =                                       
+>                       14
+                                                      
+>         avg                                         
+>             =                                       
+>                     44.9
+                                                      
+>         max                                         
+>             =                                       
+>                       67
+
+                                                Wald c
+> hi2(5)                                              
+>             =                                       
+>                   761.64
+Log likelihood = -23248.214                     Prob >
+>  chi2                                               
+>             =                                       
+>                   0.0000
+
+------------------------------------------------------
+> ------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z| 
+>     [95% Con                                        
+>             f. Interval]
+-------------+----------------------------------------
+> ------------------------
+     sesmean |   5.331682   .3655621    14.58   0.000 
+>     4.615194                                        
+>                 6.048171
+    1.sector |   1.226862   .3032677     4.05   0.000 
+>     .6324679                                        
+>                 1.821255
+      sesdev |   2.945668   .1539897    19.13   0.000 
+>     2.643853                                        
+>                 3.247482
+             |
+   c.sesmean#|
+    c.sesdev |   1.042762   .2960158     3.52   0.000 
+>     .4625813                                        
+>                 1.622942
+             |
+      sector#|
+    c.sesdev |
+          1  |  -1.643971   .2373332    -6.93   0.000 
+>    -2.109135                                        
+>                -1.178806
+             |
+       _cons |   12.12794   .1974003    61.44   0.000 
+>     11.74104                                        
+>                 12.51483
+------------------------------------------------------
+> ------------------------
+
+------------------------------------------------------
+> ------------------------
+  Random-effects Parameters  |   Estimate   Std. Err. 
+>     [95% Conf. Interval]
+-----------------------------+------------------------
+> ------------------------
+schoolid: Unstructured       |
+                  sd(sesdev) |    .254774   .4084767  
+>      .011001                                        
+>                 5.900357
+                   sd(_cons) |   1.522162   .1185112  
+>     1.306738                                        
+>                 1.773099
+          corr(sesdev,_cons) |   .4845748   .8773626  
+>    -.9376636                                        
+>                 .9922743
+-----------------------------+------------------------
+> ------------------------
+                sd(Residual) |   6.059801   .0516675  
+>     5.959376                                        
+>                 6.161918
+------------------------------------------------------
+> ------------------------
+LR test vs. linear model: chi2(3) = 216.69            
+>     Prob > chi2 =                                   
+>                   0.0000
+
+Note: LR test is conservative and provided only
+      for reference.
+
+. estimates store mfull
+
+. 
+end of do-file
+
+. do "/tmp/SD05404.000000"
+
 . 
 . mixed mathach c.sesmean i.sector c.sesdev c.sesmean#c.sesdev ///
 >      i.sector#c.sesdev || schoolid: c.sesdev, ///
@@ -164,22 +358,20 @@ Group variable: schoolid                        Number of groups  =        160
                                                 Wald chi2(5)      =     761.64
 Log likelihood = -23248.214                     Prob > chi2       =     0.0000
 
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+           mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------------+----------------------------------------------------------------
+           sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
+          1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
+            sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
+                   |
+c.sesmean#c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
+                   |
+   sector#c.sesdev |
+                1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
+                   |
+             _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
+------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -196,531 +388,64 @@ LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
 Note: LR test is conservative and provided only for reference.
 
 . estimates store mfull
-
-. 
-. * remove random slope
-. mixed mathach c.sesmean i.sector c.sesdev c.sesmean#c.sesdev ///
->       i.sector#c.sesdev || schoolid: , ///
->       mle covariance(unstructured) stddev
-Note: single-variable random-effects specification in schoolid equation;
-      covariance structure set to identity
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23248.715  
-Iteration 1:   log likelihood = -23248.715  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     771.62
-Log likelihood = -23248.715                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.335564   .3653695    14.60   0.000     4.619453    6.051675
-    1.sector |   1.224776   .3031064     4.04   0.000     .6306984    1.818854
-      sesdev |   2.942146   .1511779    19.46   0.000     2.645843    3.238449
-             |
-   c.sesmean#|
-    c.sesdev |   1.044438   .2909881     3.59   0.000     .4741122    1.614764
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.642156   .2330455    -7.05   0.000    -2.098917   -1.185396
-             |
-       _cons |   12.12822   .1973023    61.47   0.000     11.74151    12.51492
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Identity           |
-                   sd(_cons) |   1.520815   .1184479      1.305512    1.771625
------------------------------+------------------------------------------------
-                sd(Residual) |   6.062251    .051158      5.962808    6.163352
-------------------------------------------------------------------------------
-LR test vs. linear model: chibar2(01) = 215.69        Prob >= chibar2 = 0.0000
-
-. estimates store m1
-
-. lrtest mfull m1, stats
-
-Likelihood-ratio test                                 LR chi2(2)  =      1.00
-(Assumption: m1 nested in mfull)                      Prob > chi2 =    0.6061
-
-Note: The reported degrees of freedom assumes the null hypothesis is not on
-      the boundary of the parameter space.  If this is not true, then the
-      reported test is conservative.
-
-Akaike's information criterion and Bayesian information criterion
-
------------------------------------------------------------------------------
-       Model |        Obs  ll(null)  ll(model)      df         AIC        BIC
--------------+---------------------------------------------------------------
-          m1 |      7,185         .  -23248.72       8    46513.43   46568.47
-       mfull |      7,185         .  -23248.21      10    46516.43   46585.23
------------------------------------------------------------------------------
-               Note: N=Obs used in calculating BIC; see [R] BIC note.
-
-.  
-.  
-. * Better run with covariance(independent) to make sure that is what we
-. * got when I realized my Oops!
-. mixed mathach c.sesmean i.sector c.sesdev c.sesmean#c.sesdev ///
->     i.sector#c.sesdev || schoolid: c.sesdev, mle covariance(independent)
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23249.803  
-Iteration 1:   log likelihood = -23248.673  
-Iteration 2:   log likelihood = -23248.666  
-Iteration 3:   log likelihood = -23248.666  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     755.09
-Log likelihood = -23248.666                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |    5.33561   .3653746    14.60   0.000     4.619488    6.051731
-    1.sector |   1.224766   .3031112     4.04   0.000     .6306786    1.818853
-      sesdev |   2.941227   .1539651    19.10   0.000     2.639461    3.242993
-             |
-   c.sesmean#|
-    c.sesdev |   1.037936   .2959503     3.51   0.000     .4578841    1.617988
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.640004   .2372671    -6.91   0.000    -2.105039   -1.174969
-             |
-       _cons |   12.12822   .1973029    61.47   0.000     11.74151    12.51493
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Independent        |
-                 var(sesdev) |   .0627958    .205773       .000102    38.65441
-                  var(_cons) |   2.313611    .360295      1.705038      3.1394
------------------------------+------------------------------------------------
-               var(Residual) |   36.72284   .6261139      35.51595    37.97073
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(2) = 215.78                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store mind
-
-. lrtest mfull mind
-
-Likelihood-ratio test                                 LR chi2(1)  =      0.90
-(Assumption: mind nested in mfull)                    Prob > chi2 =    0.3418
-
-.  
-.  
-. * OOPS, could re-specify the model more compactly using ## notation,
-. * but this causes problem that Stata tries to insert sesdev into model 2
-. * times. Not an error, but a puzzling empty row in output
-. 
-. mixed mathach c.sesmean##c.sesdev ///
->       i1.sector##c.sesdev || schoolid: c.sesdev, mle covariance(unstructured)
-note: sesdev omitted because of collinearity
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23249.407  
-Iteration 1:   log likelihood = -23248.223  
-Iteration 2:   log likelihood = -23248.215  
-Iteration 3:   log likelihood = -23248.214  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     761.64
-Log likelihood = -23248.214                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-      sesdev |          0  (omitted)
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                 var(sesdev) |   .0649098   .2081385       .000121    34.81418
-                  var(_cons) |   2.316976   .3607865      1.707565     3.14388
-           cov(sesdev,_cons) |   .1879216   .1983344     -.2008067    .5766499
------------------------------+------------------------------------------------
-               var(Residual) |   36.72119   .6261891      35.51417    37.96924
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store mfull2
-
-.  
-. * Notice the "sesdev" seems to be "omitted", but it really is not. 
-. * Only way I can find to specify that
-. mixed mathach c.sesmean##c.sesdev i.sector ///
->       i.sector#c.sesdev || schoolid: c.sesdev, mle covariance(unstructured)
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23249.407  
-Iteration 1:   log likelihood = -23248.223  
-Iteration 2:   log likelihood = -23248.215  
-Iteration 3:   log likelihood = -23248.214  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     761.64
-Log likelihood = -23248.214                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                 var(sesdev) |   .0649098   .2081385       .000121    34.81418
-                  var(_cons) |   2.316976   .3607865      1.707565     3.14388
-           cov(sesdev,_cons) |   .1879216   .1983344     -.2008067    .5766499
------------------------------+------------------------------------------------
-               var(Residual) |   36.72119   .6261891      35.51417    37.96924
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store mfull3
-
-. * Confirm that same as mfull2
-. matrix list e(b)
-
-e(b)[1,12]
-        mathach:     mathach:     mathach:     mathach:     mathach:
-                                c.sesmean#          0b.           1.
-        sesmean       sesdev     c.sesdev       sector       sector
-y1    5.3316823    2.9456676    1.0427616            0    1.2268617
-
-        mathach:     mathach:     mathach:    lns1_1_1:    lns1_1_2:
-      0b.sector#    1.sector#                                       
-      co.sesdev     c.sesdev        _cons        _cons        _cons
-y1            0   -1.6439706    12.127936   -1.3673784     .4201315
-
-     atr1_1_1_2:     lnsig_e:
-                             
-          _cons        _cons
-y1    .52894571     1.801677
-
-. * Here's a way to replay that stored object
-. mixed, variance
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     761.64
-Log likelihood = -23248.214                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                 var(sesdev) |   .0649098   .2081385       .000121    34.81418
-                  var(_cons) |   2.316976   .3607865      1.707565     3.14388
-           cov(sesdev,_cons) |   .1879216   .1983344     -.2008067    .5766499
------------------------------+------------------------------------------------
-               var(Residual) |   36.72119   .6261891      35.51417    37.96924
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
-. 
-. 
-. * mixed in Stata 14 defaults to report variance and covariance of
-. * random effects.  Can instead have standard deviation and correlation.
-. * No need to run again
-. 
-. estimates restore mfull
-(results mfull are active now)
-
-. mixed, stddev
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     761.64
-Log likelihood = -23248.214                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                  sd(sesdev) |    .254774   .4084767       .011001    5.900357
-                   sd(_cons) |   1.522162   .1185112      1.306738    1.773099
-          corr(sesdev,_cons) |   .4845748   .8773626     -.9376636    .9922743
------------------------------+------------------------------------------------
-                sd(Residual) |   6.059801   .0516675      5.959376    6.161918
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-.  
-.  
-. * One more thing. Most of us seem to agree that reporting standard
-. * errors and t-tests on random effect estimates is mistaken. Avoid seeing
-. * them:
-. mixed mathach c.sesmean i.sector c.sesdev c.sesmean#c.sesdev ///
->       i.sector#c.sesdev || schoolid: c.sesdev, ///
->       mle covariance(unstructured) nostderr
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23249.407  
-Iteration 1:   log likelihood = -23248.223  
-Iteration 2:   log likelihood = -23248.215  
-Iteration 3:   log likelihood = -23248.214  
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(5)      =     761.64
-Log likelihood = -23248.214                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   5.331682   .3655621    14.58   0.000     4.615194    6.048171
-    1.sector |   1.226862   .3032677     4.05   0.000     .6324679    1.821255
-      sesdev |   2.945668   .1539897    19.13   0.000     2.643853    3.247482
-             |
-   c.sesmean#|
-    c.sesdev |   1.042762   .2960158     3.52   0.000     .4625813    1.622942
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.643971   .2373332    -6.93   0.000    -2.109135   -1.178806
-             |
-       _cons |   12.12794   .1974003    61.44   0.000     11.74104    12.51483
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                 var(sesdev) |   .0649098          .             .           .
-                  var(_cons) |   2.316976          .             .           .
-           cov(sesdev,_cons) |   .1879216          .             .           .
------------------------------+------------------------------------------------
-               var(Residual) |   36.72119          .             .           .
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 216.69                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store mfull
-
-. 
-. 
-. 
-. 
-. * 4.2.4 
-. 
-. * I've retooled this to eliminate the aliased coefficients.
-. mixed mathach c.sesmean##c.sesdev c.disclim c.sesdev#c.disclim ///
->     i1.sector i1.sector#c.sesdev  minority || schoolid: ///
->     c.sesdev, mle covariance(unstructured)
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -23156.932  
-Iteration 1:   log likelihood = -23155.728  
-Iteration 2:   log likelihood = -23155.722  
-Iteration 3:   log likelihood = -23155.722  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      7,185
-Group variable: schoolid                        Number of groups  =        160
-
-                                                Obs per group:
-                                                              min =         14
-                                                              avg =       44.9
-                                                              max =         67
-
-                                                Wald chi2(8)      =    1007.67
-Log likelihood = -23155.722                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-     sesmean |   4.087702   .3530983    11.58   0.000     3.395643    4.779762
-      sesdev |   2.541075   .1765827    14.39   0.000     2.194979    2.887171
-             |
-   c.sesmean#|
-    c.sesdev |   1.033431   .2932992     3.52   0.000     .4585757    1.608287
-             |
-     disclim |    -.38778   .1969545    -1.97   0.049    -.7738038   -.0017563
-             |
-    c.sesdev#|
-   c.disclim |   .1947753   .1692612     1.15   0.250    -.1369706    .5265212
-             |
-    1.sector |   1.166024   .3834196     3.04   0.002     .4145353    1.917513
-             |
-      sector#|
-    c.sesdev |
-          1  |  -1.223453    .320523    -3.82   0.000    -1.851666    -.595239
-             |
-    minority |  -2.730919   .2025487   -13.48   0.000    -3.127908   -2.333931
-       _cons |   12.87921   .2151945    59.85   0.000     12.45744    13.30098
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-schoolid: Unstructured       |
-                 var(sesdev) |   .0450178   .1998487      7.49e-06    270.4867
-                  var(_cons) |   1.901329   .3120356       1.37836    2.622719
-           cov(sesdev,_cons) |  -.0170976   .1819848     -.3737812     .339586
------------------------------+------------------------------------------------
-               var(Residual) |   35.89007   .6120176      34.71036    37.10987
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 169.61                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store mdisc
 
 . 
 end of do-file
+
+. do "/tmp/SD05404.000000"
+
+.  
+. mixed mathach c.sesmean i.sector c.ses c.sesmean#c.ses ///
+>      i.sector#c.ses || schoolid: c.sesdev, ///
+>      mle covariance(unstructured) stddev
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -23249.734  
+Iteration 1:   log likelihood = -23248.579  
+Iteration 2:   log likelihood = -23248.571  
+Iteration 3:   log likelihood =  -23248.57  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+                                                Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                Wald chi2(5)      =     758.37
+Log likelihood =  -23248.57                     Prob > chi2       =     0.0000
+
+---------------------------------------------------------------------------------
+        mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+        sesmean |   3.274976   .3877974     8.45   0.000     2.514907    4.035044
+       1.sector |   1.208552   .3043105     3.97   0.000     .6121148     1.80499
+            ses |   2.910367   .1512488    19.24   0.000     2.613924    3.206809
+                |
+c.sesmean#c.ses |   .8422617   .2753455     3.06   0.002     .3025944    1.381929
+                |
+   sector#c.ses |
+             1  |  -1.576702   .2278533    -6.92   0.000    -2.023286   -1.130118
+                |
+          _cons |   12.10873   .2010682    60.22   0.000     11.71464    12.50281
+---------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schoolid: Unstructured       |
+--Break--
+r(1);
+
+end of do-file
+
+--Break--
+r(1);
+
+. exit, clear
