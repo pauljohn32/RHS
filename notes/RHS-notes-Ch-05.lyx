@@ -1,0 +1,3282 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 5 Longitudinal and Panel Data
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These notes include the 
+\begin_inset Quotes eld
+\end_inset
+
+Introduction to Part III
+\begin_inset Quotes erd
+\end_inset
+
+ pp.
+ 227-245 as well as Chapter 5
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+Notation continuing from previous
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ total (or combined) individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+Longitudinal terminology: 
+\begin_inset Quotes eld
+\end_inset
+
+group
+\begin_inset Quotes erd
+\end_inset
+
+ is often a single person (
+\begin_inset Formula $j$
+\end_inset
+
+ is group of rows) and the rows for each person are differentiated by time
+ (which is 
+\begin_inset Formula $i$
+\end_inset
+
+ in this book).
+ Economists tend to call these 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $t$
+\end_inset
+
+, whereas Laird-Ware/Bates would call them 
+\begin_inset Formula $i$
+\end_inset
+
+ 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction to Part III
+\end_layout
+
+\begin_layout Enumerate
+4 types of models
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Random effects: group-dependent intercepts and slopes thought of as random
+ variables 
+\end_layout
+
+\begin_layout Enumerate
+Fixed effects: group-dependent intercepts and slopes thought of as fixed
+ parameters (just more 
+\begin_inset Formula $\beta$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Dynamic models: Lag y as a predictor (with or without random effects)
+\end_layout
+
+\begin_layout Enumerate
+Marginal models: difficult to understand in general, especially if you are
+ trying to learn what this is from this paragraph.
+ I won't try to clear that up in these notes either.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The most powerful, true, fabulous statement ever, p.
+ 229
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+Which of the approaches to longitudinal modeling outlined above is adopted
+ in practice depends largely on the discipline.
+ In biomedical sciences, random-effects and marginal models are most common,
+ whereas random-effects models are popular in most of the social sciences.
+ In economics, fixed-effects models and dynamic models are predominant.
+ Repeated measures or split-plot analysis of variance (ANOVA) can in some
+ ways be viewed as a fixed-effects model; this approach is used mostly for
+ experimental deisngs in areas such as agriculture and psychology but is
+ increasingly being replaced by random-effects models.
+ Growth-curve modeling is particularly popular in education and psychology.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Balance, Strong Balance, Constant Spacing
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Balance: equal number of rows within each sub-grouping
+\end_layout
+
+\begin_layout Enumerate
+Strong Balance: no missing data values (I've not heard this terminology
+ before)
+\end_layout
+
+\begin_layout Enumerate
+Treating time units as a grouping variable: 
+\end_layout
+
+\begin_layout Enumerate
+Many 
+\begin_inset Quotes eld
+\end_inset
+
+out of the box
+\begin_inset Quotes erd
+\end_inset
+
+ models only make sense with evenly spaced observations.
+ This may be less true in the future, Prof.
+ Pascal Deboeck at KU has done a lot of work on it.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+PJ asks: Why is 
+\begin_inset Quotes eld
+\end_inset
+
+time
+\begin_inset Quotes erd
+\end_inset
+
+ another grouping level? How to think of it?
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 240 Age-period-cohort effects.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Different ideas about time, how it might be relevant, and not analytically
+ separable.
+ 
+\begin_inset Formula 
+\[
+A_{ij}=P_{i}-C_{j}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $C_{j}$
+\end_inset
+
+: cohort begins in year (birth year, for example)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $P_{j}$
+\end_inset
+
+: period is calendar year
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $A_{ij}$
+\end_inset
+
+: age of individual 
+\begin_inset Formula $i$
+\end_inset
+
+ within cohort 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+It is not easy/possible, conceptually or statistically, to separate the
+ effect of 
+\begin_inset Quotes eld
+\end_inset
+
+age
+\begin_inset Quotes erd
+\end_inset
+
+ from 
+\begin_inset Quotes eld
+\end_inset
+
+cohort
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+PJ: insert observation.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Cohort effect usually thought of as intercept shift in a regression line
+\end_layout
+
+\begin_layout Enumerate
+Effect of aging is coefficient like 
+\begin_inset Formula $\beta_{j}\times A_{ij}$
+\end_inset
+
+, if all cohorts experience same effect of aging, then 
+\begin_inset Formula $\beta_{j}=\beta$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Tough to differentiate the effect of aging from common over-time influences
+ on a group of people who are in an age cohort.
+\end_layout
+
+\begin_layout Enumerate
+To say 
+\begin_inset Quotes eld
+\end_inset
+
+old people are conservative
+\begin_inset Quotes erd
+\end_inset
+
+ we have to show that old people who grew up under many different cohorts
+ are all conservative, otherwise the conservatism of today's old people
+ is probably due to a cohort effect that marked a whole generation of people
+ (PJ: get cite for famous Bennington college study claimed a cohort, denied
+ age effect)
+\end_layout
+
+\begin_layout Enumerate
+See graph p.
+ 240, where time plots for several cohorts are drawn.
+ With many cohorts, can separate (maybe) cohort from aging effects.
+\end_layout
+
+\begin_layout Enumerate
+In many models described below, there is multicollinearity between a person's
+ age and the period of the data collection.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Pooled OLS
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fit one model using all of the observations, ignore grouping, time effects.
+\end_layout
+
+\begin_layout Enumerate
+RHS Center variables to 
+\begin_inset Quotes eld
+\end_inset
+
+make the intercept more interpretable
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 241)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate educt = educ - 12
+\end_layout
+
+\begin_layout Plain Layout
+
+generate yeart = year - 1980
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These force the 
+\begin_inset Formula $y$
+\end_inset
+
+ axis to the 
+\begin_inset Quotes eld
+\end_inset
+
+left edge
+\begin_inset Quotes erd
+\end_inset
+
+ of the data.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Run a regular regression, but ask for sandwich variance estimates using
+ clusters at the nr level.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+regress y x1 x2 x3 yeart educt, vce(cluster nr)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+TODO: find out more about which HCCV approach stata uses, what role does
+ the discrete cluster play in their method?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Claim p.
+ 242 
+\begin_inset Quotes eld
+\end_inset
+
+Furthermore, the sandwich estimator of the standard errors, requested by
+ the vce(cluster nr) option, produces consistent estimate of the standard
+ errors even if the residuals are correlated within subjects and have nonconstan
+t variance.
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+TODO: Need to verify this
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Correlated residuals
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Code p.
+ 242-3 (Code below item 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:resid_check"
+
+\end_inset
+
+ ),
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict res, residuals
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+CAUTION
+\series default
+ p.
+ 243 
+\begin_inset Quotes eld
+\end_inset
+
+If running the subsequent commands from a do-file, all the commands from
+ preserve to restore must be run in one block, not one command at a time.
+\begin_inset Quotes erd
+\end_inset
+
+ !!
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+preserve
+\end_layout
+
+\begin_layout Plain Layout
+
+keep nr res yeart
+\end_layout
+
+\begin_layout Plain Layout
+
+reshape wide res, i(nr) j(year)
+\end_layout
+
+\begin_layout Plain Layout
+
+tabstat res*, statistics(sd) format(%3.2f)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Question: Why is 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+year
+\begin_inset Quotes erd
+\end_inset
+
+ and not 
+\begin_inset Quotes eld
+\end_inset
+
+yeart
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 244 
+\begin_inset Quotes eld
+\end_inset
+
+Within-subject correlations over time are sometimes referred to as longitudinal
+ correlations, serial correlations, or autocorrelations, and these term
+ also suggest that correlations may depend on the time interval between
+ occasions.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+NOTE: many sub-theories exist and are used to deal with that within-subject
+ over time correlation, data seldom supports inclusion of all sub-theories
+ within a single model.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why bother?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The question:
+\end_layout
+
+\begin_layout Quote
+Because pooled OLS with robust standard errors for clustered data gives
+ consistent estimates of regression coefficients and standard errors (assuming
+ a correctly specified mean structure), the question is, why are there three
+ chapters on longitudinal modeling in this part of the book? (p.
+ 244)
+\end_layout
+
+\begin_layout Enumerate
+Answers
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Improved causality analysis.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Indeed, the great advantage of longitudinal data as compared with cross-sectiona
+l data is that each subject can serve as his or her own control.
+ Unfortunately, pooled OLS treats longitudinal data as repeated cross-sectional
+ data (where independent samples of subjects are drawn at each occasion)
+ and conflates within- and between-subject comparisons
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 244.)
+\end_layout
+
+\begin_layout Enumerate
+Omitted variable bias, 
+\begin_inset Quotes eld
+\end_inset
+
+unmeasured confounding
+\begin_inset Quotes erd
+\end_inset
+
+, time-constant subject specific variables are not included in the model
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Another limitation of pooled OLS: not consistent 
+\begin_inset Quotes eld
+\end_inset
+
+if there are missing data and if missingness depends on observed responses
+ for the same subject, given the covariates.
+ In this common scenario, it becomes necessary ot model the within-subject
+ residual covariance matrix to obtain consistent estimates.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 244)
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Chapter 5 Subject-specific effects and dynamic models
+\end_layout
+
+\begin_layout Enumerate
+Subject specific intercepts.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+the intercepts can be viewed as representing the effects of omitted covariates
+ that are constant over time
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 247).
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Review section 3.4.7
+\series default
+, fixed-effects approach 
+\begin_inset Quotes eld
+\end_inset
+
+relaxes the assumption that the covariates are uncorrelated with the subject-spe
+cific intercept
+\begin_inset Quotes erd
+\end_inset
+
+(p.
+ 247).
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Hm.
+ Check this p.
+ 247 
+\begin_inset Quotes eld
+\end_inset
+
+However, in modern econometrics the subject-specific intercept is usually
+ viewed as random even if the fixed-effects approach is used.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random Intercept model: 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ is intercept for data group (person) j
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+
+\series bold
+ASSUMPTIONS.
+
+\series default
+ Recall from section 3.7.4 that 
+\begin_inset Quotes eld
+\end_inset
+
+exogeneity assumptions--such as no correlation between covariates and either
+ the random intercept 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ or the level-1 residuals 
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+--are required for consistent estimation of the parameters in the conventional
+ random intercept model
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 248).
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+PJ: This drives the agenda in economics.
+ They won't pay attention to an inconsistent estimator, much less one that's
+ unbiased.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\series bold
+Recall assumptions
+\series default
+, especially 
+\begin_inset Formula $\psi=Var(\zeta_{j}|X_{j})$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta=Var(\epsilon_{ij}|X_{j},\zeta_{j}).$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+It is assumed that the 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ are uncorrelated across subjects, that the 
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+ are uncorrelated across both subjects and occasions, and that the 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+ are uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 248).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Can fit with 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtmixed
+\end_layout
+
+\end_inset
+
+ if we want just the individual specific intercepts (p.
+ 249).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Check the ICC
+\begin_inset Formula 
+\[
+ICC:\hat{\rho}=\frac{\hat{\psi}}{\hat{\psi}+\hat{\theta}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Interpretation of ICC
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The importance of group-level intercept
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+the within-subject correlation between residuals
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If the ICC that meaning in your mind, then it certainly draws attention
+ to the within subject time dependence!
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+RI models accommodating endogenous covariates: group-mean-centering
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+As discussed in section 3.7.4
+\series default
+, subject-mean centered covariates are uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ by construction, and the corresponding coefficients can be consistently
+ estimated.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Stata code pp.
+ 250-251 shows mean centering, leading to an xtmixed estimate: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmixed y x1dev x2dev x3dev x1mean x2mean x3mean || nr: , mle vce(robust)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+estimated standard errors are valid even if the level-1 errors are heteroskedast
+ic or autocorrelated
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 251).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+Unfortunately, this approach produces inconsistent estimate for the effects
+ of the time-constant covariates 
+\begin_inset Formula $\ldots$
+\end_inset
+
+, even if they are exogenous.
+ The estimator for the random-intercept variance is also inconsistent
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 241).
+\end_layout
+
+\begin_layout Enumerate
+TEST between and within effects are equal (p.
+ 252).
+ I missed the part where this test is supposed to matter to me.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+test (x1dev = x1mean) (x2dev = x2mean) (x3dev=x3mean)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+We conclude that the between and within effects are significantly different
+ from each other, which suggests that one or more of the time-varying covariates
+ are endogenous.
+ This test is numerically identical to the simultaneous test that the coefficien
+ts for all the cluster means are zero in a random intercept model that includes
+ the cluster means of the time-varying covariates as well as the noncentered
+ covariates (the approach taken in section 3.7.4).
+ The test is also asymptotically equivalent to the Hausman test discussed
+ in section 3.7.6
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 252).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Test exogeneity for each of the time-varying covariates by performin separate
+ tests of equal between and within effects.
+ (uses lincom)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+For instance, if the random intercept is interpreted as unmeasured ability,
+ then high ability subjects might have higher mean earnings than expected
+ given their observed covariates and be more likely to be union members
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 252).
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Consistent Estimation: Hausman Taylor model.
+ Stata xthtaylor
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Endogenous/Exogenous, time-varying, time-constant
+\end_layout
+
+\begin_layout Enumerate
+4 Variable types
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Exogenous
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Endogenous
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Time-varying
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{ij}^{end}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Time-constant
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{j}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{j}^{end}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Requirements: Must be as many time-varying predictors as endogenous time-constan
+t covariates.
+\end_layout
+
+\begin_layout Enumerate
+Steps that go on inside H-T estimator
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fixed effects estimator of time-varying predictors (section 3.7.2 and 5.4)
+ are consistent.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Get those residuals.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Regress subject-mean residuals on time constant predictors, using the exogenous
+ covariates as instrumental variables: obtains consistent estimates of time-cons
+tant predictors (see display 5.1).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Use estimates from previous to get residuals which which to estimate of
+ 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+GLS transform of output variables using 
+\begin_inset Formula $\theta$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+HT estimator uses 3 sets of instruments
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+deviations from cluster means of time-varying covariates
+\end_layout
+
+\begin_layout Enumerate
+cluster means of exogenous time-varying covariates
+\end_layout
+
+\begin_layout Enumerate
+exogenous time-constant covariates.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+If the random-intercept model is correctly specified (including the designation
+ of exogenous and endogenous covariates), the Hausman-Taylor method will
+ produce consistent and asymptotically efficient estimators for all model
+ parameters, including the regression coefficients of time-constant covariates
+ and the random-intercept variance
+\begin_inset Quotes erd
+\end_inset
+
+(p.
+ 255).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Amemiya and MaCurdy method (
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+amacurdy
+\end_layout
+
+\end_inset
+
+ in Strata) is an enhancement for small samples using more instruments.
+\end_layout
+
+\begin_layout Enumerate
+Use 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xthtaylor 
+\end_layout
+
+\end_inset
+
+in Stata (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:p.-256.-Hausman-Taylor"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+The estimates produced by xthtaylor are highly dependent on which covariates
+ are designated as endogenous.
+ Hence, subject-matter considerations regarding endogeneity should be combined
+ with sensitivity analyses to try to ensure sensible estimates.
+ The Hausman-Taylor estimator produces consistent and asymptotically efficient
+ estimates of the coefficients of endogenous time-varying covariates if
+ the model specification is correct.
+ A Hausman test can therefore be used to compare the estimates for the time-vary
+ing covariates with their consistent (but possibly inefficient) counerparts
+ from the fixed-effects approach...
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 257).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Fixed-intercept model (aka 
+\series bold
+Fixed-Effects
+\series default
+ model in econometrics)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+See section 3.7.2.
+ Can fit by OLS with dummy variables for each subject and omit constant.
+\end_layout
+
+\begin_layout Enumerate
+Also equivalent to a group-mean centered regression, which is how fixed
+ effects models are usually described.
+\end_layout
+
+\begin_layout Enumerate
+This gives consistent estimates of time-varying covariates, 
+\begin_inset Quotes eld
+\end_inset
+
+as long as relevant time-varying covariates (confounders) are not omitted
+ from the model.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+??
+\series default
+ 
+\begin_inset Quotes erd
+\end_inset
+
+These estimated within effects are numerically identical to the corresponding
+ ML estimates for the random-intercept model (5.1) with different within
+ and between effects.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 257) Need to check that.
+\end_layout
+
+\begin_layout Enumerate
+HOWEVER:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Time-constant covariates CANNOT BE ESTIMATED (multicollinearity).
+ 
+\end_layout
+
+\begin_layout Enumerate
+The 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ (intercepts) are not consistently estimated if the number of occasions
+ remains fixed and the number of subjects increases.
+ (??)
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+This is an incidental parameter problem that is due to the number of parameters
+ 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ increasing as the number of subjects increases.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+Usually, the subject-specific effects are not of interest, and they can
+ be eliminated by subject-mean centering the responses and covariates (which
+ is what the xtreg command with with the 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+fe
+\end_layout
+
+\end_inset
+
+ option does).
+ From this perspective, 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ can also be viewed as random intercepts.
+ Because these intercepts are eliminated, it is not necessary to assume
+ that they are uncorrelated with covariates or that they have a constant
+ variance or a normal distribution.
+ The random intercepts could also be correlated across subjects, for instance,
+ because of clustering in states.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The mean-centered estimation of coefficients
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Start with the original theory, where 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ is the within-group intercept
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=\alpha_{j}+\beta_{2}x_{2j}+\ldots+\beta_{4}x_{4ij}+\ldots+\beta_{6}L_{ij}+\beta_{7}P_{i}+\beta_{8}E_{j}+\epsilon_{ij}\label{eq:yDummy}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The within-group means are calculated, and we put them in place of the original
+ variables.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\bar{y}_{.j}=\alpha_{j}+\beta_{2}x_{2j}+\ldots+\beta_{4}\bar{x}_{4.j}+\ldots+\beta_{6}\bar{L}_{.j}+\beta_{7}\bar{P}+\beta_{8}E_{j}+\bar{\epsilon}_{.j}\label{eq:yCentered}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Notes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+All of the i-subscripted variables are replaced by within group averages,
+ where the 
+\begin_inset Formula $i$
+\end_inset
+
+ is replaced by a period.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\bar{\epsilon}.j$
+\end_inset
+
+ is a theoretical quantity, it is not calculated from data.
+ It is written out as book-keeping 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $x_{2}$
+\end_inset
+
+ , 
+\begin_inset Formula $E_{j}$
+\end_inset
+
+ not changed because it is a group level constant.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Subtract equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:yDummy"
+
+\end_inset
+
+) from (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:yCentered"
+
+\end_inset
+
+), term-by term.
+ The group level deviations about the group means appear in the new regression:
+\begin_inset Formula 
+\begin{equation}
+y_{ij}-\bar{y}_{.j}=\beta_{4}\bar{x}_{4.j}+\ldots+\beta_{6}\bar{L}_{.j}+u_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Notes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+CANCELLATION eliminated 
+\begin_inset Formula $\alpha_{j}$
+\end_inset
+
+ as well as 
+\begin_inset Formula $x_{2j}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The group-centered variables 
+\begin_inset Formula $L$
+\end_inset
+
+ and 
+\begin_inset Formula $P$
+\end_inset
+
+ are redundant, we can only keep one.
+ 
+\end_layout
+
+\begin_layout Enumerate
+The new, improved error term has the group mean error removed, so if there
+ were persistent unmeasured group level influences, we abolished them.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+A great advantage of these estimates is that they are not susceptible to
+ bias due to omitted subject-level covariates (level-2 endogeneity)
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 258).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Stata xtreg or regress with the built-in differencing operator
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Hausman Test (section 3.7.6) can be used as a test for endogeneity in the
+ time-varying predictors.
+ Must use FGLS estimate to compare with fixed effects model (DON'T use ML)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Study the Hausman output p.
+ 262.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $H_{0}:$
+\end_inset
+
+ difference in coefficients not systematic
+\end_layout
+
+\begin_layout Enumerate
+Rejected.
+ Similar to test for the joint hypothesis discussed in 5.3.1.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+An advantege of the latter test (based on robust standard errors) ist hat
+ it can be used even if there are heteroskedastic or autocorrelated level-1
+ errors
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 262).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Section 5.4.2: ANCOVA concepts.
+ I refuse to write this out.
+\end_layout
+
+\begin_layout Enumerate
+Random-coefficient model.
+ Run xtmixed with random slope.
+ This just assumes away all the problems we've been stressing about through
+ this chapter.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 266 has very interesting commentary in last paragraph.
+ Concerning random slope coefficients, sometimes they don't make sense in
+ centered data because the effect is always smallest whenever centered x
+ is 0, and depending on how the data is generated, that may be ridiculous.
+ TODO: write out a coherent explanation of that for a lecture.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Fixed-coefficient model: Fixed-Effects with group-varying intercepts and
+ slopes.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Insert a group-varying slope for the variable 
+\begin_inset Formula $L_{ij}$
+\end_inset
+
+, so it is 
+\begin_inset Formula $(\beta_{6}+\alpha_{2j})L_{ij}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+If there's no missing data, could first-difference the data to estimate
+ some of the coefficients.
+ (p.
+ 267).
+\end_layout
+
+\begin_layout Enumerate
+Now you see why they introduced the D operator for Stata in the earlier
+ part, when it seemed useless.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Lagged-response (
+\begin_inset Quotes eld
+\end_inset
+
+dynamic
+\begin_inset Quotes erd
+\end_inset
+
+) models (p.
+ 269)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+AR-1 lag model
+\begin_inset Formula 
+\begin{equation}
+y_{ij}=\beta_{1}+\gamma y_{i-1,j}+\beta_{2}x_{2j}+\ldots+\epsilon_{ij}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+If we had only one 
+\begin_inset Quotes eld
+\end_inset
+
+group
+\begin_inset Quotes erd
+\end_inset
+
+, this would be a time-series exercise.
+\end_layout
+
+\begin_layout Enumerate
+We have groups, however.
+ Usually, we don't have as many observations within each group as we might
+ like.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Can fit in stata using the 
+\begin_inset Quotes eld
+\end_inset
+
+L.
+\begin_inset Quotes erd
+\end_inset
+
+ symbol in the regression formula, or by manually creating a lagged version
+ of the variable (see Stata code below, part 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "enu:LAG:-create-lag-1"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Lagged-response with subject-specific intercepts: Anderson-Hsaio model
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Big specification problem because if there are subject-specific intercepts,
+ then lagged 
+\begin_inset Formula $y$
+\end_inset
+
+ is certainly correlated with the random intercept.
+ Hence biased estimates.
+\end_layout
+
+\begin_layout Enumerate
+Suggestion by Anderson and Hsiao (p.
+ 274).
+ Use the second lag of 
+\begin_inset Formula $y$
+\end_inset
+
+ as an instrumental variable.
+ Use that second lag to predict y-lag-1, and then use the residual in the
+ regression.
+ This method gives consistent estimates of time varying predictors, but
+ does not estimate the time-constant predictors.
+\end_layout
+
+\begin_layout Enumerate
+Caution about Stata 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtivreg, fd
+\end_layout
+
+\end_inset
+
+.
+ Stata uses the second lag of difference, but RHS suggest instead the second
+ lag of y instead.
+ So us Stata 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ivregress
+\end_layout
+
+\end_inset
+
+ function.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Arellano-bond model
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Use more lags as instruments.
+ Arellano and BOnd (1991) Generalized Method of Moments
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Stata's xtabond estimator.
+ (p.
+ 277)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Missing data and dropout
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Jargon, MAR
+\end_layout
+
+\begin_layout Enumerate
+Simulation p.
+ 279
+\end_layout
+
+\begin_layout Enumerate
+xtmixed random intercept model does much better than ordinary pooled OLS
+ estimator.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Stata Code, Introduction to Part III
+\end_layout
+
+\begin_layout Enumerate
+Running example: wagepan.dta 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+use http://www.stata-press.com/data/mlmus3/wagepan
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Wide and long data formats.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Using reshape, see example of reshape to :
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 231 convert long to wide
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+TODO: find out if this
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+format lwage* %5.3f
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+has a permanent effect on the data, or if it simply alters display.
+ I fear the former.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The list function
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+list nr lwage* in 1/5, clean noobs abbreviate(6)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 232 reshape wide to long
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtset
+\end_layout
+
+\end_inset
+
+ puts a session-long setting in place to tell a data set if it is viewed
+ as a panel, and how observations are grouped.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset nr year
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first layer of grouping is 
+\begin_inset Quotes eld
+\end_inset
+
+nr
+\begin_inset Quotes erd
+\end_inset
+
+, within nr groups, observations are sorted by year.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtdescribe
+\end_layout
+
+\end_inset
+
+, p.
+ 233
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtdescribe if lwage < .
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Here we find one of the truly odd features of Stata.
+ Missing is 
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+ but inside the guts, it is coded as the largest possible number that the
+ computer is able to record.
+ So displaying cases for which a variable is smaller than 
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+ is same as asking for all observations with finite, smaller than maximal
+ values.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Output from 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtdescribe
+\end_layout
+
+\end_inset
+
+ has a 
+\begin_inset Quotes eld
+\end_inset
+
+Pattern
+\begin_inset Quotes erd
+\end_inset
+
+ element.
+ I do not understand comments bottom page 233.
+ Need to get output from more example data sets to understand what's going
+ on there.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+quietly xtset nr
+\end_layout
+
+\end_inset
+
+ means don't show the output.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 234,
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtsum
+\end_layout
+
+\end_inset
+
+ is a summary.
+ Output format
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="7">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Var
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+mean
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+StdDev
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Min
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Max
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Observations
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+y
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+overall
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+42.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+33
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N=
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+between
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+22
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n=
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+within
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+T=
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Mean exists only overall here
+\end_layout
+
+\begin_layout Enumerate
+What are 
+\begin_inset Quotes eld
+\end_inset
+
+
+\bar under
+between
+\bar default
+
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+
+\bar under
+within
+\bar default
+
+\begin_inset Quotes erd
+\end_inset
+
+ ?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+between: 
+\begin_inset Quotes eld
+\end_inset
+
+between-subject
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+within: 
+\begin_inset Quotes eld
+\end_inset
+
+within-subject
+\begin_inset Quotes erd
+\end_inset
+
+ variability
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Includes 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+T
+\end_layout
+
+\end_inset
+
+ because of balance, otherwise would be
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+ T-bar
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 235, xttab is a summary for categorical variables.
+ MUST reset xt to disregard time
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+quietly xtset nr
+\end_layout
+
+\begin_layout Plain Layout
+
+xttab union
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The interpretation of 
+\begin_inset Quotes eld
+\end_inset
+
+between
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+within
+\begin_inset Quotes erd
+\end_inset
+
+ still escapes me.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 235 Graphs: 
+\series bold
+box plot
+\series default
+ of responses over time
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+basic
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+graph box y, over(year)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+fancier
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+graph box y, over(year) intensity (0) medtype(line) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    marker(1, mlabel(nr) mlabsize(vsmall) msym(i) mlabpos(0) mlabcol(black))
+ ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    ytitle(whatever you want)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Plot observed Trajectories.
+ Trellis plot, p.
+ 236
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Basic trellis plot simple, insert 
+\begin_inset Quotes eld
+\end_inset
+
+, 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+by (nr, compact)
+\end_layout
+
+\end_inset
+
+ at end of a two-way plot.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway line lwage year, by(nr, compact)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 237.
+ Simple approach of plotting all groups 
+\begin_inset Quotes eld
+\end_inset
+
+messy
+\begin_inset Quotes erd
+\end_inset
+
+, RHS write out code to randomly select some units for time plots.
+ Note the diagonal x labels in the output 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+format lwage* %9.0g
+\end_layout
+
+\begin_layout Plain Layout
+
+sort nr year
+\end_layout
+
+\begin_layout Plain Layout
+
+set seed 123123
+\end_layout
+
+\begin_layout Plain Layout
+
+generate r = runiform() if year==1980
+\end_layout
+
+\begin_layout Plain Layout
+
+* Choose 12 at random as follows
+\end_layout
+
+\begin_layout Plain Layout
+
+egen num = rank(r) if r < .
+\end_layout
+
+\begin_layout Plain Layout
+
+egen number = mean(num), by(nr)
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway line lwage year if number<=12, by(nr, compact) ytitle(whatever) xtitle(wh
+atever) xlabel( , angle(45))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Spaghetti plot for those 12 sets, but drawn on top of scatter of all data
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen mn_lwage = mean(lwage), by(year)
+\end_layout
+
+\begin_layout Plain Layout
+
+sort nr year
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (scatter lwage year, jitter(2) msym(0) msize(tiny)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    (line lwage year if number <= 12, connect(ascending) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    lwidth(vthin) lpatt(solid)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    (line mn_lwage year, sort lpatt(longdash)) if lwage >-2, ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    ytitle(whatever) xtitle(whatever) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+    legend(order( 2 "Individual" 3 "Mean"))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:resid_check"
+
+\end_inset
+
+Pooled OLS regression: just run 
+\begin_inset Quotes eld
+\end_inset
+
+reg
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Check for residual variance patterns.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict res, residuals
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+CAUTION
+\series default
+ p.
+ 243 
+\begin_inset Quotes eld
+\end_inset
+
+If running the subsequent commands from a do-file, all the commands from
+ preserve to restore must be run in one block, not one command at a time.
+\begin_inset Quotes erd
+\end_inset
+
+ !!
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+preserve
+\end_layout
+
+\begin_layout Plain Layout
+
+keep nr res yeart
+\end_layout
+
+\begin_layout Plain Layout
+
+reshape wide res, i(nr) j(year)
+\end_layout
+
+\begin_layout Plain Layout
+
+tabstat res*, statistics(sd) format(%3.2f)
+\end_layout
+
+\begin_layout Plain Layout
+
+correlate res*, wrap
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Question: Why is 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+year
+\begin_inset Quotes erd
+\end_inset
+
+ and not 
+\begin_inset Quotes eld
+\end_inset
+
+yeart
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+HYPO test: TEST between and within effects are equal (p.
+ 252).
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+test (x1dev = x1mean) (x2dev = x2mean) (x3dev=x3mean)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+p.
+ 252.
+ Test exogeneity for each of the time-varying covariates by performin separate
+ tests of equal between and within effects.
+ (uses lincom)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+lincom x1dev-x1mean
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where x1dev is the deviation within group and x1mean is mean within group.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:p.-256.-Hausman-Taylor"
+
+\end_inset
+
+p.
+ 256.
+ Hausman-Taylor
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset nr
+\end_layout
+
+\begin_layout Plain Layout
+
+xthtaylor y x1 x2 x3 x4 x5, endog (x1 x2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Stata 
+\begin_inset Quotes eld
+\end_inset
+
+keeps track of whether covariates are time varying or time constant
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note the predictors are not specified in group mean-centered form, the
+ procedure does that inside.
+ Also, the grouping variable is not declared inside the xthtaylor code,
+ it is obtained from environment xtset.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset CommandInset label
+LatexCommand label
+name "enu:LAG:-create-lag-1"
+
+\end_inset
+
+LAG: create lag-1 response
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+by nr (yeart), sort: generate lag1 = lwage[_n-1]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+NOTE: creates a missing value in the first row within each group.
+ 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+_n
+\end_layout
+
+\end_inset
+
+ is a row counter in Stata
+\end_layout
+
+\begin_layout Enumerate
+Insert 
+\begin_inset Quotes eld
+\end_inset
+
+lag1
+\begin_inset Quotes erd
+\end_inset
+
+ as predictor
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+regress lwage lag1 x2 x3...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Or use Stata symbol 
+\begin_inset Quotes eld
+\end_inset
+
+L
+\begin_inset Quotes erd
+\end_inset
+
+ in the regression, save the trouble of creating the variable explicitly
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+regress lwage L.lwage x2 x3...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Anderson-Hsaio lagged y with subject-specific intercepts.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset nr yeart
+\end_layout
+
+\begin_layout Plain Layout
+
+ivretgress 2sls D.lwage D.(union married) (LD.lwage = L2.1wage)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gives instrumental variables estimates via 2SLS.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Arellano-Bond p.
+ 277
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset nr yeart
+\end_layout
+
+\begin_layout Plain Layout
+
+xtabond lwage union married exper, lags(1) twostep noconstant vce(robust)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
