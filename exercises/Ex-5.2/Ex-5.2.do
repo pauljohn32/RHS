@@ -18,6 +18,7 @@ xtsum
 
 
 
+
 mixed anti pov momage female childage hispanic black momwork married || id: , covariance(unstructured) mle stddev
 estimates store ri1
 
@@ -66,7 +67,9 @@ foreach var of varlist anti pov momage female childage hispanic black momwork ma
 
 
 
-mixed anti momage female childage hispanic black momwork married pov_mn pov_dev || id: , covariance(unstructured) mle stddev
+mixed anti momage female childage hispanic black ///
+                                               momwork married pov_mn pov_dev || id: , ///
+                                                                          covariance(unstructured) mle stddev
 estimates store ri5
 
 
