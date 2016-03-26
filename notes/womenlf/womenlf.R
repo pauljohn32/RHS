@@ -25,3 +25,11 @@ summary(m1)
 outreg(list("Logistic Model 1" = m1))
 
 plotCurves(m1, plotx = "husbinc", modx = "chilpres")
+
+
+dat$workstatn <- ifelse(levels(dat$workstat)[dat$workstat] %in% "employed", 1, 0) 
+plot(workstatn ~ husbinc, data = dat,  col = chilpres, ylim = c(0, 1.2))
+pom <- predictOMatic(m1, predVals = list(husbinc = seq(0,50), chilpres = levels(dat$chilpres)))
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "absent"))
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "present"), lty = 2, col = 4)
+legend("topright", c("absent", "present"), lty = c(1, 2), col = c(1, 4), title = "chilpres", horiz = TRUE)

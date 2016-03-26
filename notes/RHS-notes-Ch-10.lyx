@@ -1,0 +1,2631 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{Sweavel}
+\usepackage{booktabs}
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+\usepackage{graphicx}
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+
+\def\Sweavesize{\normalsize} 
+\def\Rcolor{\color{black}} 
+\def\Rbackground{\color[gray]{0.95}}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+sweave
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+dir.create("plots", showWarnings=F)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% In document Latex options:
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+fvset{listparameters={
+\backslash
+setlength{
+\backslash
+topsep}{0em}}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+SweaveOpts{prefix.string=plots/t,split=T,ae=F,nogin=T, height=4,width=6}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Sweavesize{
+\backslash
+scriptsize} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Rcolor{
+\backslash
+color{black}} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Rbackground{
+\backslash
+color[gray]{0.90}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Roptions, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+options(device = pdf)
+\end_layout
+
+\begin_layout Plain Layout
+
+options(width=160, prompt=" ", continue="  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+options(useFancyQuotes = FALSE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(75645)
+\end_layout
+
+\begin_layout Plain Layout
+
+op <- par() 
+\end_layout
+
+\begin_layout Plain Layout
+
+pjmar <- c(5.1, 5.1, 1.5, 2.1) 
+\end_layout
+
+\begin_layout Plain Layout
+
+#pjmar <- par("mar")
+\end_layout
+
+\begin_layout Plain Layout
+
+options(SweaveHooks=list(fig=function() par(mar=pjmar, ps=12)))
+\end_layout
+
+\begin_layout Plain Layout
+
+pdf.options(onefile=F,family="Times",pointsize=12)
+\end_layout
+
+\begin_layout Plain Layout
+
+library(rockchalk)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 10 Longitudinal and Panel Data
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These notes include the 
+\begin_inset Quotes eld
+\end_inset
+
+Introduction to Part III
+\begin_inset Quotes erd
+\end_inset
+
+ pp.
+ 227-245 as well as Chapter 5
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+Notation continuing from previous
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ total (or combined) individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+Longitudinal terminology: 
+\begin_inset Quotes eld
+\end_inset
+
+group
+\begin_inset Quotes erd
+\end_inset
+
+ is often a single person (
+\begin_inset Formula $j$
+\end_inset
+
+ is group of rows) and the rows for each person are differentiated by time
+ (which is 
+\begin_inset Formula $i$
+\end_inset
+
+ in this book).
+ Economists tend to call these 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $t$
+\end_inset
+
+, whereas Laird-Ware/Bates would call them 
+\begin_inset Formula $i$
+\end_inset
+
+ 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Quick Logit Overview
+\end_layout
+
+\begin_layout Enumerate
+In a Binomial probablity model, 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The expected value of 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ is the same as the probability that 
+\begin_inset Formula $y_{i}=1$
+\end_inset
+
+.
+ Hence
+\begin_inset Formula 
+\begin{equation}
+E[y_{i}|x_{i}]=Pr(y_{i}=1|x_{i})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The predictor variables are all weighted and added together
+\begin_inset Formula 
+\begin{equation}
+X\beta=1+x1_{i}\beta_{1}+x2_{i}\beta_{2}+\ldots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Throw any interactions or squares of 
+\begin_inset Formula $x$
+\end_inset
+
+ you want in there.
+\end_layout
+
+\begin_layout Enumerate
+Call 
+\begin_inset Formula $X_{i}\beta$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+eta
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\eta_{i}$
+\end_inset
+
+ for short.
+ It is 
+\begin_inset Quotes eld
+\end_inset
+
+the linear predictor
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+And then transformed by the 
+\begin_inset Quotes eld
+\end_inset
+
+inverse link function
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+A graph of the logit transformation
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sshape1, include=F, fig=TRUE,height=4,width=6, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+X3 <- seq(0,150,length=200)
+\end_layout
+
+\begin_layout Plain Layout
+
+expbx <- exp((-1)*(-10+.115*X3))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1 <- 1/(1+expbx)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X3,ProbY1,type="l",xlab='x',ylab='Probability(y=1)')
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-sshape1}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+That particular curve was
+\begin_inset Formula 
+\begin{equation}
+Prob(y=1|x)=\frac{1}{1+e^{-(-10+0.115x)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+more generally:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Prob(y=1|x)=\frac{1}{1+e^{-(X_{i}\beta)}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That is mathematically equivalent to
+\begin_inset Formula 
+\begin{equation}
+Prob(y=1|x)=\frac{e^{X_{i}\beta}}{1+e^{X_{i}\beta}}\label{eq:logit2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Writing it as in expression (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:logit2"
+
+\end_inset
+
+) makes it easier to generalize this to a multi-outcome dependent variable.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The effect of adding a 
+\begin_inset Quotes eld
+\end_inset
+
+dummy variable
+\begin_inset Quotes erd
+\end_inset
+
+ (same as shifting the intercept, yes?)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sshape2, include=F, fig=TRUE,height=4,width=6, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+expbx <- exp((-1)*(-10+.115*X3))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1 <- 1/(1+expbx)
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.2 <- 1/(1+ exp((-1)*(-8+0.115*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.3 <- 1/(1+ exp((-1)*(-4+0.115*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X3,ProbY1,type="l",xlab='x',ylab='Probability(y=1)', ylim = c(0,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.2 ~ X3, lty = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.3 ~ X3, lty = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("topleft", legend = c("-10+.115x", "-8+.115x","-4+.115x" ), lty = c(1,2,4))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-sshape2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The effect of adjusting the slope 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sshape3, include=F, fig=TRUE,height=4,width=6, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+expbx <- exp((-1)*(-10+.065*X3))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1 <- 1/(1+expbx)
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.2 <- 1/(1+ exp((-1)*(-10+0.115*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.3 <- 1/(1+ exp((-1)*(-10+0.175*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.4 <- 1/(1+ exp((-1)*(-10+0.3*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X3, ProbY1, type="l", xlab='x', ylab='Probability(y=1)', ylim = c(0,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.2 ~ X3, lty = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.3 ~ X3, lty = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.4 ~ X3, lty = 3)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("topleft", legend = c("-10+.065x", "-10+.115x","-10+.175x", "-10+.3*x"),
+ lty = c(1,2,4,3))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-sshape3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+A change in the 
+\begin_inset Quotes eld
+\end_inset
+
+intercept
+\begin_inset Quotes erd
+\end_inset
+
+ or the 
+\begin_inset Quotes eld
+\end_inset
+
+slope
+\begin_inset Quotes erd
+\end_inset
+
+ has a change that is much more complicated and hard to understand than
+ an ordinary linear regression model.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+A change in the 
+\begin_inset Quotes eld
+\end_inset
+
+intercept
+\begin_inset Quotes erd
+\end_inset
+
+ does not really change the intercept at all, it shifts the S-shaped curve
+ from side to side
+\end_layout
+
+\begin_layout Enumerate
+A change in the 
+\begin_inset Quotes eld
+\end_inset
+
+slope
+\begin_inset Quotes erd
+\end_inset
+
+ has a counter-intuitive effect.
+ If the slope is INCREASED, than a change in 
+\begin_inset Formula $x$
+\end_inset
+
+ has a larger effect for 
+\emph on
+just a small piece of the domain of 
+\begin_inset Formula $x$
+\end_inset
+
+ 
+\emph default
+and for the rest of the domain, the effect is flatter and less important
+ than it was.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why do they call this an inverse link function
+\begin_inset Formula 
+\begin{equation}
+\frac{e^{\eta_{i}}}{1+e^{\eta_{i}}}=\frac{1}{1+e^{-\eta_{i}}}?
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Answer: McCullagh and Nelder thought of mapping back from the expected value
+ of 
+\begin_inset Formula $y_{i}$
+\end_inset
+
+ to get the value of the linear predictor.
+ They conceptualized the transformation as acting on the left hand side,
+ so 
+\begin_inset Formula $g(E[y])=X_{i}\beta=\eta_{i}$
+\end_inset
+
+ 
+\begin_inset Formula 
+\begin{equation}
+ln\left[\frac{Pr(y_{i}=1|x_{i})}{1-Pr(y_{i}=1|x_{i})}\right]=\eta_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Simplify some notation, that thing on the left is the 
+\begin_inset Quotes eld
+\end_inset
+
+log of the odds ratio
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+ln\left[\frac{P_{i}}{1-P_{i}}\right]=\eta_{i}=X_{i}\beta
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where I make typing easier by 
+\begin_inset Formula $P_{i}=Pr(y_{i}=1|x_{i})$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+In the Generalized Linear Model, the thing on the left is the 
+\series bold
+link function
+\series default
+, frequently symbolized as 
+\begin_inset Formula $g()$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The womenlf example pp.
+ 505.
+ I ran this in R
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<echo=T,include=T>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+wdir <- "womenlf/"
+\end_layout
+
+\begin_layout Plain Layout
+
+dat <- readRDS(paste0(wdir, "womenlf.rds"))
+\end_layout
+
+\begin_layout Plain Layout
+
+library(rockchalk)
+\end_layout
+
+\begin_layout Plain Layout
+
+dat$workstat.old <- dat$workstat
+\end_layout
+
+\begin_layout Plain Layout
+
+dat$workstat <- combineLevels(dat$workstat, levs = c("parttime", "fulltime"),
+ newLabel = "employed")
+\end_layout
+
+\begin_layout Plain Layout
+
+m1 <- glm(workstat ~ husbinc + chilpres, data = dat, family = binomial(link
+ = "logit"))
+\end_layout
+
+\begin_layout Plain Layout
+
+summary(m1)
+\end_layout
+
+\begin_layout Plain Layout
+
+confint(m1)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+My parameter estimates are similar to the RHS book, but the confidence intervals
+ are quite different.
+ 
+\end_layout
+
+\begin_layout Standard
+think this table is nice-enough for now:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<results=tex>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+outreg(list("Logistic Model 1" = m1))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In rockchalk:plotCurves I've got a little bug I need to fix in the plotting
+ of the points.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<womenlf1,fig=T,include=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plotCurves(m1, plotx = "husbinc", modx = "chilpres", ylim = c(-0.1,1.3))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-womenlf1}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That's a little humiliating, have to do the old fashioned way
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<womenlf2, fig=T,include=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+dat$workstatn <- ifelse(levels(dat$workstat)[dat$workstat] %in% "employed",
+ 1, 0) 
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(workstatn ~ husbinc, data = dat,  
+\end_layout
+
+\begin_layout Plain Layout
+
+    col = ifelse(levels(chilpres)[chilpres] == "absent", 1, 4), ylim = c(0,
+ 1.2))
+\end_layout
+
+\begin_layout Plain Layout
+
+pom <- predictOMatic(m1, predVals = list(husbinc = seq(0,50), chilpres =
+ levels(dat$chilpres)))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "absent"),
+ col = 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "present"),
+ lty = 2, col = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("topright", c("absent", "present"), lty = c(1, 2), col = c(1, 4),
+ title = "chilpres", horiz = TRUE)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-womenlf2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In RHS p.
+ 509, they show same for a wider range of husbinc, I might as well do same.
+ compare to RHS p.
+ 509
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<womenlf3, fig=T, include=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(workstatn ~ husbinc, data = dat,  
+\end_layout
+
+\begin_layout Plain Layout
+
+    col = ifelse(levels(chilpres)[chilpres] == "absent", 1, 4), xlim = c(-100,
+ 100), ylim = c(0, 1))
+\end_layout
+
+\begin_layout Plain Layout
+
+pom <- predictOMatic(m1, predVals = list(husbinc = seq(-100,100), chilpres
+ = levels(dat$chilpres)))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "absent"),
+ col = 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(fit ~ husbinc, data = subset(pom, subset = chilpres == "present"),
+ lty = 2, col = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("bottomleft", c("absent", "present"), lty = c(1, 2), col = c(1, 4),
+ title = "chilpres", horiz = TRUE)
+\end_layout
+
+\begin_layout Plain Layout
+
+abline(v = min(dat$husbinc, na.rm = TRUE))
+\end_layout
+
+\begin_layout Plain Layout
+
+abline(v = max(dat$husbinc, na.rm = TRUE))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-womenlf3}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The Odds Ratio
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Some authors, like RHS, are very enthusiastic about interpreting the odds
+ ratio as an indicator of the impact of a predictor.
+ IMHO, this only makes sense when the predictor is a categorical, two-valued
+ variable, one that can be 
+\begin_inset Quotes eld
+\end_inset
+
+dummied up
+\begin_inset Quotes erd
+\end_inset
+
+ and recoded as 0 and 1.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+What's the difference in the Probit model? 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+To see this, best to formulate the 
+\begin_inset Quotes eld
+\end_inset
+
+latent response model
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+A probit is an alternative link function that is only very slightly different.
+\end_layout
+
+\begin_layout Enumerate
+RHS write the latent model this way
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Formula $y^{*}=X_{i}\beta+\epsilon_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula 
+\begin{equation}
+y=\begin{cases}
+1 & \mathrm{if}\,y*>0\\
+0 & y*\le0
+\end{cases}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Lets sketch that on the board, the 
+\begin_inset Quotes eld
+\end_inset
+
+success
+\begin_inset Quotes erd
+\end_inset
+
+ cases (where y = 1) will be on the right side.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+I usually write it down with the sign of the error term reversed and I think
+ if 
+\begin_inset Quotes eld
+\end_inset
+
+success
+\begin_inset Quotes erd
+\end_inset
+
+ in the left end of the graph.
+ The binary outcome model can be viewed as an 
+\begin_inset Quotes eld
+\end_inset
+
+if then
+\begin_inset Quotes erd
+\end_inset
+
+ calculation based on a random variable 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray}
+if\,X\beta>\epsilon_{i} &  & then\,y_{i}=1\\
+if\,X\beta\leq\epsilon_{i} & then & y_{i}=0
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The logistic distribution for 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ leads to the 
+\begin_inset Quotes eld
+\end_inset
+
+logit model
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+The Normal distribution for 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ leads to the 
+\begin_inset Quotes eld
+\end_inset
+
+probit model
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Nice graph RHS p.
+ 511
+\end_layout
+
+\begin_layout Enumerate
+Lets get predicted values from probit and logit and compare
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<womenlf5, fig=T, include=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+m2 <- glm(workstat ~ husbinc + chilpres, data = dat, family = binomial(link
+ = "probit"))
+\end_layout
+
+\begin_layout Plain Layout
+
+pom2 <- predictOMatic(m2, predVals = list(husbinc = seq(-100,100), chilpres
+ = levels(dat$chilpres)))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(fit ~ husbinc, data = subset(pom, subset = chilpres == "absent"), col
+ = 1, lty = 1, type = "l")
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(fit ~ husbinc, data = subset(pom2, subset = chilpres == "absent"),
+ col = 4, lty = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("bottomleft", c("logit", "probit"), lty = c(1,4), col = c(1,4))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-womenlf5}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+There's an unidentifiable coefficient in all of these models.
+ The variance of the error term cannot be estimated.
+ It is fixed at a specific value and the coefficients of the variables 
+\begin_inset Quotes eld
+\end_inset
+
+re-scale themselves
+\begin_inset Quotes erd
+\end_inset
+
+ accordingly.
+ Suppose 
+\begin_inset Formula 
+\begin{equation}
+X_{i}\beta-\epsilon_{i}>0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+If we divide through all elements by the standard deviation of 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+, then the inequality still holds
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X_{i}\frac{\beta}{\sigma_{\epsilon}}\beta-\frac{\epsilon_{i}}{\sigma_{\epsilon}}>0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That's what it means when a parameter is 
+\begin_inset Quotes eld
+\end_inset
+
+unidentifiable
+\begin_inset Quotes erd
+\end_inset
+
+, it has no empirical referent.
+ As a result, it is very common to set the standard deviation at some convenient
+ value, such as 1.0 for the normal distribution.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+To understand the effect of any one variable, IT IS NECESSARY to set the
+ values of all the other predictors in the model.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Very common to set all of them at the 
+\begin_inset Quotes eld
+\end_inset
+
+mean
+\begin_inset Quotes erd
+\end_inset
+
+, but I prefer the mode of categorical predictors (as in rockchalk).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Marginal Model: ignores individual differences, just fits predictive part.
+\end_layout
+
+\begin_layout Enumerate
+See Stata code below, items 6 and 7
+\end_layout
+
+\begin_layout Enumerate
+fits predictive model with outcome ~ treatment + visit + treatment * visit
+\begin_inset Formula 
+\begin{equation}
+logit(P(y=1|X))=\beta_{0}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Random Intercept
+\end_layout
+
+\begin_layout Enumerate
+The random intercept is denoted 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, that's added to the model
+\end_layout
+
+\begin_layout Enumerate
+Two stage formulation 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The RHS way, p.
+ 522.
+ I still can't track through their symbols.
+\end_layout
+
+\begin_layout Enumerate
+My way
+\begin_inset Formula 
+\begin{equation}
+logit(P(y=1|X))=\beta_{0j}^{*}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\beta_{0j}^{*}=\beta_{0}+\zeta_{0j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+the linear predictor is easy
+\begin_inset Formula 
+\begin{equation}
+\eta_{ji}=\beta_{0}+\zeta_{0j}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Use xtlogit, or xtmelogit, or gllamm.
+\end_layout
+
+\begin_layout Section
+Nice Comparison of Marginal versus Conditional models
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+The difference between population-averaged and subject-specific effects
+ is due to the average of a nonlinear function not being the same as the
+ nonlinear function of the average.
+\begin_inset Quotes erd
+\end_inset
+
+ p.
+ 530.
+\end_layout
+
+\begin_layout Section
+What about the conditional modes:
+\end_layout
+
+\begin_layout Enumerate
+surprise, looks like bad news here: 
+\begin_inset Quotes eld
+\end_inset
+
+Such predictions are useful for making inferences for the clusters in the
+ data, important examples being assessment of institutional performance
+ (see section 4.8.5) or of abilities in item response theory (see exercise
+ 10.4).
+ The estimated or predicted values of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ should generally not be used for model diagnostics in random-intercept
+ logistic regression because their distribution if the model is true is
+ not known.
+ In general, the values should also not be used to obtain cluster-specific
+ predicted probabilities (see section 10.13.2).
+\begin_inset Quotes erd
+\end_inset
+
+ RHS p.
+ 543-4
+\end_layout
+
+\begin_layout Enumerate
+Another surprise.
+ We know the max likelihood estimates are not good for 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+ Here we find that the 
+\begin_inset Quotes eld
+\end_inset
+
+Empirical Bayes
+\begin_inset Quotes erd
+\end_inset
+
+ and the 
+\begin_inset Quotes eld
+\end_inset
+
+Modal Empirical Bayes
+\begin_inset Quotes erd
+\end_inset
+
+ calculations are different.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+The predictions are nearly identical.
+ This is not surprising because marginal effects derived from generalized
+ linear mixed models are close to true marginal effects even if the random-inter
+cept distribution is misspecified (Heagerty and Kurland 2001).
+\begin_inset Quotes erd
+\end_inset
+
+ p.
+ 549
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Although they warn about use of 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ estimates above, they do show how to calculate 
+\begin_inset Quotes eld
+\end_inset
+
+Predicted subject-specific probabilities
+\begin_inset Quotes erd
+\end_inset
+
+.
+ See Stata code below.
+\end_layout
+
+\begin_layout Section
+Stata Code notes
+\end_layout
+
+\begin_layout Enumerate
+Logit fit, after combining full and part time workers.
+ Recode style RHS p.
+ 205 seems dangerous to me
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+recode workstat 2=1
+\end_layout
+
+\begin_layout Plain Layout
+
+logit workstat husbinc chilpres
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you want to see the odds ratios instead
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+logit workstat husbinc chilpres, or
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I hate that one, I'd never do it.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Plots
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Plot for the observed range of husbinc
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict prob, pr
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line prob husbinc if chilpres==0, sort)
+\end_layout
+
+\begin_layout Plain Layout
+
+(line prob husbinc if chilpres==1, sort lpatt(dash)),
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(order(1 "No child" 2 "Child"))
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle("Husband's income/$1000") ytitle("Probability that wife works")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Plot for a wider range of values of husband income to see the full width
+ of the scale
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway (function y=invlogit(_b[husbinc]*x+_b[_cons]), range(-100 100))
+\end_layout
+
+\begin_layout Plain Layout
+
+(function y=invlogit(_b[husbinc]*x+_b[chilpres]+_b[_cons]),
+\end_layout
+
+\begin_layout Plain Layout
+
+range(-100 100) lpatt(dash)),
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle("Husband's income/$1000") ytitle("Probability that wife works")
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(order(1 "No child" 2 "Child")) xline(1) xline(45)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Logit models existed before the 
+\begin_inset Quotes eld
+\end_inset
+
+generalized linear model
+\begin_inset Quotes erd
+\end_inset
+
+ created a broad framework that united many types of models.
+ The Stata 
+\begin_inset Quotes eld
+\end_inset
+
+logit
+\begin_inset Quotes erd
+\end_inset
+
+ function is an example of the way we were doing this in the olden days,
+ but now it is suggested to thing of it as a GLM and run this instead
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+glm workstat husbinc chilpres, link(logit) family(binomial)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Probit
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+probit workstat husbinc chilpres
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Make a nice twoway plot showing the similarity of predicted values from
+ probit and logit.
+ This code requires one to type in values estimated from the model fits.
+ HORRIBLE.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway (function y=invlogit(1.3358-0.0423*x), range(-100 100))
+\end_layout
+
+\begin_layout Plain Layout
+
+(function y=normal(0.7982-0.0242*x), range(-100 100) lpatt(dash)),
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle("Husband's income/$1000") ytitle("Probability that wife works")
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(order(1 "Logit link" 2 "Probit link")) xline(1) xline(45)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Toenail data import
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtset patient visit
+\end_layout
+
+\begin_layout Plain Layout
+
+xtdescribe if outcome < .
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Marginal Data: Two side-by-side barplots of outcomes
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+label define tr 0 "Itraconazole" 1 "Terbinafine"
+\end_layout
+
+\begin_layout Plain Layout
+
+label values treatment tr
+\end_layout
+
+\begin_layout Plain Layout
+
+graph bar (mean) proportion = outcome, over(visit) by(treatment) ytitle(Proporti
+on with onycholysis)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A line plot of the same information using time as the x axis
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+egen prop = mean(outcome), by(treatment visit)
+\end_layout
+
+\begin_layout Plain Layout
+
+egen mn_month = mean(month), by(treatment visit)
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway line prop mn_month, by(treatment) sort xtitle(Time in months) ytitle(Prop
+ortion with onycholysis)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Marginal Data: Logistic fit, report odds ratios
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate trt_month = treatment*month
+\end_layout
+
+\begin_layout Plain Layout
+
+logit outcome treatment month trt_month, or vce(cluster patient)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+predict prob, pr
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line prop mn_month, sort) (line prob month, sort lpatt(dash)), ///
+\end_layout
+
+\begin_layout Plain Layout
+
+by(treatment) legend(order(1 "Observed proportions" 2 "Fitted probabilities"))
+ ///
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle(Time in months) ytitle(Probability of onycholysis)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random effects Logistic: xtlogit
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+quietly xtset patient
+\end_layout
+
+\begin_layout Plain Layout
+
+xtlogit outcome treatment month trt_month, intpoints(30)
+\end_layout
+
+\begin_layout Plain Layout
+
+xtlogit, or
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xtmelogit outcome treatment month trt_month || patient:, intpoints(30)
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store xtmelogit
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using gllamm
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+ssc install gllamm, replace
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+gllamm outcome treatment month trt_month, i(patient) link(logit) family(binomial
+) nip(30) adapt
+\end_layout
+
+\begin_layout Plain Layout
+
+estimates store gllamm
+\end_layout
+
+\begin_layout Plain Layout
+
+gllamm, eform
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+See: p.
+ 542: Advice for speeding up estimation in gllamm
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Posterior prediction/estimation of random effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+At the time of writing this book, the only Stata command that provides empirical
+ Bayes predictions for generalized linear mixed models is the postestimation
+ command gllapred for gllamm with the u option: .
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estimates restore gllamm
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred eb, u
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+MODE prediction, see RHS 10.12.3
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estimates restore xtmelogit
+\end_layout
+
+\begin_layout Plain Layout
+
+predict ebmodal, reffects
+\end_layout
+
+\begin_layout Plain Layout
+
+predict se2, reses
+\end_layout
+
+\begin_layout Plain Layout
+
+egen num0 = total(outcome==0), by(patient)
+\end_layout
+
+\begin_layout Plain Layout
+
+egen num1 = total(outcome==1), by(patient)
+\end_layout
+
+\begin_layout Plain Layout
+
+list patient num0 num1 ebm1 ebmodal ebs1 se2 if visit==1&patient<=12, noobs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Humph.
+ Empirical Bayes is different from Modal predictions? see.
+ p.
+ 547
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+twoway (rspike mlest ebmodal ebm1 if visit==1)
+\end_layout
+
+\begin_layout Plain Layout
+
+(scatter mlest ebm1 if visit==1, msize(small) msym(th) mcol(black))
+\end_layout
+
+\begin_layout Plain Layout
+
+(scatter ebmodal ebm1 if visit==1, msize(small) msym(oh) mcol(black))
+\end_layout
+
+\begin_layout Plain Layout
+
+(function y=x, range(ebm1) lpatt(solid)),
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle(Empirical Bayes prediction)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(order(2 "Maximum likelihood" 3 "Empirical Bayes modal"))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Predicted probabilities:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Population averaged
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+estimates restore gllamm
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred margprob, mu marginal
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line prob month, sort) (line margprob month, sort lpatt(dash)),
+ ///
+\end_layout
+
+\begin_layout Plain Layout
+
+by(treatment) legend(order(1 "Ordinary logit" 2 "Random-intercept logit"))
+ ///
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle(Time in months) ytitle(Fitted marginal probabilities of onycholysis)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+gllamm predictions of individual probabilities
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate zeta1 = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred condprob0, mu us(zeta)
+\end_layout
+
+\begin_layout Plain Layout
+
+generate lower1 = -4
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred condprobm4, mu us(lower)
+\end_layout
+
+\begin_layout Plain Layout
+
+generate upper1 = 4
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred condprob4, mu us(upper)
+\end_layout
+
+\begin_layout Plain Layout
+
+replace lower1 = -2
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred condprobm2, mu us(lower)
+\end_layout
+
+\begin_layout Plain Layout
+
+replace upper1 = 2
+\end_layout
+
+\begin_layout Plain Layout
+
+gllapred condprob2, mu us(upper)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+twoway (line prop mn_month, sort) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line margprob month, sort lpatt(dash)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line condprob0 month, sort lpatt(shortdash_dot)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line condprob4 month, sort lpatt(shortdash)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line condprobm4 month, sort lpatt(shortdash)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line condprob2 month, sort lpatt(shortdash)) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+(line condprobm2 month, sort lpatt(shortdash)), ///
+\end_layout
+
+\begin_layout Plain Layout
+
+by(treatment) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(order(1 "Observed proportion" 2 "Marginal probability" 3 ///
+\end_layout
+
+\begin_layout Plain Layout
+
+"Median probability" 4 "Conditional probabilities")) ///
+\end_layout
+
+\begin_layout Plain Layout
+
+xtitle(Time in months) ytitle(Probabilities of onycholysis)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_body
+\end_document
