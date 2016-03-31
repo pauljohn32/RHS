@@ -323,7 +323,7 @@ library(rockchalk)
 \end_layout
 
 \begin_layout Title
-Chapter 10 Longitudinal and Panel Data
+Chapter 10 Logit Models
 \end_layout
 
 \begin_layout Author
@@ -345,19 +345,6 @@ today
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-These notes include the 
-\begin_inset Quotes eld
-\end_inset
-
-Introduction to Part III
-\begin_inset Quotes erd
-\end_inset
-
- pp.
- 227-245 as well as Chapter 5
 \end_layout
 
 \begin_layout Section
@@ -497,7 +484,7 @@ conditionally uncorrelated
 \end_layout
 
 \begin_layout Section
-Quick Logit Overview
+Quick Overview
 \end_layout
 
 \begin_layout Enumerate
@@ -527,7 +514,8 @@ E[y_{i}|x_{i}]=Pr(y_{i}=1|x_{i})
 \end_layout
 
 \begin_layout Enumerate
-The predictor variables are all weighted and added together
+The predictor variables are all weighted (slope coefficients) and added
+ together
 \begin_inset Formula 
 \begin{equation}
 X\beta=1+x1_{i}\beta_{1}+x2_{i}\beta_{2}+\ldots
@@ -539,11 +527,12 @@ X\beta=1+x1_{i}\beta_{1}+x2_{i}\beta_{2}+\ldots
 \end_layout
 
 \begin_layout Enumerate
-Throw any interactions or squares of 
+Insert any interactions or squares of 
 \begin_inset Formula $x$
 \end_inset
 
- you want in there.
+ you want in there: but there is reason to be cautious.
+ The Logistic functional form automatically creates interactions.
 \end_layout
 
 \begin_layout Enumerate
@@ -568,7 +557,11 @@ eta
 \begin_inset Quotes eld
 \end_inset
 
-the linear predictor
+the 
+\series bold
+linear predictor
+\series default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -581,7 +574,11 @@ And then transformed by the
 \begin_inset Quotes eld
 \end_inset
 
+
+\series bold
 inverse link function
+\series default
+
 \begin_inset Quotes erd
 \end_inset
 
@@ -700,6 +697,62 @@ reference "eq:logit2"
 ) makes it easier to generalize this to a multi-outcome dependent variable.
 \end_layout
 
+\begin_layout Standard
+Note that the probability of getting 
+\begin_inset Formula $y=0$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+1-\frac{e^{X_{i}\beta}}{1+e^{X_{i}\beta}}=\frac{1}{1+e^{X_{i}\beta}}\label{eq:1-P}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In some formulae for maximum likelihood estimation, then, we can represent
+ the 
+\emph on
+probability of observing what was actually found
+\emph default
+ as 
+\begin_inset Formula 
+\begin{equation}
+\frac{\{e^{X_{i}\beta}\}^{y_{i}}}{1+e^{X_{i}\beta}}\label{eq:trick}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note if 
+\begin_inset Formula $y=1,$
+\end_inset
+
+ this gives back 
+\begin_inset Formula $(\ref{eq:logit2})$
+\end_inset
+
+ but if 
+\begin_inset Formula $y=0$
+\end_inset
+
+ it gives back (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:1-P"
+
+\end_inset
+
+).
+\end_layout
+
 \end_deeper
 \begin_layout Enumerate
 The effect of adding a 
@@ -710,7 +763,8 @@ dummy variable
 \begin_inset Quotes erd
 \end_inset
 
- (same as shifting the intercept, yes?)
+ (same as shifting the intercept, yes?).
+ The S shaped curve appears to shift horizontally.
 \end_layout
 
 \begin_deeper
@@ -806,7 +860,7 @@ status open
 
 \begin_layout Plain Layout
 
-expbx <- exp((-1)*(-10+.065*X3))
+expbx <- exp((-1)*(-10+.25*X3))
 \end_layout
 
 \begin_layout Plain Layout
@@ -816,17 +870,17 @@ ProbY1 <- 1/(1+expbx)
 
 \begin_layout Plain Layout
 
-ProbY1.2 <- 1/(1+ exp((-1)*(-10+0.115*X3)))
+ProbY1.2 <- 1/(1+ exp((-1)*(-10+0.08*X3)))
 \end_layout
 
 \begin_layout Plain Layout
 
-ProbY1.3 <- 1/(1+ exp((-1)*(-10+0.175*X3)))
+ProbY1.3 <- 1/(1+ exp((-1)*(-10+0.11*X3)))
 \end_layout
 
 \begin_layout Plain Layout
 
-ProbY1.4 <- 1/(1+ exp((-1)*(-10+0.3*X3)))
+ProbY1.4 <- 1/(1+ exp((-1)*(-10+0.18*X3)))
 \end_layout
 
 \begin_layout Plain Layout
@@ -851,8 +905,8 @@ lines(ProbY1.4 ~ X3, lty = 3)
 
 \begin_layout Plain Layout
 
-legend("topleft", legend = c("-10+.065x", "-10+.115x","-10+.175x", "-10+.3*x"),
- lty = c(1,2,4,3))
+legend("topleft", legend = c("-10+.08x","-10+.11x", "-10+.18*x","-10+.25x"),
+ lty = c(2,3,4,1))
 \end_layout
 
 \begin_layout Plain Layout
@@ -881,6 +935,209 @@ includegraphics[width=14cm]{plots/t-sshape3}
 
 \end_layout
 
+\end_deeper
+\begin_layout Enumerate
+The range of observed x tends to be very important in empirical applications.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Suppose we only observe when 
+\begin_inset Formula $x>100$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sshape4, include=F, fig=TRUE,height=4,width=6, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+expbx <- exp((-1)*(-10+.25*X3))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1 <- 1/(1+expbx)
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.2 <- 1/(1+ exp((-1)*(-10+0.08*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.3 <- 1/(1+ exp((-1)*(-10+0.11*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.4 <- 1/(1+ exp((-1)*(-10+0.18*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X3, ProbY1, type="l", xlab='x', ylab='Probability(y=1)', ylim = c(0,1),
+ xlim = c(100,150))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.2 ~ X3, lty = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.3 ~ X3, lty = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.4 ~ X3, lty = 3)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("topleft", legend = c("-10+.08x","-10+.11x", "-10+.18*x","-10+.25x"),
+ lty = c(2,3,4,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-sshape4}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Or 
+\begin_inset Formula $0<x<20$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<sshape5, include=F, fig=TRUE,height=4,width=6, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+expbx <- exp((-1)*(-10+.25*X3))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1 <- 1/(1+expbx)
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.2 <- 1/(1+ exp((-1)*(-10+0.08*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.3 <- 1/(1+ exp((-1)*(-10+0.11*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+ProbY1.4 <- 1/(1+ exp((-1)*(-10+0.18*X3)))
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X3, ProbY1, type="l", xlab='x', ylab='Probability(y=1)', ylim = c(0,1),
+ xlim = c(0,20))
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.2 ~ X3, lty = 2)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.3 ~ X3, lty = 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+lines(ProbY1.4 ~ X3, lty = 3)
+\end_layout
+
+\begin_layout Plain Layout
+
+legend("topleft", legend = c("-10+.08x","-10+.11x", "-10+.18*x","-10+.25x"),
+ lty = c(2,3,4,1))
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includegraphics[width=14cm]{plots/t-sshape5}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Enumerate
 A change in the 
@@ -1009,6 +1266,30 @@ where I make typing easier by
  
 \end_layout
 
+\begin_layout Standard
+The formula on the left is called the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+logit transform
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+logit(P_{i})=ln\left(\frac{P_{i}}{1-P_{i}}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \end_deeper
 \begin_layout Enumerate
 In the Generalized Linear Model, the thing on the left is the 
@@ -1020,9 +1301,294 @@ link function
 \end_inset
 
 .
+\begin_inset Formula 
+\begin{equation}
+g(P_{i})=X_{i}\beta=\eta_{i}
+\end{equation}
+
+\end_inset
+
  
+\begin_inset Formula 
+\begin{equation}
+\frac{e^{\eta_{i}}}{1+e^{\eta_{i}}}=g^{-1}(\eta_{i})
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+The inverse link function goes the other way, from the inputs into the expected
+ value.
+\begin_inset Formula 
+\begin{equation}
+Pr(y_{i}=1)=logitinv(X_{i}\beta)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why do they call this a Binomial probability model?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Superficial answer: Binomial is for the number of 
+\begin_inset Quotes eld
+\end_inset
+
+successes
+\begin_inset Quotes erd
+\end_inset
+
+ out of N events.
+ You can think of 1 row that is scored 0 or 1 as a failure or success out
+ of 1 draw.
+\end_layout
+
+\begin_layout Enumerate
+Historically informative: The earliest models of this type were created
+ for 
+\series bold
+grouped data
+\series default
+, which was presented in the form
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="3">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+N of rats
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+poison potency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+number dead within 1 day
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+18
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Any time we have all categorical predictors, it is possible to group the
+ data rows into this kind of format.
+ This is suggested as a way to speed up estimation in RHS, pp.
+ 543.
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Enumerate
 The womenlf example pp.
@@ -1099,7 +1665,7 @@ My parameter estimates are similar to the RHS book, but the confidence intervals
 \end_layout
 
 \begin_layout Standard
-think this table is nice-enough for now:
+I think this table is nice-enough for now:
 \end_layout
 
 \begin_layout Standard
@@ -1113,7 +1679,7 @@ status open
 
 \begin_layout Plain Layout
 
-outreg(list("Logistic Model 1" = m1))
+outreg(list("Logistic Model 1" = m1), tight = TRUE)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1181,7 +1747,7 @@ status open
 
 \begin_layout Plain Layout
 
-<<womenlf2, fig=T,include=F>>=
+<<womenlf2, fig=T, include=F, echo=T>>=
 \end_layout
 
 \begin_layout Plain Layout
@@ -1243,7 +1809,61 @@ status open
 
 
 \backslash
+input{plots/t-womenlf2.tex}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 includegraphics[width=14cm]{plots/t-womenlf2}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is worth mentioning 
+\begin_inset Quotes eld
+\end_inset
+
+the old fashioned way
+\begin_inset Quotes erd
+\end_inset
+
+ because Stata software has also made quite a bit of effort to make predicted
+ value plots 
+\begin_inset Quotes eld
+\end_inset
+
+automatically
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, many model types do not cooperate with that margins tool and hence
+ Stata users are also forced to fallback to the old fashioned way.
+ See:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.ats.ucla.edu/stat/stata/faq/predictive_margins_xtmelogit.htm
 \end_layout
 
 \end_inset
@@ -1359,19 +1979,10 @@ dummied up
  and recoded as 0 and 1.
 \end_layout
 
-\end_deeper
 \begin_layout Enumerate
-What's the difference in the Probit model? 
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-To see this, best to formulate the 
-\begin_inset Quotes eld
-\end_inset
-
-latent response model
-\begin_inset Quotes erd
+But, if you do have a dummy variable coded 0 and 1, it is very easy to see
+ that the effect of changing that predictor from 0 to 1 is 
+\begin_inset Formula $exp(\beta)$
 \end_inset
 
 .
@@ -1379,22 +1990,92 @@ latent response model
 \end_layout
 
 \begin_layout Enumerate
-A probit is an alternative link function that is only very slightly different.
-\end_layout
+Definition:
+\begin_inset Formula 
+\begin{equation}
+Odds=\frac{Pr(y=1)}{1-Pr(y=1)}
+\end{equation}
 
-\begin_layout Enumerate
-RHS write the latent model this way
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-\begin_inset Formula $y^{*}=X_{i}\beta+\epsilon_{i}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Enumerate
+Suppose I call 
+\begin_inset Formula $P_{1}$
+\end_inset
+
+ the prediction when x=1 and 
+\begin_inset Formula $P_{0}$
+\end_inset
+
+ is probability when x = 0.
+ The change in the log odds ratio
+\begin_inset Formula 
+\begin{eqnarray}
+ln(\frac{P_{1}}{1-P_{1}})-ln(\frac{P_{0}}{1-P_{0}}) & = & \beta_{0}+\beta_{1}\{1\}-\beta_{0}-\beta_{1}\{0\}\\
+ln\left\{ \frac{\frac{P_{1}}{1-P_{1}}}{\frac{P_{0}}{1-P_{0}}}\right\}  & = & \beta_{1}\nonumber 
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+so
+\begin_inset Formula 
+\begin{eqnarray}
+exp\left\{ ln\left\{ \frac{\frac{P_{1}}{1-P_{1}}}{\frac{P_{0}}{1-P_{0}}}\right\} \right\}  & = & exp(\beta_{1})\\
+\frac{\frac{P_{1}}{1-P_{1}}}{\frac{P_{0}}{1-P_{0}}} & = & exp(\beta_{1})\nonumber \\
+Odds\,Ratio & = & exp(\beta_{1})\nonumber 
+\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+What's the difference in the Probit model? To see this, best to formulate
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+latent response model
+\series default
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+RHS write the latent model this way
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y^{*}=X_{i}\beta+\epsilon_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 y=\begin{cases}
@@ -1423,8 +2104,21 @@ success
 
 \end_deeper
 \begin_layout Enumerate
-I usually write it down with the sign of the error term reversed and I think
- if 
+I usually write it down with the sign of the error term reversed.
+ I write
+\begin_inset Formula 
+\begin{equation}
+y_{i}^{*}=X_{i}\beta-\epsilon_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+and I think if 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1448,13 +2142,18 @@ if then
 
 \begin_inset Formula 
 \begin{eqnarray}
-if\,X\beta>\epsilon_{i} &  & then\,y_{i}=1\\
+if\,\epsilon<X\beta &  & then\,y_{i}=1\\
 if\,X\beta\leq\epsilon_{i} & then & y_{i}=0
 \end{eqnarray}
 
 \end_inset
 
 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Logit or Probit
 \end_layout
 
 \begin_deeper
@@ -1487,7 +2186,19 @@ probit model
 \begin_inset Quotes erd
 \end_inset
 
+.
+ A probit is an alternative link function that is only very slightly different.
+\end_layout
 
+\begin_layout Enumerate
+Here's why I like to write it down this way: It makes it easier to see that
+ we are using the 
+\series bold
+Cumulative Distribution Function.
+\end_layout
+
+\begin_layout Standard
+Insert some sketches here.
 \end_layout
 
 \end_deeper
@@ -1568,8 +2279,16 @@ includegraphics[width=14cm]{plots/t-womenlf5}
 \end_deeper
 \end_deeper
 \begin_layout Enumerate
-There's an unidentifiable coefficient in all of these models.
- The variance of the error term cannot be estimated.
+The VARIANCE IS 
+\series bold
+UNIDENTIFIABLE
+\series default
+! There's an unidentifiable coefficient in all of these models.
+ The variance of the error term 
+\emph on
+cannot be estimated
+\emph default
+.
  It is fixed at a specific value and the coefficients of the variables 
 \begin_inset Quotes eld
 \end_inset
@@ -1580,6 +2299,10 @@ re-scale themselves
 
  accordingly.
  Suppose 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 X_{i}\beta-\epsilon_{i}>0
@@ -1590,7 +2313,6 @@ X_{i}\beta-\epsilon_{i}>0
 
 \end_layout
 
-\begin_deeper
 \begin_layout Standard
 If we divide through all elements by the standard deviation of 
 \begin_inset Formula $\epsilon_{i}$
@@ -1610,7 +2332,7 @@ X_{i}\frac{\beta}{\sigma_{\epsilon}}\beta-\frac{\epsilon_{i}}{\sigma_{\epsilon}}
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Enumerate
 That's what it means when a parameter is 
 \begin_inset Quotes eld
 \end_inset
@@ -1620,9 +2342,428 @@ unidentifiable
 \end_inset
 
 , it has no empirical referent.
- As a result, it is very common to set the standard deviation at some convenient
- value, such as 1.0 for the normal distribution.
  
+\end_layout
+
+\begin_layout Enumerate
+Probit/Logit difference
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Normal distribution of 
+\begin_inset Formula $\epsilon:$
+\end_inset
+
+ assume variance of 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is 1.0 (so the most pleasant 
+\begin_inset Formula $N(0,1)$
+\end_inset
+
+ is assumed)
+\end_layout
+
+\begin_layout Enumerate
+Logistic distribution of 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+: assume variance is 
+\begin_inset Formula $\pi^{2}/3$
+\end_inset
+
+.
+ This number is a result of 
+\begin_inset Quotes eld
+\end_inset
+
+standardizing
+\begin_inset Quotes erd
+\end_inset
+
+ the Logistic so that it has EV = 0 and Var = 1
+\end_layout
+
+\begin_layout Enumerate
+The estimates of the 
+\begin_inset Formula $\beta$
+\end_inset
+
+ are scaled to these values.
+\end_layout
+
+\begin_layout Enumerate
+Caution about interpreting Logit models because of this un-identified variance
+ parameter:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Mood, C.
+ (2010).
+ Logistic Regression: Why We Cannot Do What We Think We Can Do, and What
+ We Can Do About It.
+ 
+\emph on
+European Sociological Review
+\emph default
+, 26(1), 67–82.
+ http://doi.org/10.1093/esr/jcp006 
+\end_layout
+
+\begin_layout Standard
+Allison, Paul D.
+ 1999.
+ Comparing Logit and Probit Coefficients Across Groups.
+ 
+\emph on
+Sociological Methods and Research
+\emph default
+ 28:186-208.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+When calculating the ICC for random effects models, then, we have a weird
+ looking formula, 
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{ccc}
+Logit &  & Probit\\
+\frac{Var(\zeta_{j})}{Var(\zeta_{j})+\pi^{2}/3} &  & \frac{Var(\zeta_{j})}{Var(\zeta_{j})+1}
+\end{array}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Estimation: Maximum Likelihood
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Choose values of 
+\begin_inset Formula $\beta_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\beta_{2}$
+\end_inset
+
+, and such that make the sample as likely as possible.
+ 
+\end_layout
+
+\begin_layout Enumerate
+For a stipulated set of guesses, one must recalculate the Likelihood function.
+ Suppose we sort the data so the first k observed cases have 
+\begin_inset Formula $y=0$
+\end_inset
+
+ and then the rest have 
+\begin_inset Formula $y=1$
+\end_inset
+
+.
+ 
+\begin_inset Formula 
+\begin{equation}
+Likelihood=Pr(y_{1}=0)\cdot Pr(y_{2}=0)\cdot\ldots Pr(y_{k}=0)\cdot Pr(y_{k+1}=1)\cdot\ldots Pr(y_{N}=1)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+To avoid working with that giant product, convert that to the log likelihood
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+lnL=lnPr(y_{1}=0)+lnPr(y_{2}=0)+lnPr(y_{k}=0)+lnPr(y_{k+1}=1)+\ldots+lnPr(y_{N}=1)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\sum_{i=1}^{k}ln(Pr(y_{i}=0))+\sum_{k+1}^{N}ln(Pr(y_{i}=1))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Recall the trick in equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:trick"
+
+\end_inset
+
+).
+ The probability that a case equals its observed value is 
+\begin_inset Formula $\frac{\{e^{X_{i}\beta}\}^{y_{i}}}{1+e^{X_{i}\beta}}$
+\end_inset
+
+, so we can write the above more concisely
+\begin_inset Formula 
+\begin{equation}
+Likelihood=\Pi_{i=1}^{N}\frac{\{e^{X_{i}\beta}\}^{y_{i}}}{1+e^{X_{i}\beta}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, I'm using my style of referring to a row from 
+\begin_inset Formula $X$
+\end_inset
+
+ as 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+ and treating it as a row vector.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+logL=\sum_{i=1}^{N}ln\left(\frac{\{e^{X_{i}\beta}\}^{y_{i}}}{1+e^{X_{i}\beta}}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\sum ln(exp(X_{i}\beta)^{y_{i}}-\sum ln(1+exp(X_{i}\beta))
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\sum y_{i}X_{i}\beta-\sum log(1+exp(X_{i}\beta)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The ML estimation process has to adjust each coefficient in 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+ For each one, the first order condition is found as
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial lnL}{\partial\beta_{j}}=\sum_{i=1}^{N}X_{i}(y-Pr(y=1|\beta))
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The math to work out the optimization is written out in Hastie, Tibhsirani,
+ Friedman, The Elements of Statistical Learning, 2ed, pp.
+ 120-2
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Properties of these estimates.
+ ML
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Not Unbiased
+\end_layout
+
+\begin_layout Enumerate
+Consistent
+\end_layout
+
+\begin_layout Enumerate
+Asymptotically Normally distributed
+\end_layout
+
+\begin_layout Enumerate
+The variance/covariance matrix of the 
+\begin_inset Formula $\hat{\beta}$
+\end_inset
+
+ can be derived in various ways.
+ The most common is the 
+\begin_inset Quotes eld
+\end_inset
+
+Information matrix
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Derived from the second order conditions ( 
+\begin_inset Quotes eld
+\end_inset
+
+Hessian
+\begin_inset Quotes erd
+\end_inset
+
+ matrix) evaluated at the MLE.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Hypo testing:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+A ratio of 
+\begin_inset Formula $\hat{\beta_{j}}/s.e.(\hat{\beta_{j}})$
+\end_inset
+
+ is an approximate N(0,1) value, in the sense that if sample 
+\begin_inset Formula $\rightarrow\infty$
+\end_inset
+
+, then the ratio 
+\begin_inset Formula $\rightarrow N(0,1)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Likelihood Ratio test applies to logit models, in R as anova(), in Stata
+ as lrtest
+\end_layout
+
+\begin_layout Enumerate
+Confidence intervals for 95% often calculated as Wald's approximate method
+ 
+\begin_inset Formula $\hat{\beta}_{j}\pm1.96s.e.(\hat{\beta}_{j})$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Calculating predicted values
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+To calculate a predicted value, YOU MUST fill in values for all the 
+\begin_inset Formula $x$
+\end_inset
+
+'s and all of the 
+\begin_inset Formula $\beta$
+\end_inset
+
+'s in here
+\begin_inset Formula 
+\begin{equation}
+\hat{\eta}_{i}=\hat{\beta}_{0}+\hat{\beta}_{1}x1_{i}+\hat{\beta}_{2}x2_{i}+\ldots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+and IF you want predicted probabilities after that, apply the inverse link
+ function, say
+\begin_inset Formula 
+\begin{equation}
+logitinv(\hat{\eta}_{i})=logitinv(\widehat{X\beta})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Software generally gives you a choice, whether you to investigate the predicted
+ value on the linear predictor scale, 
+\begin_inset Formula $X\hat{\beta}$
+\end_inset
+
+ or do you want 
+\begin_inset Formula $Prob(y_{i}=1|X,\hat{\beta})$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Stata predict function allows users to choose with options 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+xb
+\end_layout
+
+\end_inset
+
+ or 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+pr
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -1647,26 +2788,121 @@ mean
 \end_layout
 
 \end_deeper
-\begin_layout Section
-Marginal Model: ignores individual differences, just fits predictive part.
-\end_layout
-
 \begin_layout Enumerate
-See Stata code below, items 6 and 7
-\end_layout
-
-\begin_layout Enumerate
-fits predictive model with outcome ~ treatment + visit + treatment * visit
-\begin_inset Formula 
-\begin{equation}
-logit(P(y=1|X))=\beta_{0}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
-\end{equation}
-
+Recall the caution about 
+\begin_inset Quotes eld
 \end_inset
 
+the old fashioned way
+\begin_inset Quotes erd
+\end_inset
 
+ and Stata's margins functions (shortcomings)
 \end_layout
 
+\begin_layout Enumerate
+We did not yet insert random effects, but if we did, it would be necessary
+ to confront one more problem here: what value do you assume for the random
+ effect when you calculate your predictions? If you designate, for example,
+ that there is a unit in which no random effect is experienced (supposing
+ 
+\begin_inset Formula $\zeta_{j}=0$
+\end_inset
+
+), then the predicted value concerns the 
+\begin_inset Quotes eld
+\end_inset
+
+population representative case?
+\begin_inset Quotes erd
+\end_inset
+
+ in some sense?
+\end_layout
+
+\begin_layout Enumerate
+Could average together estimates of effects from the cases, weighting them
+ by the probability of the random effect.
+ More to come on this.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Various fitting functions for models with random effects
+\end_layout
+
+\begin_layout Enumerate
+Stata:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+xtlogit: random intercept only.
+ Faster because it has analytical derivatives
+\end_layout
+
+\begin_layout Enumerate
+xtmlelogit: similar in style to xtmixed, allows request for many random
+ effects.
+ 
+\end_layout
+
+\begin_layout Enumerate
+gllamm: Rabe-Hesketh, Skrondal, & Pickles offer a package for Stata which,
+ as RHS mention, will do some calculations that no other package will do.
+\end_layout
+
+\begin_layout Enumerate
+Question: why was xtlogit available so long before the other packages were
+ available?
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Answer: When the model is simple enough, the use of numerical approximations
+ can be minimized and more exact analytical formulae can be put into use.
+ 
+\end_layout
+
+\begin_layout Standard
+When we want more random effect estimates, this becomes impossible.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+R
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Before lme4 was released, there were several packages that, like xtlogit,
+ could fit a single random intercept quickly
+\end_layout
+
+\begin_layout Enumerate
+lme4 was eventually released, it uses a more general algorithm to fit these
+ things.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+MCMC alternatives
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The random effects model allow the inclusion of Normally distributed random
+ effects
+\end_layout
+
+\begin_layout Enumerate
+Inside a model that assumes errors are Logistic, wouldn't it seem strange
+ to insert a Normal random effect?
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Random Intercept
 \end_layout
@@ -1702,6 +2938,7 @@ logit(P(y=1|X))=\beta_{0j}^{*}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{
 
 \end_layout
 
+\begin_deeper
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
@@ -1725,15 +2962,86 @@ the linear predictor is easy
 
 \end_layout
 
+\begin_layout Standard
+In a case like this, the two level formulation does not simplify or help
+ anything.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Introduce some level 2 predictors of the intercept
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+logit(P(y=1|X))=\beta_{0j}^{*}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\beta_{0j}^{*}=\beta_{0}+\beta_{4}groupPredictor_{j}+\zeta_{0j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\eta_{ji}=\beta_{0}+\beta_{4}groupPredictor_{j}+\zeta_{0j}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
 \end_deeper
 \begin_layout Enumerate
 Use xtlogit, or xtmelogit, or gllamm.
 \end_layout
 
 \begin_layout Section
+Marginal Model: ignores individual differences, just fits predictive part.
+\end_layout
+
+\begin_layout Enumerate
+See Stata code below, items 6 and 7
+\end_layout
+
+\begin_layout Enumerate
+fits predictive model with outcome ~ treatment + visit + treatment * visit
+\begin_inset Formula 
+\begin{equation}
+logit(P(y=1|X))=\beta_{0}+\beta_{1}treatment_{i}+\beta_{2}visit_{i}+\beta_{3}treatment_{i}\times visit_{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Generalized Estimating Equations offer a more elaborate way of trying to
+ estimate these things.
+\end_layout
+
+\begin_layout Enumerate
 Nice Comparison of Marginal versus Conditional models
 \end_layout
 
+\begin_deeper
 \begin_layout Standard
 \begin_inset Quotes eld
 \end_inset
@@ -1748,12 +3056,23 @@ The difference between population-averaged and subject-specific effects
  530.
 \end_layout
 
+\end_deeper
 \begin_layout Section
-What about the conditional modes:
+BLUPS, or other statements about random effects.
+ (What about the conditional modes?)
 \end_layout
 
 \begin_layout Enumerate
-surprise, looks like bad news here: 
+lme4 in R offers ranef(), which gives guesses about the values of 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+RHS claim there is bad news here: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2219,7 +3538,12 @@ xtitle(Time in months) ytitle(Probability of onycholysis)
 
 \end_deeper
 \begin_layout Enumerate
-Random effects Logistic: xtlogit
+Random effects Logistic: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+xtlogit
 \end_layout
 
 \begin_deeper
@@ -2268,10 +3592,12 @@ estimates store xtmelogit
 
 \end_layout
 
-\begin_layout Standard
+\end_deeper
+\begin_layout Enumerate
 Using gllamm
 \end_layout
 
+\begin_deeper
 \begin_layout Standard
 \begin_inset listings
 inline false
@@ -2313,17 +3639,27 @@ gllamm, eform
 
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Standard
 See: p.
  542: Advice for speeding up estimation in gllamm
 \end_layout
 
+\end_deeper
 \end_deeper
 \begin_layout Enumerate
 Posterior prediction/estimation of random effects
 \end_layout
 
 \begin_deeper
+\begin_layout Enumerate
+Clearly, we need to make statements about 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+.
+ Lets don't quibble about whether to call them estimates or predictions.
+\end_layout
+
 \begin_layout Enumerate
 At the time of writing this book, the only Stata command that provides empirical
  Bayes predictions for generalized linear mixed models is the postestimation
