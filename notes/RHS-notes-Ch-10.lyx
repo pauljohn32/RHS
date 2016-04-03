@@ -2105,7 +2105,15 @@ success
 \end_deeper
 \begin_layout Enumerate
 I usually write it down with the sign of the error term reversed.
- I write
+ (Recall, I write 
+\begin_inset Formula $X_{i}$
+\end_inset
+
+ to refer to a ROW vector of data (
+\begin_inset Formula $i$
+\end_inset
+
+'th row))
 \begin_inset Formula 
 \begin{equation}
 y_{i}^{*}=X_{i}\beta-\epsilon_{i}
@@ -2142,7 +2150,7 @@ if then
 
 \begin_inset Formula 
 \begin{eqnarray}
-if\,\epsilon<X\beta &  & then\,y_{i}=1\\
+if\,\epsilon_{i}<X\beta &  & then\,y_{i}=1\\
 if\,X\beta\leq\epsilon_{i} & then & y_{i}=0
 \end{eqnarray}
 
@@ -3572,6 +3580,11 @@ xtlogit, or
 
 \end_layout
 
+\end_deeper
+\begin_layout Enumerate
+xtmelogit
+\end_layout
+
 \begin_layout Standard
 \begin_inset listings
 inline false
@@ -3644,7 +3657,6 @@ See: p.
  542: Advice for speeding up estimation in gllamm
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Enumerate
 Posterior prediction/estimation of random effects
