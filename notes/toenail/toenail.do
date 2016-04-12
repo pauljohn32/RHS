@@ -1,4 +1,13 @@
 
+
+* Paul E. Johnson
+* 20160402
+
+capture log close
+set more off, permanently
+log using toenail-1.log, replace text
+
+
 use toenail.dta
 
 
@@ -9,15 +18,6 @@ label define tr 0 "Itraconazole" 1 "Terbinafine"
 label values treatment tr
 graph bar (mean) proportion = outcome, over(visit) /// 
     by(treatment) ytitle(Proportion with onycholysis)
-
-* Paul E. Johnson
-* 20160402
-
-capture log close
-set more off, permanently
-log using toenail-1.log, replace text
-
-
 
 
 egen prop = mean(outcome), by(treatment visit)
@@ -36,25 +36,61 @@ logit, or
    
 predict logitprob, pr
 
-twoway (line prop mn_month, sort) (line prob month, sort lpatt(dash)), ///
+twoway (line logitprob mn_month, sort) (line logitprob month, sort lpatt(dash)), ///
 by(treatment) legend(order(1 "Observed proportions" 2 "Fitted probabilities")) ///
 xtitle(Time in months) ytitle(Probability of onycholysis)
+   
+
+logit outcome i.treatment##c.month, vce(cluster patient)
+estimates store logit2
+
+margins
+
+margins, at(month=(1/15)) atmeans
+
+margins i.treatment, at(month=(1/15)) atmeans
+marginsplot
+translate @Graph "marginsplot-1.pdf", name("Graph")
+
+* post 
+margins i.treatment, at(month=(1/15)) atmeans post
+
+margins, at(month=(1/15)) atmeans post   
+* Caution: that obliterated the logit mode.
+
+estimates restore logit2
+margins i.treatment, at(month=(1/15)) atmeans
+*margins, at(month=(1/15)) atmeans expression(predict(pr))
+   
    
     
 *xtlogit    
 quietly xtset patient
-xtlogit outcome treatment month trt_month, intpoints(30)
+* xtlogit only allows a random intercept, no random slope
+* gaussian quadrature points is 30
+xtlogit outcome i.treatment##c.month, intpoints(30)
 estimates store xtlogit
 xtlogit, or    
 
-* xtmelogit
+margins i.treatment, at(month=(1/15)) atmeans
+marginsplot
 
+predict xtlogitprob, pr
+
+
+* xtmelogit
+* Slower, more versatile. Numerical approximations
 xtmelogit outcome treatment month trt_month || patient:, intpoints(30)
 estimates store xtmelogit
+predict xtmelogitpr, mu
+
+xtmelogit outcome i.treatment##c.month || patient:, intpoints(30)
+estimates store xtmelogit2
+predict xtmelogitpr2, mu
 
 * gllamm
 * If you don't have a recent gllamm
-*ssc install gllamm, replace
+* ssc install gllamm, replace
 gllamm outcome treatment month trt_month, i(patient) link(logit) /// 
     family(binomial) nip(30) adapt
 estimates store gllamm
@@ -89,9 +125,20 @@ twoway (line logitprob month, sort) (line margprob month, sort lpatt(dash)), ///
 by(treatment) legend(order(1 "Ordinary logit" 2 "Random-intercept logit")) ///
 xtitle(Time in months) ytitle(Fitted marginal probabilities of onycholysis)
 
-twooway (line 
 
+ 
 
+* following not quite right
+twoway (line gllammmu month, connect(ascending)) ///
+    (line margprob month, connect(ascending))
+
+margins, at(month=(1/15)) atmeans asbalanced plot(__swapxp)
+
+margins, predict(outcome(1)) at(month=(1/15)) atmeans asbalanced plot(__swapxp)	
+
+margins , at(month=(1/15)) atmeans asbalanced plot(__swapxp)	
+
+margins , at(month=(1/15) treatment=(1)) atmeans asbalanced expression(predict(xb))
 
 
 * gllamm predictions of individual probabilties
