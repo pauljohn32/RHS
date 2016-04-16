@@ -29,10 +29,16 @@ xtlogit y do_want other_self blame express anger gender
 * 4.
 quietly xtset person
 xtlogit y i1-i24, nocons
-
+estimates store xtlogit1
 * 5.
 
+* Learn how to convert string to factor
+meglm y i.description || person: , family(binom) link(logit)
+
+
+
 * 6.
+estimates restore xtlogit1
 matrix a = e(b)
 matrix a1 = a[1,1..24]
 

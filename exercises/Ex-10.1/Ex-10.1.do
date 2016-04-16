@@ -12,6 +12,11 @@ use toenail.dta, clear
 gen trt_month = treatment*month
 gllamm outcome treatment month trt_month, i(patient) ///
   family(binom) link(probit) adapt
+estimates store gllamm1
+
+meglm outcome treatment month trt_month || patient: , ///
+  family(binom) link(probit) intp(12)
+estimates store meglam1
 
 matrix a=e(b)
 gllamm outcome treatment month trt_month, i(patient) ///
@@ -49,3 +54,12 @@ regress logitm1 probitm1 if visit==1, noconstant
 * greater. I can't figure how to make Stata show this, but in R, run:
 * sd(rlogis(10000))
 
+
+
+meglm outcome treatment month || patient: , ///
+  family(binom) link(probit) intp(12)
+estimates store meglam2
+
+
+predict mu, mu
+predict ranef, reffects

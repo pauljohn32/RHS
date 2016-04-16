@@ -84,6 +84,9 @@ xtmelogit outcome treatment month trt_month || patient:, intpoints(30)
 estimates store xtmelogit
 predict xtmelogitpr, mu
 
+meglm outcome treatment month trt_month || patient:, family(binom) ///
+    link(logit) intpoints(30)
+
 xtmelogit outcome i.treatment##c.month || patient:, intpoints(30)
 estimates store xtmelogit2
 predict xtmelogitpr2, mu

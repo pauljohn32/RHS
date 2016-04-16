@@ -1,0 +1,1905 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+\usepackage{Sweavel}
+\usepackage{booktabs}
+\usepackage{ifthen}
+
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+\usepackage{graphicx}
+
+\usepackage{listings}
+\lstset{tabsize=2, breaklines=true}
+
+\def\Sweavesize{\normalsize} 
+\def\Rcolor{\color{black}} 
+\def\Rbackground{\color[gray]{0.95}}
+\end_preamble
+\use_default_options true
+\begin_modules
+logicalmkup
+enumitem
+sweave
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+Format 7
+InsetLayout CharStyle:Rinput
+LyxType               charstyle
+LabelString           Rinput
+LatexType             command
+LatexName             Rinput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rinput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Rfunction
+LyxType               charstyle
+LabelString           Rfunction
+LatexType             command
+LatexName             Rfunction
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Rfunction}[1]{{\ttfamily #1}}
+EndPreamble
+End
+InsetLayout CharStyle:Routput
+LyxType               charstyle
+LabelString           Routput
+LatexType             command
+LatexName             Routput
+Font
+Family             Typewriter
+EndFont
+Preamble
+\newcommand*{\Routput}[1]{{\ttfamily #1}}
+EndPreamble
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding global
+\font_roman lmodern
+\font_sans lmss
+\font_typewriter lmtt
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command bibtex8
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+dir.create("plots", showWarnings=F)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% In document Latex options:
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+fvset{listparameters={
+\backslash
+setlength{
+\backslash
+topsep}{0em}}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+SweaveOpts{prefix.string=plots/t,split=T,ae=F,nogin=T, height=4,width=6}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Sweavesize{
+\backslash
+scriptsize} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Rcolor{
+\backslash
+color{black}} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+def
+\backslash
+Rbackground{
+\backslash
+color[gray]{0.90}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Roptions, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+options(device = pdf)
+\end_layout
+
+\begin_layout Plain Layout
+
+options(width=160, prompt=" ", continue="  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+options(useFancyQuotes = FALSE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(75645)
+\end_layout
+
+\begin_layout Plain Layout
+
+op <- par() 
+\end_layout
+
+\begin_layout Plain Layout
+
+pjmar <- c(5.1, 5.1, 1.5, 2.1) 
+\end_layout
+
+\begin_layout Plain Layout
+
+#pjmar <- par("mar")
+\end_layout
+
+\begin_layout Plain Layout
+
+options(SweaveHooks=list(fig=function() par(mar=pjmar, ps=12)))
+\end_layout
+
+\begin_layout Plain Layout
+
+pdf.options(onefile=F,family="Times",pointsize=12)
+\end_layout
+
+\begin_layout Plain Layout
+
+library(rockchalk)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Chapter 13 Count Models
+\end_layout
+
+\begin_layout Author
+Paul E.
+ Johnson
+\end_layout
+
+\begin_layout Date
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Glossary
+\end_layout
+
+\begin_layout Standard
+Notation continuing from previous
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\xi_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+xi
+\begin_inset Quotes erd
+\end_inset
+
+ total (or combined) individual row-level error term for group 
+\begin_inset Formula $i$
+\end_inset
+
+ row 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\end_layout
+
+\begin_layout Standard
+Longitudinal terminology: 
+\begin_inset Quotes eld
+\end_inset
+
+group
+\begin_inset Quotes erd
+\end_inset
+
+ is often a single person (
+\begin_inset Formula $j$
+\end_inset
+
+ is group of rows) and the rows for each person are differentiated by time
+ (which is 
+\begin_inset Formula $i$
+\end_inset
+
+ in this book).
+ Economists tend to call these 
+\begin_inset Formula $i$
+\end_inset
+
+, and 
+\begin_inset Formula $t$
+\end_inset
+
+, whereas Laird-Ware/Bates would call them 
+\begin_inset Formula $i$
+\end_inset
+
+ 
+\begin_inset Formula $j$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+zeta
+\begin_inset Quotes erd
+\end_inset
+
+ a group level random error, 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes a grouping variable, 
+\begin_inset Formula $Var(\zeta_{j})=\psi$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\epsilon_{ij}$
+\end_inset
+
+: 
+\begin_inset Quotes eld
+\end_inset
+
+epsilon
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $Var(\epsilon_{ij})=\theta$
+\end_inset
+
+.
+ Individual row-level error uncorrelated with 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Cov(y_{ij},y_{i'j}|\zeta_{j})=0$
+\end_inset
+
+.
+ Apart from 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+, the observed scores are 
+\begin_inset Quotes eld
+\end_inset
+
+conditionally uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Count Data
+\end_layout
+
+\begin_layout Enumerate
+13.2.1 This chapter is about counts, NOT r/n (binomial), which xtmelogit can
+ handle 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+PJ Note: Proportion with offset in Poisson framework possible
+\end_layout
+
+\begin_layout Enumerate
+Also proportions (Beta regression)
+\end_layout
+
+\begin_layout Enumerate
+Compositional data
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+13.2.2 Count can be seen as aggregated individual data, and the grouping naturally
+ leads to multilevel issues 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Caution: ecological fallacy
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+13.3 Poisson model.
+ 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ is incidence rate
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Interesting notation here is linked to time interval of 
+\begin_inset Quotes eld
+\end_inset
+
+exposure
+\begin_inset Quotes erd
+\end_inset
+
+, they use 
+\begin_inset Formula $\mu_{i}=\lambda t_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Poisson is written up separately in my slides on count data, don't want
+ to re type all that.
+\end_layout
+
+\begin_layout Enumerate
+p 689: 
+\begin_inset Formula $Pr(y_{1}|\lambda)\times Pr(y_{2}\mbox{\lambda})=Pr(y_{1}+y_{2})$
+\end_inset
+
+.
+ The probability of the aggregated counts across 2 times is product of 2
+ probabilities.
+ 
+\end_layout
+
+\begin_layout Enumerate
+log link function
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $exp(\beta)$
+\end_inset
+
+is INCIDENCE RATE Ratio (IRR) due to increase in 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 690 If exposure times differ among observation units, offset is used to
+ synchronize that.
+\end_layout
+
+\begin_layout Enumerate
+p 690 Overdispersion more common than underdispersion (I agree).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Longitudinal data structure
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Note distracting tendency to generate new, unusual symbols.
+ p.
+ 692 introduces 
+\begin_inset Formula $\nu_{ij}$
+\end_inset
+
+ where usually we would have 
+\begin_inset Formula $\eta_{ij}$
+\end_inset
+
+ in the MLM literature.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+ROBUST: need to get better understanding of standard errors and what magic
+ Stata is doing on 
+\begin_inset Quotes eld
+\end_inset
+
+vce(cluster id)
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p 694.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+The confidnece intervals are based on the sandwich estimator taking the
+ dependence of the repeated counts (given the covariates) into account
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Frustratingly vague amid all of the other very precise elements here.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random intercept Poisson regression
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Frailty.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Cases with equivalent predictors always can generate different counts.
+ That's not the special thing here.
+\end_layout
+
+\begin_layout Enumerate
+The special thing is that frailty allows 2 cases with same predictors to
+ have different probability distributions, like 
+\begin_inset Formula $Poisson(x+1)$
+\end_inset
+
+ versus 
+\begin_inset Formula $Poisson(x+10)$
+\end_inset
+
+.
+ Here, we suppose the differences between cases are simple parametric difference
+s, but it would be just a small conceptual step to suppose they are different
+ probability models (leading to a 
+\begin_inset Quotes eld
+\end_inset
+
+mixture model
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset Formula $\zeta_{1j}$
+\end_inset
+
+ is a group-level error, 
+\begin_inset Formula $\zeta_{1j}|x_{ij}\sim N(0,\psi_{11})$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\mu_{ij}=exp(X_{ij}\beta+\zeta_{1j})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Marginal (population averaged) models line up with unit-level results, unlike
+ in logistic regression.
+ This a a point I had not considered before reading this book.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+p.
+ 696 
+\begin_inset Quotes eld
+\end_inset
+
+Interestingly, we can also interpret the coefficients as marginal or population-
+averaged effects because the relationship between the marginal expectation
+ of the count (given 
+\begin_inset Formula $x_{ij}$
+\end_inset
+
+ but averaged over 
+\begin_inset Formula $\zeta_{1j})$
+\end_inset
+
+ and the covariates is 
+\begin_inset Formula 
+\begin{equation}
+\mu_{ji}^{M}=exp\{(\beta_{1}+\psi_{11}/2)+\beta_{2}x_{2i}+\ldots\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The intercept is the only parameter that is not the same in the marginal
+ and conditional models [in general the marginal intercept is 
+\begin_inset Formula $E\{exp(\beta_{1}+\zeta_{ji})\}$
+\end_inset
+
+, which becomes 
+\begin_inset Formula $exp(\beta_{1}+\psi_{11}/2)$
+\end_inset
+
+ for a normally distributed random intercept
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+NOTE: need
+\series default
+ go get derivation on that.
+\end_layout
+
+\begin_layout Standard
+Then the implication p.
+ 696 
+\begin_inset Quotes eld
+\end_inset
+
+Because marginal and conditional effects coincide for random-intercept Poisson
+ regression models, in contrast to random-intercept logistic regression,
+ consistent estimation of regression parameters (apart from the intercept)
+ does not hinge on the correct choice of the random-intercept distribution.
+ What is required is correct specification of the mean structure and lack
+ of correlation between the random intercpet and the covariates.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The marginal (population averaged) variance
+\begin_inset Formula 
+\begin{equation}
+Var(y_{ij}|x_{ij})=\mu_{ij}^{M}+(\mu_{ij}^{M})^{2}\{exp(\psi_{11})-1\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Note that, like the negative binomial, the variance of the random effect
+ outcome is the poisson variance plus another piece
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+ICC hard to define, no 
+\begin_inset Quotes eld
+\end_inset
+
+latent variable
+\begin_inset Quotes erd
+\end_inset
+
+ characterization similar to logit that would allow similar ICC.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Option 1.
+ Analytical derivation.
+ Tough! See Stryhn 2006, given covariates, correlation between two counts
+ in same cluster that have all same predictors is still a very complicated
+ formula (p.
+ 697)
+\end_layout
+
+\begin_layout Enumerate
+Option 2.
+ Simulation.
+ (p.
+ 697) randomly draw individuals with same predictors, form an IRR.
+ 
+\begin_inset Formula 
+\begin{equation}
+IRR_{median}=exp\{\sqrt{2\psi_{11}}\Phi^{-1}(3/4)\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+See Section 10.9.2, the median incidence-rate ratio
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Stata estimation example inserts normally distibuted error in a poisson
+ model.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Hypo test
+\series default
+ of the variance estimate.
+ Same idea as other models, 
+\begin_inset Quotes eld
+\end_inset
+
+null hypothesis is on the border of the parameter space
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 698).
+ From commentary, cannot tell for sure if software is supposed to make correctio
+ns described or if use is supposed to remember that they would be necessary.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Takeaway point: If The 
+\series bold
+LR test 
+\series default
+gives a very small p value, then the random effect variance is not 0, but
+ if the p value is larger, where we might conclude 
+\begin_inset Quotes eld
+\end_inset
+
+there is no random effect
+\begin_inset Quotes erd
+\end_inset
+
+, we should be somewhat cautious.
+\end_layout
+
+\begin_layout Standard
+Similar commentary p.
+ 703 
+\begin_inset Quotes eld
+\end_inset
+
+...the asymptotic null distribution for this test is 
+\begin_inset Formula $1/2\chi_{1}^{2}+1/2\chi_{2}^{2}$
+\end_inset
+
+, and we conclude that the random-intercept Poisson model is rejected in
+ favor of the random-coefficient Poisson model.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Random Slopes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Suppose linear predictor has intercept and slope variance
+\begin_inset Formula 
+\begin{equation}
+(\beta_{1}+\zeta_{1j})+(\beta_{2}+\zeta_{2j})x_{21}+\ldots
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Unstructured correlation between 2 group-level random effects
+\begin_inset Formula 
+\begin{equation}
+\left[\begin{array}{c}
+\zeta_{1j}\\
+\zeta_{2j}
+\end{array}\right]\sim MVN\left(\left[\begin{array}{c}
+0\\
+0
+\end{array}\right],\left[\begin{array}{cc}
+\psi_{11} & \psi_{21}\\
+\psi_{21} & \psi_{22}
+\end{array}\right]\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Marginal expected count is
+\begin_inset Formula 
+\begin{equation}
+E[y_{ji}|x_{ij}]=exp\{\beta_{1}+\beta_{2}x_{2i}+\ldots(\psi_{11}+2\psi_{21}x_{2i}+\psi_{22}x_{2i}^{2})/2\}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\series bold
+NOTE: 
+\series default
+Get derivation on that.
+ 
+\end_layout
+
+\begin_layout Standard
+factor out the 
+\begin_inset Formula $x_{2i}$
+\end_inset
+
+, reorganize.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The variable 
+\begin_inset Formula $x_{2}$
+\end_inset
+
+ is dichotomous, {0,1}.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Hence, the multiplicative effect of the reform on the marginal epected count
+ now no longer equals 
+\begin_inset Formula $exp(\beta_{2})$
+\end_inset
+
+ as in the random-intercept model but 
+\begin_inset Formula $exp(\beta_{2}+\psi_{21}+\psi_{22}/2)$
+\end_inset
+
+.
+ In general, teh marginal expected count is given by the exponential of
+ the sum of the linear predictor and half the variance of the random part
+ of the model.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 702).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+Interpretation of estimates
+\begin_inset Quotes erd
+\end_inset
+
+ p.
+ 705
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+I don't understand part after 
+\begin_inset Quotes eld
+\end_inset
+
+Instead of thinking
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Isn't this just plugging in 0 and 1 as two values of 
+\begin_inset Formula $x_{2}$
+\end_inset
+
+?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Big point about identification.
+ (TODO Come back, clean this up).
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+In LMM and Logit models, the individual level variance is not separately
+ estimable
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 705 Individual level variance 
+\begin_inset Formula $\theta$
+\end_inset
+
+...
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Overdispersion (single level models)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Normally distributed individual noise implies 
+\begin_inset Quotes eld
+\end_inset
+
+GLMM
+\begin_inset Quotes erd
+\end_inset
+
+, but log Gamma noise implies Negative Binomial
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 707 Shows how to use xtpoisson to estimate individual-level normal error.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+could we get both individual and group level errors? Big question.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Note we get more zeroes out of these models, possibly solving the 
+\begin_inset Quotes eld
+\end_inset
+
+Zero Inflation
+\begin_inset Quotes erd
+\end_inset
+
+ issue.
+\end_layout
+
+\begin_layout Enumerate
+Negative Binomial (p.
+ 707)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+individual frailty is log Gamma distribution, which implies outcomes are
+ Negative Binomial.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Say it this way.
+ The random effects are determined FIRST.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Then they are nserted into 
+\begin_inset Formula $Pois(X\beta+Z\zeta)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Hence the observed count is Poisson, conditional on 
+\begin_inset Formula $\zeta$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Since we don't know 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ (not observed), we have to imagine the range of possible draws from the
+ Poisson process that would happen if 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ takes on many values.
+ Hence, the overall 
+\begin_inset Quotes eld
+\end_inset
+
+marginal
+\begin_inset Quotes erd
+\end_inset
+
+ distribution of 
+\begin_inset Formula $y$
+\end_inset
+
+ happens to follow a Neg.
+ Binomial distribution.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+
+\series bold
+TODO: 
+\series default
+think about writing one clean derivation of log Gamma error to NB distribution!
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Quasilikelihood:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Either GLMM or NB models are based on a specific function for inserted random
+ noise.
+ Can we avoid that assumption?
+\end_layout
+
+\begin_layout Enumerate
+Quasi models try to build a regression model without making that detailed
+ assumption.
+ Suppose instead one assumes
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The expected value is same as in all models discussed so far, the log link:
+ 
+\begin_inset Formula $E[y_{ji}]=ln(\mu_{ij})=X_{ij}\beta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+But we know the variance of 
+\begin_inset Formula $y_{ji}$
+\end_inset
+
+ is not same as Poisson, because there is some uncertainty.
+ So ASSERT
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+Var(y_{ij}|X_{ji})=\phi\mu_{ji}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Variance is proportional to mu.
+ We'd like to estimate 
+\begin_inset Formula $\phi$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Wedderburn (197x) proposed this
+\end_layout
+
+\begin_layout Enumerate
+In my mind, it is tied to generalized estimating equations.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Level-1 overdispersion
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+I've been wondering a long time, what if the data generator has random error
+ at various levels.
+ 
+\end_layout
+
+\begin_layout Enumerate
+We are used to hierarchical error in regressions,
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Linear Mixed model 
+\begin_inset Formula $X_{j}\beta+\zeta_{1j}+\zeta_{2j}+\epsilon_{ij}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+It seems superficial/silly now to use different letters 
+\begin_inset Formula $\zeta$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ , these are just errors we assume exist
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+In a count model, say poisson, why can't we introduce similar? Could fit
+ a multilevel model.
+ If the software would work, there's no conceptual problem.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Alternative math model spelled out p.
+ 711.
+ Hausman, Hall and Griliches (1984) with a special Stata function 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtnbreg
+\end_layout
+
+\end_inset
+
+.
+ If you read into the details, you see this is a quasilikelihood model with
+ an assertion of the EV and the variance function.
+ The interesting bit is that the variance component has a draw from a Beta
+ distribution embedded in it.
+ Neat! However, after fighting though that, we learn that RHS don't like
+ to interpret these models.
+ p.
+ 712 
+\begin_inset Quotes eld
+\end_inset
+
+We therefore do not recommend using this model.
+\begin_inset Quotes erd
+\end_inset
+
+ Wasted effort.
+\end_layout
+
+\begin_layout Enumerate
+Alternative estimation approach is to fit same old random intercept model,
+ but correct the standard errors for individual-level variability.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Robust
+\begin_inset Quotes erd
+\end_inset
+
+ standard errors again.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Conditional Poisson: The Fixed Effects equivalent.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Could estimate dummy variables, one for each unit.
+\end_layout
+
+\begin_layout Enumerate
+Can suppress those dummies, as in linear models (regression on deviation
+ scores) or in logistic regression (clogit, Chapter 10.14.1, which I did not
+ understand either).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtpoisson y x1 x2, fe 
+\end_layout
+
+\end_inset
+
+: MUST omit all predictors that are constant within units.
+ No level 2 predictors.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 715: Conditional NB regression.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Generalized Estimating Equations.
+ Wish I could find my other notes on this.
+\end_layout
+
+\begin_layout Enumerate
+Missing values
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 716 
+\begin_inset Quotes eld
+\end_inset
+
+From the discussion in section 13.7.1, we would expect the estimated conditional
+ effects using random-intercept Poisson models to be similar to the estimated
+ marginal effects using ordinary Poisson regression or GEE (apart from the
+ intercept).
+ However, it is eviden from table 13.1 that the estimates are quite different.
+\begin_inset Quotes erd
+\end_inset
+
+ Some guesses follow, including unbalanced data.
+ 
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 717 
+\begin_inset Quotes eld
+\end_inset
+
+It is often claimed that GEE requires data to be missing completely at random
+ (MCAR) for consistency, but missingness can actually depend on the covariates.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Simulation study p 717.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+TODO:
+\series default
+ This might be worth some further study.
+ Will do in R since Stata programming still seems horrible to me.
+ Anyway, it addresses problem related to resignation from studies and how
+ mixed models correct for it (p.
+ 717).
+ In ordinary Poisson model, intervention appeared effective, but mixed model
+ says it was not, and allegation is that the missingness structure is fooling
+ the Poisson model.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Estimating a proportion (ratio) model.
+ Higher-than-expected rates of lip cancer take on same pattern as any proportion
+ model estimated by offets with Poisson.
+ Section 13.13 - 13.15 should probably be in one section.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+It is an example of using an 
+\begin_inset Quotes eld
+\end_inset
+
+offset
+\begin_inset Quotes erd
+\end_inset
+
+ to estimate a model of a proportion.
+\begin_inset Formula 
+\begin{equation}
+ln(\frac{r_{j}}{n_{j}})=ln(r_{j})-ln(n_{j})=X_{j}\beta
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+ln(r_{j})-ln(n_{j})=X_{j}\beta
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+ln(r_{j})=ln(n_{j})+X_{j}\beta
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+on the right hand side, we have a predictor for which we do not estimate
+ a coefficient, 
+\begin_inset Formula $ln(n_{j})$
+\end_inset
+
+.
+ That's an 
+\begin_inset Quotes eld
+\end_inset
+
+offset
+\begin_inset Quotes erd
+\end_inset
+
+, it is just an intercept we assume exists.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 724: shows gllamm estimation of grouped random effect with offset.
+\end_layout
+
+\begin_layout Enumerate
+Predicted values: some details worked out.
+ I'm not writing out much here.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Posterior expectation: 
+\begin_inset Formula 
+\begin{equation}
+\int exp(\hat{\beta}_{1}+\zeta_{j})\times Posterior(\zeta_{j}|observed)d\zeta_{j}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+What's that? we know 
+\begin_inset Formula $\zeta_{j}$
+\end_inset
+
+ varies randomly, we have to use its various values to weight 
+\begin_inset Formula $exp(\hat{\beta}_{1}+\zeta_{j})$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+gllapred will calculate those for us
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+NPML: Nonparametric Maximum Likelihood
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+PJ Note: after reading the Murray Aitkin papers and the GLIM book, the NPML
+ idea seems mis-named.
+ It should be something like 
+\begin_inset Quotes eld
+\end_inset
+
+discrete random effects
+\begin_inset Quotes erd
+\end_inset
+
+ models.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Instead of assuming 
+\begin_inset Formula $\zeta_{j}\sim N(0,1)$
+\end_inset
+
+ or such, just suppose there's an unmeasured variable that takes on a few
+ discrete values.
+ Then the challenge is to try to figure out
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+what are the values that happened to produce the data we got, and
+\end_layout
+
+\begin_layout Enumerate
+can we guess which rows were affected by which of the random effects, and
+\end_layout
+
+\begin_layout Enumerate
+in light of those random effects, do our other regression estimates change?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+That sounds horribly complicated, but Aitkin showed these models can be
+ estimated with much less elaborate software than LMM or GLMM.
+\end_layout
+
+\begin_layout Enumerate
+Big conceptual problem is that the estimation process can proceed in steps.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Allow 2 discrete valued random effects
+\begin_inset Quotes erd
+\end_inset
+
+ then 
+\begin_inset Quotes eld
+\end_inset
+
+Allow 3 values
+\begin_inset Quotes erd
+\end_inset
+
+ then 
+\begin_inset Quotes eld
+\end_inset
+
+Allow 4 values
+\begin_inset Quotes erd
+\end_inset
+
+ and the calculations do not always stabilize and the conclusions we might
+ reach about the models can be affected by this uncertain calculation.
+\end_layout
+
+\begin_layout Enumerate
+See the beautiful graph p.
+ 731!
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Stata notes
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 691 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtdescribe
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Fitting Counts: without random effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 693 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+poisson
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+glm
+\end_layout
+
+\end_inset
+
+ Same thing, general purpose name 
+\end_layout
+
+\begin_layout Enumerate
+option 
+\begin_inset Quotes eld
+\end_inset
+
+vce(cluster id)
+\begin_inset Quotes erd
+\end_inset
+
+.
+ WTF
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Random Intercept: Poisson with random effects
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+p.
+ 697 xtpoisson
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+
+\series bold
+NOTE
+\series default
+ CRITICAL observation: xtpoisson can fit a gamma distributed 
+\begin_inset Formula $exp(\zeta)$
+\end_inset
+
+ term, meaning it is equivalent to negative binomial in that case.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+KEY: check if same model can have individual-level log-gamma error as well
+ as group level errors.
+ WOW!
+\end_layout
+
+\begin_layout Enumerate
+Hence necessary to include argument 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ in call (p.
+ 698)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+p.
+ 699 xtmepoisson 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+|| id:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+does not require declaration that error is normal, that's assumed.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Default uses 7 quadrature points
+\end_layout
+
+\begin_layout Enumerate
+Could use Laplace method equivalent of 1 quadrature point
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+gllamm.
+ Interesting design
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+generate cons = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+eq ri: cons
+\end_layout
+
+\begin_layout Plain Layout
+
+gllamm numvisit x1 x2, family(poisson) link(log) i(id) eqs(ri) eform adapt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Seems to offer avenue to fit model with both individual level and group
+ level random effects.
+\end_layout
+
+\begin_layout Enumerate
+p.
+ 701.
+ lrtest.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+We must divide the p-value by 2, as discussed in section 2.6.2,...
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Random slope
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+xtpoisson cannot do this, it only for intercepts
+\end_layout
+
+\begin_layout Enumerate
+xtmepoisson: 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+|| id: reform
+\end_layout
+
+\end_inset
+
+.
+ Don't forget 
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+covariance(unstructured)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+gllamm (p.
+ 704)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Code shows how to use estimates from random intercept model to start the
+ random slope estimator.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Fixed effects estimator: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset Flex Code
+status open
+
+\begin_layout Plain Layout
+xtpoisson y x1 x1, fe
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+post estimation simulation in gllamm 
+\begin_inset Quotes eld
+\end_inset
+
+gllasim
+\begin_inset Quotes erd
+\end_inset
+
+ similar to simulate() in R functions.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+TODO: type in their code, learn from it.
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
