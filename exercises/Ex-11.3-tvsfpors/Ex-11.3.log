@@ -1,0 +1,270 @@
+--------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.3-tvsfpors/Ex-11.3.log
+  log type:  text
+ opened on:  26 Apr 2016, 15:36:03
+
+. 
+. * use http://www.stata-press.com/data/mlmus3/tvsfpors, clear
+. * saveold tvsfpors.dta12, version(12) replace
+. use tvsfpors.dta12, clear
+
+.  
+.  *1
+. meglm thk prethk i.cc##i.tv || school: , family(ordinal)
+
+Fitting fixed-effects model:
+
+Iteration 0:   log likelihood =  -2212.775  
+Iteration 1:   log likelihood =  -2125.509  
+Iteration 2:   log likelihood = -2125.1034  
+Iteration 3:   log likelihood = -2125.1032  
+
+Refining starting values:
+
+Grid node 0:   log likelihood = -2136.2426
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -2136.2426  (not concave)
+Iteration 1:   log likelihood = -2120.2577  
+Iteration 2:   log likelihood = -2119.7574  
+Iteration 3:   log likelihood = -2119.7428  
+Iteration 4:   log likelihood = -2119.7428  
+
+Mixed-effects GLM                               Number of obs     =      1,600
+Family:                 ordinal
+Link:                     logit
+Group variable:          school                 Number of groups  =         28
+
+                                                Obs per group:
+                                                              min =         18
+                                                              avg =       57.1
+                                                              max =        137
+
+Integration method: mvaghermite                 Integration pts.  =          7
+
+                                                Wald chi2(4)      =     128.06
+Log likelihood = -2119.7428                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+         thk |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      prethk |   .4032892     .03886    10.38   0.000      .327125    .4794534
+        1.cc |   .9237904    .204074     4.53   0.000     .5238127    1.323768
+        1.tv |   .2749937   .1977424     1.39   0.164    -.1125744    .6625618
+             |
+       cc#tv |
+        1 1  |  -.4659256   .2845963    -1.64   0.102    -1.023724    .0918728
+-------------+----------------------------------------------------------------
+       /cut1 |  -.0884493   .1641062    -0.54   0.590    -.4100916     .233193
+       /cut2 |   1.153364    .165616     6.96   0.000     .8287625    1.477965
+       /cut3 |    2.33195   .1734199    13.45   0.000     1.992053    2.671846
+-------------+----------------------------------------------------------------
+school       |
+   var(_cons)|   .0735112   .0383106                      .0264695    .2041551
+------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 10.72         Prob >= chibar2 = 0.0005
+
+. 
+. meglm, or
+
+Mixed-effects GLM                               Number of obs     =      1,600
+Family:                 ordinal
+Link:                     logit
+Group variable:          school                 Number of groups  =         28
+
+                                                Obs per group:
+                                                              min =         18
+                                                              avg =       57.1
+                                                              max =        137
+
+Integration method: mvaghermite                 Integration pts.  =          7
+
+                                                Wald chi2(4)      =     128.06
+Log likelihood = -2119.7428                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+         thk | Odds Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      prethk |    1.49674   .0581633    10.38   0.000     1.386975    1.615191
+        1.cc |    2.51882   .5140255     4.53   0.000     1.688453    3.757553
+        1.tv |   1.316522   .2603324     1.39   0.164     .8935309    1.939755
+             |
+       cc#tv |
+        1 1  |   .6275539   .1785995    -1.64   0.102     .3592545    1.096225
+-------------+----------------------------------------------------------------
+       /cut1 |  -.0884493   .1641062    -0.54   0.590    -.4100916     .233193
+       /cut2 |   1.153364    .165616     6.96   0.000     .8287625    1.477965
+       /cut3 |    2.33195   .1734199    13.45   0.000     1.992053    2.671846
+-------------+----------------------------------------------------------------
+school       |
+   var(_cons)|   .0735112   .0383106                      .0264695    .2041551
+------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 10.72         Prob >= chibar2 = 0.0005
+
+. 
+. * 2
+. 
+. meglm thk prethk i.cc##i.tv || class: , family(ordinal)
+
+Fitting fixed-effects model:
+
+Iteration 0:   log likelihood =  -2212.775  
+Iteration 1:   log likelihood =  -2125.509  
+Iteration 2:   log likelihood = -2125.1034  
+Iteration 3:   log likelihood = -2125.1032  
+
+Refining starting values:
+
+Grid node 0:   log likelihood = -2139.0758
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -2139.0758  (not concave)
+Iteration 1:   log likelihood = -2117.1207  
+Iteration 2:   log likelihood = -2115.4237  
+Iteration 3:   log likelihood = -2115.3832  
+Iteration 4:   log likelihood = -2115.3831  
+
+Mixed-effects GLM                               Number of obs     =      1,600
+Family:                 ordinal
+Link:                     logit
+Group variable:           class                 Number of groups  =        135
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       11.9
+                                                              max =         28
+
+Integration method: mvaghermite                 Integration pts.  =          7
+
+                                                Wald chi2(4)      =     136.61
+Log likelihood = -2115.3831                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+         thk |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      prethk |    .414802   .0393628    10.54   0.000     .3376523    .4919517
+        1.cc |   .8613405   .1735822     4.96   0.000     .5211257    1.201555
+        1.tv |   .2058661   .1705962     1.21   0.228    -.1284962    .5402284
+             |
+       cc#tv |
+        1 1  |  -.3011391   .2451318    -1.23   0.219    -.7815885    .1793104
+-------------+----------------------------------------------------------------
+       /cut1 |  -.0757384    .146627    -0.52   0.605    -.3631221    .2116453
+       /cut2 |   1.197664   .1485244     8.06   0.000     .9065616    1.488766
+       /cut3 |   2.403178   .1579046    15.22   0.000     2.093691    2.712665
+-------------+----------------------------------------------------------------
+class        |
+   var(_cons)|   .1886195   .0637244                      .0972773    .3657311
+------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 19.44         Prob >= chibar2 = 0.0000
+
+. 
+. meglm, or
+
+Mixed-effects GLM                               Number of obs     =      1,600
+Family:                 ordinal
+Link:                     logit
+Group variable:           class                 Number of groups  =        135
+
+                                                Obs per group:
+                                                              min =          1
+                                                              avg =       11.9
+                                                              max =         28
+
+Integration method: mvaghermite                 Integration pts.  =          7
+
+                                                Wald chi2(4)      =     136.61
+Log likelihood = -2115.3831                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+         thk | Odds Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      prethk |   1.514071   .0595981    10.54   0.000     1.401653    1.635505
+        1.cc |   2.366331   .4107528     4.96   0.000     1.683922    3.325285
+        1.tv |   1.228589   .2095925     1.21   0.228     .8794169    1.716399
+             |
+       cc#tv |
+        1 1  |   .7399748   .1813913    -1.23   0.219     .4576784    1.196392
+-------------+----------------------------------------------------------------
+       /cut1 |  -.0757384    .146627    -0.52   0.605    -.3631221    .2116453
+       /cut2 |   1.197664   .1485244     8.06   0.000     .9065616    1.488766
+       /cut3 |   2.403178   .1579046    15.22   0.000     2.093691    2.712665
+-------------+----------------------------------------------------------------
+class        |
+   var(_cons)|   .1886195   .0637244                      .0972773    .3657311
+------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 19.44         Prob >= chibar2 = 0.0000
+
+. 
+. 
+. * Following test fails!
+. ** meglm thk prethk i.cc##i.tv || class:  || school: , family(ordinal)
+. 
+. * Now respect the nesting, runs!
+. meglm thk prethk i.cc##i.tv || school:  || class: , ///
+>     family(ordinal) covar(unstructured)
+
+Fitting fixed-effects model:
+
+Iteration 0:   log likelihood =  -2212.775  
+Iteration 1:   log likelihood =  -2125.509  
+Iteration 2:   log likelihood = -2125.1034  
+Iteration 3:   log likelihood = -2125.1032  
+
+Refining starting values:
+
+Grid node 0:   log likelihood = -2152.1514
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -2152.1514  (not concave)
+Iteration 1:   log likelihood = -2125.9213  (not concave)
+Iteration 2:   log likelihood = -2120.1861  
+Iteration 3:   log likelihood = -2115.6177  
+Iteration 4:   log likelihood = -2114.5896  
+Iteration 5:   log likelihood = -2114.5881  
+Iteration 6:   log likelihood = -2114.5881  
+
+Mixed-effects GLM                               Number of obs     =      1,600
+Family:                 ordinal
+Link:                     logit
+
+-------------------------------------------------------------
+                |     No. of       Observations per Group
+ Group Variable |     Groups    Minimum    Average    Maximum
+----------------+--------------------------------------------
+         school |         28         18       57.1        137
+          class |        135          1       11.9         28
+-------------------------------------------------------------
+
+Integration method: mvaghermite                 Integration pts.  =          7
+
+                                                Wald chi2(4)      =     124.39
+Log likelihood = -2114.5881                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+         thk |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      prethk |   .4085273    .039616    10.31   0.000     .3308814    .4861731
+        1.cc |   .8844369   .2099124     4.21   0.000     .4730161    1.295858
+        1.tv |    .236448   .2049065     1.15   0.249    -.1651614    .6380575
+             |
+       cc#tv |
+        1 1  |  -.3717699   .2958887    -1.26   0.209     -.951701    .2081612
+-------------+----------------------------------------------------------------
+       /cut1 |  -.0959459   .1688988    -0.57   0.570    -.4269815    .2350896
+       /cut2 |   1.177478   .1704946     6.91   0.000     .8433151    1.511642
+       /cut3 |   2.383672   .1786736    13.34   0.000     2.033478    2.733865
+-------------+----------------------------------------------------------------
+school       |
+   var(_cons)|   .0448735   .0425387                      .0069997    .2876749
+-------------+----------------------------------------------------------------
+school>class |
+   var(_cons)|   .1482157   .0637521                       .063792    .3443674
+------------------------------------------------------------------------------
+LR test vs. ologit model: chi2(2) = 21.03                 Prob > chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. 
+. 
+end of do-file
+
