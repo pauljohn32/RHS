@@ -268,3 +268,4 @@ Note: LR test is conservative and provided only for reference.
 . 
 end of do-file
 
+. exit, clear
