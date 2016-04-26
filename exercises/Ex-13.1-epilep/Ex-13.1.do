@@ -36,6 +36,10 @@ meglm y lbas treat lbas_trt lage v4 || subj: , ///
     link(log) family(poisson) intpoints(12)
 estimates store meglm1
 
+predict meglm1mu, mu
+predict meglm1xb, xb
+predict re*, reffects
+
 est tab gllamm1 meglm1, se
 
 * 2.
@@ -50,6 +54,11 @@ estimates store gllamm2
 meglm y lbas treat lbas_trt lage visit || subj:visit, ///
     link(log) family(poisson) intpoints(12)
 estimates store meglm2a
+predict meglm2mu, mu
+predict meglm2xb, xb
+predict re2*, reffects
+
+
 
 est tab gllamm2 meglm2a, se
 
