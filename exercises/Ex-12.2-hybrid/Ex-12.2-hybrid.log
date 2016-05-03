@@ -1,0 +1,351 @@
+---------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-12.2-hybrid/Ex-12.2.log
+  log type:  text
+ opened on:   3 May 2016, 14:55:46
+
+. 
+. * use http://www.stata-press.com/data/mlmus3/hybrid, clear
+. * saveold hybrid.dta12, version(12) replace
+. use hybrid.dta12, clear
+
+. 
+. 
+. 
+. * 1.
+. clogit chosen price cost range electric hybrid highperf medhiperf, ///
+>     group(situation)
+
+Iteration 0:   log likelihood = -1413.2538  
+Iteration 1:   log likelihood = -1399.2289  
+Iteration 2:   log likelihood = -1399.1932  
+Iteration 3:   log likelihood = -1399.1932  
+
+Conditional (fixed-effects) logistic regression
+
+                                                Number of obs     =      4,452
+                                                LR chi2(7)        =     462.29
+                                                Prob > chi2       =     0.0000
+Log likelihood = -1399.1932                     Pseudo R2         =     0.1418
+
+------------------------------------------------------------------------------
+      chosen |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       price |  -.4166842   .0331591   -12.57   0.000    -.4816747   -.3516936
+        cost |  -.0128795   .0035308    -3.65   0.000    -.0197999   -.0059592
+       range |   .4770448   .1764833     2.70   0.007     .1311439    .8229458
+    electric |  -1.392353    .276639    -5.03   0.000    -1.934555   -.8501506
+      hybrid |   .3554657   .1218117     2.92   0.004     .1167192    .5942122
+    highperf |   .1099063   .0838237     1.31   0.190    -.0543852    .2741978
+   medhiperf |   .3841103   .0854518     4.50   0.000     .2166278    .5515927
+------------------------------------------------------------------------------
+
+. 
+. * 2.
+. 
+. * 3.
+. by situation, sort: gen alt = _n
+
+. 
+. gllamm alt price cost range electric hybrid       ///
+>    highperf medhiperf, i(id) link(mlogit)         ///
+>    expanded(situation chosen o) noconstant init
+ 
+number of level 1 units = 4452
+ 
+Condition Number = 142.2959
+ 
+gllamm model 
+ 
+log likelihood = -1399.1932
+ 
+------------------------------------------------------------------------------
+         alt |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       price |  -.4166842   .0331591   -12.57   0.000    -.4816747   -.3516936
+        cost |  -.0128795   .0035308    -3.65   0.000    -.0197999   -.0059592
+       range |   .4770449   .1764833     2.70   0.007     .1311439    .8229458
+    electric |  -1.392353   .2766389    -5.03   0.000    -1.934555   -.8501507
+      hybrid |   .3554657   .1218117     2.92   0.004     .1167192    .5942122
+    highperf |   .1099063   .0838237     1.31   0.190    -.0543852    .2741978
+   medhiperf |   .3841103   .0854518     4.50   0.000     .2166278    .5515928
+------------------------------------------------------------------------------
+ 
+
+.    
+. * 4.
+. 
+. eq elec: electric
+
+. eq hyb: hybrid
+
+.  
+. gllamm alt price cost range electric hybrid   ///
+>    highperf medhiperf, i(id) link(mlogit)     ///
+>    expanded(situation chosen o) noconstant    ///
+>    nrf(2) eqs(elec hyb) trace adapt ip(m) nip(11)
+ 
+General model information
+------------------------------------------------------------------------------
+
+dependent variable:         alt
+nominal responses:          mlogit
+equation for fixed effects  price cost range electric hybrid highperf medhiperf
+  
+Random effects information for 2 level model
+------------------------------------------------------------------------------
+
+ 
+ 
+***level 2 (id) equation(s):
+   (2 random effect(s))
+  
+ 
+   diagonal element of cholesky decomp. of covariance matrix
+   id1_1 : electric
+ 
+   diagonal element of cholesky decomp. of covariance matrix
+   id1_2 : hybrid
+ 
+   off-diagonal elements
+   id1_2_1: _cons
+ 
+number of level 1 units = 4452
+number of level 2 units = 100
+ 
+Initial values for fixed effects
+ 
+(using gllamm for inital values)
+
+------------------------------------------------------------------------------
+Iteration 0:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:
+        price       cost      range   electric     hybrid   highperf  medhiperf
+r1          0          0          0          0          0          0          0
+
+                                                   log likelihood = -1630.3406
+------------------------------------------------------------------------------
+Iteration 1:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:
+        price       cost      range   electric     hybrid   highperf  medhiperf
+r1  -.4236289  -.0165773   .3990987  -1.495134   .2643324   .1429684   .4367357
+
+                                                   log likelihood = -1401.0266
+------------------------------------------------------------------------------
+Iteration 2:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:
+        price       cost      range   electric     hybrid   highperf  medhiperf
+r1  -.4159687  -.0127826   .4803984  -1.391132   .3566525   .1092679   .3822523
+
+                                                   log likelihood = -1399.1955
+------------------------------------------------------------------------------
+Iteration 3:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:
+        price       cost      range   electric     hybrid   highperf  medhiperf
+r1  -.4166827  -.0128795   .4770505  -1.392355   .3554654   .1099059    .384108
+
+                                                   log likelihood = -1399.1932
+------------------------------------------------------------------------------
+Iteration 4:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:
+        price       cost      range   electric     hybrid   highperf  medhiperf
+r1  -.4166842  -.0128795   .4770449  -1.392353   .3554657   .1099063   .3841103
+
+                                                   log likelihood = -1399.1932
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+         alt |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       price |  -.4166842   .0331591   -12.57   0.000    -.4816747   -.3516936
+        cost |  -.0128795   .0035308    -3.65   0.000    -.0197999   -.0059592
+       range |   .4770449   .1764833     2.70   0.007     .1311439    .8229458
+    electric |  -1.392353   .2766389    -5.03   0.000    -1.934555   -.8501507
+      hybrid |   .3554657   .1218117     2.92   0.004     .1167192    .5942122
+    highperf |   .1099063   .0838237     1.31   0.190    -.0543852    .2741978
+   medhiperf |   .3841103   .0854518     4.50   0.000     .2166278    .5515928
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+
+start running on  3 May 2016 at 14:55:53
+
+Running adaptive quadrature
+------------------------------------------------------------------------------
+Iteration 0 of adaptive quadrature:
+Initial parameters:
+
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4166842  -.0128795   .4770449  -1.392353   .3554657   .1099063   .3841103         .5
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1         .5          0
+
+Updated log likelihood:
+-1372.9964 -1372.9995 -1372.9995 
+                                                   log likelihood = -1372.9995
+------------------------------------------------------------------------------
+Iteration 1 of adaptive quadrature:
+Updated parameters:
+
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4470934  -.0122569   .4997141  -1.541191   .4133767   .0881075   .4785642   1.539506
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .9167093   .8698435
+
+Updated log likelihood: 
+-1356.5795 -1341.7793 -1340.7962 -1340.7971 -1340.7971 
+                                                   log likelihood = -1340.7971
+------------------------------------------------------------------------------
+Iteration 2 of adaptive quadrature:
+Updated parameters:
+
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4600297  -.0125361    .576143  -1.713437   .4306693    .088358   .4883893   1.529005
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7491723   .8297651
+
+Updated log likelihood: 
+-1339.7933 -1339.7355 -1339.7329 -1339.7329 
+                                                   log likelihood = -1339.7329
+------------------------------------------------------------------------------
+Iteration 3 of adaptive quadrature:
+Updated parameters:
+
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4595854  -.0125684   .5772325  -1.717649   .4221822   .0883181   .4885095   1.518518
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7708915   .8274023
+
+Updated log likelihood: 
+-1339.7114 -1339.7111 -1339.7112 -1339.7112 
+                                                   log likelihood = -1339.7112
+------------------------------------------------------------------------------
+Iteration 4 of adaptive quadrature:
+Updated parameters:
+
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4595854  -.0125684   .5772325  -1.717649   .4221822   .0883181   .4885095   1.518518
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7708915   .8274023
+
+Updated log likelihood: 
+-1339.7112 
+                                                   log likelihood = -1339.7112
+------------------------------------------------------------------------------
+
+
+
+Adaptive quadrature has converged, running Newton-Raphson
+------------------------------------------------------------------------------
+Iteration 0:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4595854  -.0125684   .5772325  -1.717649   .4221822   .0883181   .4885095   1.518518
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7708915   .8274023
+
+                                                   log likelihood = -1339.7112
+------------------------------------------------------------------------------
+Iteration 1:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4595854  -.0125684   .5772325  -1.717649   .4221822   .0883181   .4885095   1.518518
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7708915   .8274023
+
+                                                   log likelihood = -1339.7112
+                                                                   (backed up)
+------------------------------------------------------------------------------
+Iteration 2:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1   -.459393  -.0125642   .5770955  -1.716373   .4219962   .0884075   .4881424   1.513838
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7700225    .825514
+
+                                                   log likelihood = -1339.7109
+------------------------------------------------------------------------------
+Iteration 3:
+Coefficient vector:
+          alt:       alt:       alt:       alt:       alt:       alt:       alt:     id1_1:
+        price       cost      range   electric     hybrid   highperf  medhiperf   electric
+y1  -.4593933  -.0125642   .5770961  -1.716378   .4219961   .0884075   .4881429   1.513856
+
+        id1_2:   id1_2_1:
+       hybrid      _cons
+y1   .7700241   .8255214
+
+                                                   log likelihood = -1339.7109
+------------------------------------------------------------------------------
+finish running on  3 May 2016 at 15:00:20
+  
+ 
+number of level 1 units = 4452
+number of level 2 units = 100
+ 
+Condition Number = 117.99942
+ 
+gllamm model 
+ 
+log likelihood = -1339.7109
+ 
+------------------------------------------------------------------------------
+         alt |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       price |  -.4593933   .0364869   -12.59   0.000    -.5309064   -.3878803
+        cost |  -.0125642   .0038541    -3.26   0.001    -.0201181   -.0050104
+       range |   .5770961   .1930294     2.99   0.003     .1987655    .9554268
+    electric |  -1.716378   .3442832    -4.99   0.000     -2.39116   -1.041595
+      hybrid |   .4219961   .1755978     2.40   0.016     .0778308    .7661614
+    highperf |   .0884075   .0916702     0.96   0.335    -.0912629    .2680778
+   medhiperf |   .4881429   .0935178     5.22   0.000     .3048514    .6714343
+------------------------------------------------------------------------------
+ 
+ 
+Variances and covariances of random effects
+------------------------------------------------------------------------------
+
+ 
+***level 2 (id)
+ 
+    var(1): 2.2917606 (.55255287)
+    cov(2,1): 1.2497207 (.34393584) cor(2,1): .73125961
+ 
+    var(2): 1.2744227 (.32258838)
+------------------------------------------------------------------------------
+
+ 
+
+.    
+. 
+end of do-file
+
+. exit, clear
