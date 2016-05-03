@@ -1,0 +1,265 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-12.1-crackers/Ex-12.1.log
+  log type:  text
+ opened on:   3 May 2016, 13:56:28
+
+. 
+. 
+. * use http://www.stata-press.com/data/mlmus3/crackers, clear
+. * saveold crackers.dta12, version(12) replace
+. 
+. use crackers.dta12, clear
+
+. 
+. * 1.
+. 
+. egen resp = group(id occ)
+
+. 
+. tabulate brand, generate(br)
+
+      brand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   Sunshine |      2,509       25.00       25.00
+    Keebler |      2,509       25.00       50.00
+    Nabisco |      2,509       25.00       75.00
+    Private |      2,509       25.00      100.00
+------------+-----------------------------------
+      Total |     10,036      100.00
+
+. rename br1 Sunshine
+
+. rename br2 Keebler
+
+. rename br3 Nabisco
+
+. clogit choice Sunshine Keebler Nabisco display feature price, group(resp)
+
+Iteration 0:   log likelihood = -2597.4395  
+Iteration 1:   log likelihood = -2508.5953  
+Iteration 2:   log likelihood = -2505.5877  
+Iteration 3:   log likelihood = -2505.5809  
+Iteration 4:   log likelihood = -2505.5809  
+
+Conditional (fixed-effects) logistic regression
+
+                                                Number of obs     =     10,036
+                                                LR chi2(6)        =    1945.26
+                                                Prob > chi2       =     0.0000
+Log likelihood = -2505.5809                     Pseudo R2         =     0.2796
+
+------------------------------------------------------------------------------
+      choice |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    Sunshine |  -.8544199   .1092333    -7.82   0.000    -1.068513   -.6403265
+     Keebler |  -.0831798   .1332619    -0.62   0.533    -.3443683    .1780087
+     Nabisco |   1.824142   .1151987    15.83   0.000     1.598356    2.049927
+     display |   .0947567   .0716482     1.32   0.186    -.0456711    .2351846
+     feature |   .5264186   .1105882     4.76   0.000     .3096697    .7431675
+       price |  -3.111738   .2398017   -12.98   0.000     -3.58174   -2.641735
+------------------------------------------------------------------------------
+
+. 
+. 
+. * 2.
+. gllamm brand Sunshine Keebler Nabisco display feature price, i(resp) ///
+>    noconstant link(mlogit) expanded(resp choice o) init
+ 
+number of level 1 units = 10036
+ 
+Condition Number = 7.7559682
+ 
+gllamm model 
+ 
+log likelihood = -2505.5809
+ 
+------------------------------------------------------------------------------
+       brand |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    Sunshine |  -.8544197   .1092333    -7.82   0.000    -1.068513   -.6403264
+     Keebler |  -.0831803   .1332619    -0.62   0.533    -.3443688    .1780082
+     Nabisco |   1.824141   .1151987    15.83   0.000     1.598356    2.049926
+     display |   .0947567   .0716482     1.32   0.186    -.0456711    .2351846
+     feature |   .5264187   .1105882     4.76   0.000     .3096698    .7431675
+       price |  -3.111737   .2398017   -12.98   0.000    -3.581739   -2.641734
+------------------------------------------------------------------------------
+ 
+
+. estimates store mod0
+
+. 
+.    
+. eq pr: price
+
+. gllamm brand Sunshine Keebler Nabisco display feature price, i(id) ///
+>    eqs(pr) noconstant link(mlogit) expanded(resp choice o) adapt
+
+Running adaptive quadrature
+Iteration 0:    log likelihood = -2340.4753
+Iteration 1:    log likelihood = -2005.5628
+Iteration 2:    log likelihood = -1864.9909
+Iteration 3:    log likelihood = -1811.3827
+Iteration 4:    log likelihood = -1806.8396
+Iteration 5:    log likelihood = -1806.7112
+Iteration 6:    log likelihood = -1806.7108
+
+
+Adaptive quadrature has converged, running Newton-Raphson
+Iteration 0:   log likelihood = -1806.7108  
+Iteration 1:   log likelihood = -1806.7101  
+Iteration 2:   log likelihood = -1806.7101  
+ 
+number of level 1 units = 10036
+number of level 2 units = 100
+ 
+Condition Number = 14.009539
+ 
+gllamm model 
+ 
+log likelihood = -1806.7101
+ 
+------------------------------------------------------------------------------
+       brand |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    Sunshine |   -.650458   .1262584    -5.15   0.000    -.8979199    -.402996
+     Keebler |  -.2848871   .1612067    -1.77   0.077    -.6008465    .0310722
+     Nabisco |   1.791467   .1337217    13.40   0.000     1.529377    2.053557
+     display |   .3945288   .0901052     4.38   0.000     .2179259    .5711317
+     feature |   .7031294   .1396606     5.03   0.000     .4293997    .9768591
+       price |  -1.694039   .7132755    -2.38   0.018    -3.092033   -.2960447
+------------------------------------------------------------------------------
+ 
+ 
+Variances and covariances of random effects
+------------------------------------------------------------------------------
+
+ 
+***level 2 (id)
+ 
+    var(1): 38.111195 (6.5680927)
+------------------------------------------------------------------------------
+
+ 
+
+. lrtest mod0 .
+
+Likelihood-ratio test                                 LR chi2(1)  =   1397.74
+(Assumption: mod0 nested in .)                        Prob > chi2 =    0.0000
+
+.    
+. eq f: feature
+
+. gllamm brand Sunshine Keebler Nabisco display feature price, i(id) ///
+>    eqs(f) noconstant link(mlogit) expanded(resp choice o) adapt
+
+Running adaptive quadrature
+Iteration 0:    log likelihood = -2503.1417
+Iteration 1:    log likelihood = -2502.7863
+Iteration 2:    log likelihood =  -2502.785
+
+
+Adaptive quadrature has converged, running Newton-Raphson
+Iteration 0:   log likelihood =  -2502.785  
+Iteration 1:   log likelihood =  -2502.785  (backed up)
+Iteration 2:   log likelihood = -2502.7848  
+ 
+number of level 1 units = 10036
+number of level 2 units = 100
+ 
+Condition Number = 7.7532512
+ 
+gllamm model 
+ 
+log likelihood = -2502.7848
+ 
+------------------------------------------------------------------------------
+       brand |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    Sunshine |  -.8619583   .1103117    -7.81   0.000    -1.078165   -.6457514
+     Keebler |  -.0895874    .134091    -0.67   0.504    -.3524009    .1732262
+     Nabisco |   1.828094   .1158989    15.77   0.000     1.600936    2.055251
+     display |   .0927289   .0724771     1.28   0.201    -.0493236    .2347814
+     feature |   .5102645   .1388799     3.67   0.000     .2380649     .782464
+       price |  -3.116051   .2411091   -12.92   0.000    -3.588616   -2.643486
+------------------------------------------------------------------------------
+ 
+ 
+Variances and covariances of random effects
+------------------------------------------------------------------------------
+
+ 
+***level 2 (id)
+ 
+    var(1): .44348774 (.26188764)
+------------------------------------------------------------------------------
+
+ 
+
+. lrtest mod0 .
+
+Likelihood-ratio test                                 LR chi2(1)  =      5.59
+(Assumption: mod0 nested in .)                        Prob > chi2 =    0.0180
+
+.    
+. eq d: display
+
+. gllamm brand Sunshine Keebler Nabisco display feature price, i(id) ///
+>    eqs(d) noconstant link(mlogit) expanded(resp choice o) adapt
+
+Running adaptive quadrature
+Iteration 0:    log likelihood = -2463.1263
+Iteration 1:    log likelihood = -2441.6933
+Iteration 2:    log likelihood = -2441.5118
+Iteration 3:    log likelihood = -2441.5118
+
+
+Adaptive quadrature has converged, running Newton-Raphson
+Iteration 0:   log likelihood = -2441.5118  
+Iteration 1:   log likelihood = -2441.5118  (backed up)
+Iteration 2:   log likelihood = -2441.5117  
+ 
+number of level 1 units = 10036
+number of level 2 units = 100
+ 
+Condition Number = 7.3537355
+ 
+gllamm model 
+ 
+log likelihood = -2441.5117
+ 
+------------------------------------------------------------------------------
+       brand |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    Sunshine |  -.9147974   .1130946    -8.09   0.000    -1.136459   -.6931361
+     Keebler |  -.1764184   .1372727    -1.29   0.199     -.445468    .0926312
+     Nabisco |   1.805204   .1186642    15.21   0.000     1.572627    2.037782
+     display |   .1335016   .1427443     0.94   0.350    -.1462721    .4132753
+     feature |   .5032149    .117909     4.27   0.000     .2721176    .7343123
+       price |  -2.992649   .2490011   -12.02   0.000    -3.480682   -2.504616
+------------------------------------------------------------------------------
+ 
+ 
+Variances and covariances of random effects
+------------------------------------------------------------------------------
+
+ 
+***level 2 (id)
+ 
+    var(1): 1.3440745 (.30618228)
+------------------------------------------------------------------------------
+
+ 
+
+. lrtest mod0 .
+
+Likelihood-ratio test                                 LR chi2(1)  =    128.14
+(Assumption: mod0 nested in .)                        Prob > chi2 =    0.0000
+
+. 
+. 
+. 
+. 
+end of do-file
+
+. exit, clear
