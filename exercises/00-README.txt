@@ -45,5 +45,31 @@ Ex-05.1-taxprep:  definition of xtmixed "re" "be" "fe" estimators
 				  This has demonstration that be and fe can be
 				  reproduced by recode and refit.
 
+Ex-05.2-antisocial: mixed, lrtest
+					calculates icc
+					lincom
+					
+Ex-05.4-ezunem:
+        		foreach recode
+				 logged data
+				 lagged predictor
+				 xtivreg: Instrumental variables model Anderson Hsiao model
 
 
+Ex-11.1-respiratory: ordinal outcome
+					 gllamm fitter, predict demo
+					 reshape to long i and j
+					 	meglm
+						twoway: multiline graph
+				Graph Save code: translate @Graph "graph1.pdf", name("Graph")
+				margins for predicted values
+
+Ex-12.2-aggression: meglm ordinal and gllamm compared
+					lrtest
+					no graphs
+
+Ex-11.3-tvspors: smoking data
+				 meglm ordinal, covar unstructured
+
+Ex-11.4-essays: grade categorized 1 2 3 4
+				meglm ordinal
