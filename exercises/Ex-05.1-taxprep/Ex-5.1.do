@@ -67,11 +67,9 @@ restore
 
 * Whats the fe regression?  Lets fit a dummy, one for each subject
 
-regress lntax time prep ms hh depend age lntpi mr emp i.subject, noconstant
+regress lntax time prep ms hh depend age lntpi mr emp ibn.subject, noconstant
 estimates store fe2
-* Appears there is an error that Stata does not estimate Subject 1
-regress lntax time prep ms hh depend age lntpi mr emp i.subject
-estimates store fe3
+* ibn causes stata to estimate intercepts for all groups
 
 
 hausman fe1 re1
