@@ -25,11 +25,16 @@ foreach var of varlist cohes lead hrs wbeing{
     gen `var'_dev = `var' - `var'_mn
 }
 
+* I wondered what tsum means by "SD within", here's the answer:
+* It is SD of group-mean centered data
+sum cohes_dev
+
 
 regress wbeing hrs
 regress wbeing hrs cohes lead
 
 
+* Between "be" lets get the between regression estimates, the easy and hard ways
 xtreg wbeing hrs, be
 
 egen pickone = tag(grp)
@@ -41,9 +46,15 @@ regress wbeing_mn hrs_mn
 estimates store be2
 restore
 
+* Fixed Effects
+
+xtreg wbeing hrs, fe
+
+reg wbeing hrs_dev
 
 
-xtmixed wbeing cohes lead hrs || grp: , covariance(unstructured)
+
+mixed wbeing cohes lead hrs || grp: , covariance(unstructured)
 
 xtmixed wbeing cohes lead hrs  cohes_mn lead_mn hrs_mn  || grp: , covariance(unstructured)
 
