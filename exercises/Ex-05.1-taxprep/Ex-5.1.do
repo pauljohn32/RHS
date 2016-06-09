@@ -27,6 +27,8 @@ estimates store be1
 
 xtreg lntax time prep ms hh depend age lntpi mr emp, fe
 estimates store fe1
+predict fe1_u, u
+* When we have the group level data summary below, look at std.dev.(fe1_u)
 
 regress lntax time prep ms hh depend age lntpi mr emp i.subject
 
@@ -70,6 +72,11 @@ restore
 regress lntax time prep ms hh depend age lntpi mr emp ibn.subject, noconstant
 estimates store fe2
 * ibn causes stata to estimate intercepts for all groups
+
+* Look above in the summary for the pickone data. Note the standard
+* deviation of fixed effect estimates is same as number reported in
+* fe output for sd(u)
+
 
 
 hausman fe1 re1
