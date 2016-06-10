@@ -35,6 +35,8 @@ estimates store xtlogit1
 * Learn how to convert string to factor
 meglm y i.description || person: , family(binom) link(logit)
 
+encode description, generate(description2)
+meglm y i.description2 || person: , family(binom) link(logit)
 
 
 * 6.
