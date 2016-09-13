@@ -57,6 +57,10 @@ anova(m1, m0)
 
 summary(m1)
 
+library(rockchalk)
+outreg(list("Random Int\n Only" = m0, "Random Slope" = m1), type = "html")
+
+
 library(lattice)
 dotplot(ranef(m1))
 
