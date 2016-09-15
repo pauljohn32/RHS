@@ -17,14 +17,20 @@ summary(m.wrong)
 
 ## Continue with the homework
 m1 <-  lmer(yield ~ moist + (1|varietyf), data = dat)
+summary(m1)
 
 m2 <- lmer(yield ~ moist + (moist|varietyf), data = dat)
+summary(m2)
+
 library(lattice)
 dotplot(ranef(m2, condVar = TRUE))
 
 ## Here's a shocker
 anova(m2, m1)
 ## Really? Look at the pictures! 
+
+re1 <- ranef(m2, condVar=TRUE, whichel = "varietyf")
+dotplot(re1)
 
 ## Here's a spaghetti plot. 
 plot(m2)
