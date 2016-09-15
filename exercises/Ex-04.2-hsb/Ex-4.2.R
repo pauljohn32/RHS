@@ -1,6 +1,23 @@
 library(foreign)
 
-dat <- read.dta("hsb.dta12")
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/hsb.dta") 
+#dat <- read.dta("hsb.dta12")
+
+## Hadley Wickham's plyr package provides a number of idioms that
+## have been very popular.  I always avoided using them because they
+## were not "core R" idioms and there are special features there that
+## do not travel to other parts of R.  However, there's no denying
+## the popularity of it. 
+## Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data
+##     Analysis. Journal of Statistical Software, 40(1), 1-29.  <
+##     http://www.jstatsoft.org/v40/i01/>.
+## Lots of people love it, but I just can't make it work on a daily
+## basis.  I just can't think that way.
+
+#1
+Beta1 + Beta_star*Xdevij + Beta2*sesdevij + Beta3*Wj + Beta4*Xbarj + Beta5*(W1j*sesdevij) + Beta6*(Xbarj*sesdevij) + zeta1j + zeta2j*sesdevij + rij 
+
+#2 
 dat$schoolid <- as.character(dat$schoolid)
 
 ## Ways to create group level mean for ses
@@ -31,33 +48,23 @@ DT[ , sesdev4:= ses - sesmean4]
 ## data frame
 dat <- as.data.frame(DT)
 
-
-## Hadley Wickham's plyr package provides a number of idioms that
-## have been very popular.  I always avoided using them because they
-## were not "core R" idioms and there are special features there that
-## do not travel to other parts of R.  However, there's no denying
-## the popularity of it. 
-## Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data
-##     Analysis. Journal of Statistical Software, 40(1), 1-29.  <
-##     http://www.jstatsoft.org/v40/i01/>.
-## Lots of people love it, but I just can't make it work on a daily
-## basis.  I just can't think that way.
-
-
-library(lme4)
-
+#3
 m0 <- lmer(mathach ~ sesmean + sector + sesdev + sesmean*sesdev +
          sector*sesdev + (1|schoolid), data = dat)
-
+summary(m0)
+# gamma12: for a 1 point increase in mean deviation from school mean SES for Catholic schools, mathach decreases by 1.64          
 
 m1 <- lmer(mathach ~ sesmean + sector + sesdev + sesmean*sesdev +
          sector*sesdev + (sesdev|schoolid), data = dat)
 
 anova(m1, m0)
-
 summary(m1)
-
 library(lattice)
 dotplot(ranef(m1))
-
 dotplot(ranef(m1, condVar=TRUE))
+
+#3
+
+m2 <- lmer(mathach ~ sesmean + sector + disclim + minority + sesdev + sesmean*sesdev +
+         sector*sesdev +disclim*sesdev + sesmean*minority + sector*minority + disclim*minority + (1|schoolid), data = dat)
+summary(m2)
