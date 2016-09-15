@@ -59,6 +59,10 @@ m1 <- lmer(mathach ~ sesmean + sector + sesdev + sesmean*sesdev +
 
 anova(m1, m0)
 summary(m1)
+
+library(rockchalk)
+outreg(list("Random Int\n Only" = m0, "Random Slope" = m1), type = "html")
+
 library(lattice)
 dotplot(ranef(m1))
 dotplot(ranef(m1, condVar=TRUE))
