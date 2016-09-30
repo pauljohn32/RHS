@@ -1,0 +1,431 @@
+phtest_glmer(m1, m2_w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+resid_l1 <- residuals(m1, level = 0)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+resid_l2 <- residuals(m1, level = 1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1.resid <- residuals(m1, level = 0)#
+l2.resid <- residuals(m1, level = 1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1 <- seq(min(l1.resid), max(l1.resid), length.out = 200)#
+l1.d <- dnorm(l1, mean = mean(l1.resid), sd = sd(l1.resid))#
+l2 <- seq(min(l2.resid), max(l2.resid), length.out = 200)#
+l2.d <- dnorm(l2, mean = mean(l2.resid), sd = sd(l2.resid))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, ylim = c(0, 1.5))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, ylim = c(0, 1.5), xlim =c(-1,1))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l2.resid
+summary(l2.resid)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid),max(l1.resid))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid), xlim =c(-1,1))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+plot.new
+plot.new()
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid),max(l1.resid))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid), xlim =c(-1,1))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid),max(l1.resid))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid)), xlim =c(-1,1))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid)), xlim =c(-1,1))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+min(l1.resid)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+max(l1.resid)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+min(l1.resid), max(l1.resid)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid)))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid)))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid)))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1.resid
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l2.resid
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1.resid <- residuals(m1, type = "response")#
+l2.resid <- unlist(unname(ranef(m2)[[1]][1]))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1 <- seq(min(l1.resid), max(l1.resid), length.out = 200)#
+l1.d <- dnorm(l1, mean = mean(l1.resid), sd = sd(l1.resid))#
+l2 <- seq(min(l2.resid), max(l2.resid), length.out = 200)#
+l2.d <- dnorm(l2, mean = mean(l2.resid), sd = sd(l2.resid))#
+#
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid)))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid)))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+l2.resid
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+l1.resid <- residuals(m1, type = "response")#
+l2.resid <- unlist(unname(ranef(m1)[[1]][1]))#
+#
+l1 <- seq(min(l1.resid), max(l1.resid), length.out = 200)#
+l1.d <- dnorm(l1, mean = mean(l1.resid), sd = sd(l1.resid))#
+l2 <- seq(min(l2.resid), max(l2.resid), length.out = 200)#
+l2.d <- dnorm(l2, mean = mean(l2.resid), sd = sd(l2.resid))#
+#
+dev.new(width=8, height=6)#
+par(mfrow=c(1,2))#
+hist(l1.resid, main = "Level 1 Residual", freq = FALSE, xlim = c(min(l1.resid), max(l1.resid)))#
+lines(density(l1.resid), col = "red")#
+lines(l1, l1.d, col = "blue")#
+legend(-3.5, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')#
+#
+hist(l2.resid, main = "Level 2 Residual", freq = FALSE, xlim = c(min(l2.resid),max(l2.resid)))#
+lines(density(l2.resid), col = "red")#
+lines(l2, l2.d, col = "blue")#
+legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=c("red", "blue"), cex = .33, bty = 'n')
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+at <- read.dta("http://www.stata-press.com/data/mlmus3/antisocial.dta")
+rm(list=ls())
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/antisocial.dta")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+library(lme4)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+m1 <- lmer(anti ~ pov + momage + female + childage + hispanic + black + mowork + married + (1|id), data = dat, REML = FALSE)#
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+m1 <- lmer(anti ~ pov + momage + female + childage + hispanic + black + momwork + married + (1|id), data = dat, REML = FALSE)#
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+r1 <- lm(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)
+r1
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+anova(r1, m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+library(nlme)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- lme(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- lme(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, random = ~1, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- lme(fixed = anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- lme(fixed = anti ~ pov + momage + female + childage + hispanic + black + momwork + married, random = ~1, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- glm(fixed = anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- glm(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+summary(nm1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- gls(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, data = dat)#
+summary(nm1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+anova(nm1, m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm2 <- lme(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, random = ~1 | id, method="ML",dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+summary(nm2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+anova(nm1, nm2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- gls(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, method = "ML" data = dat)#
+summary(nm1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nm1 <- gls(anti ~ pov + momage + female + childage + hispanic + black + momwork + married, method = "ML", data = dat)#
+summary(nm1)#
+#
+n
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+anova(nm1, nm2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+summary(m1)
+rm(list=ls())
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+library(lme4)#
+library(nlme)#
+#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/antisocial.dta") #
+#
+#1#
+m1 <- lmer(anti ~ pov + momage + female + childage + hispanic + black + momwork + married + (1|id), data = dat, REML = FALSE)#
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+1.47/(1.47 + 1.013)
+sqrt(1.315)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+1.47^2/(1.47^2 + 1.013^2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+unique(dat$id)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+length(unique(dat$id))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+mn_pov<- aggregate(dat$pov, by = list(id = dat$id),mean, na.rm = TRUE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+mn_pov
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+rownames(mn_pov) <- mn_pov$id#
+colnames(mn_pov) <- c("id", "povmn")#
+dat$pov_mn <- mn_pov[dat$id, "povmn"]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+dat$pov_mn
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+dat$pov_dev <- dat$pov - dat$pov_mn
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+nj <- length(unique(dat$id))#nj
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+dat$pov_dev <- 1/nj*(dat$pov - dat$pov_mn)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+dat$pov_dev <- dat$pov - dat$pov_mn
+dat$pov_dev
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+m2 <- lmer(anti ~ pov_dev + momage + female + childage + hispanic + black + momwork + married + (1|id), data = dat, REML = FALSE)#
+summary(m2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+m2 <- lmer(anti ~ pov_mn + pov_dev + momage + female + childage + hispanic + black + momwork + married + (1|id), data = dat, REML = FALSE)#
+summary(m2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+library(multcomp)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.2-antisocial')
+summary(glht(m2, linfct = c("pov_mn - pov_dev = 0")))#Identical to Stata.
+rm(list=ls())
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+library(lme4)#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/ezunem.dta")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+library(lme4)#
+library(foreign)#
+#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/ezunem.dta")
+head(dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+library(plm)
+names(dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(uclms ~ d82 + d83 + d84 + d85 + d86 +d87 + d88, data = dat, index = c("ez", "t"), model = "within")
+head(dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(uclms ~ d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(ln(uclms) ~ d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat$uclms_l <- ln(dat$uclms)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat$uclms_l <- log(dat$uclms)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(l_uclms ~ d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(uclms_l ~ d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(uclms_l ~ 1 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mean(fixef(m1w))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mean(fixef(m1w))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ 1 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ 1 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat,#
+  effect = "twoway", index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ 1 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ 0 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mean(fixef(m1w))
+head(dat)
+tail(dat)
+head(dat,100)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m1w <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat, index = c("city", "t"), model = "within") #
+summary(m1w)
+str(dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat.1 = pdata.frame(dat, index = c("city", "t"),#
+             drop.index = TRUE, row.names = TRUE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat.1
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, data = dat.1, model = "fd")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(mfd)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat.1 = pdata.frame(dat[,c("city", "t", "luclms", "d81", "d82", "d83", "d84", "d85", "d86", "d87", "d88", "ez")], index = c("city", "t"),#
+             drop.index = TRUE, row.names = TRUE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+dat.1
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, model = "fd")#
+summary(mfd)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, model = "fd")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, model = "fd", data = dat.1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(mfd)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, model = "fd", data = dat)#
+summary(mfd)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+mfd <- plm(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, model = "fd", data = dat.1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(mfd)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+coef(mfd)
+summary(m1)
+summary(m2)
+summary(m1w)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+library(nlme)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m.ar1 <- lme(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, #
+  random = ~ 1 | city,#
+  correlation = corAR1(),#
+  data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(m.ar1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m.ar1 <- lme(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, #
+  random = ~ 1 | city,#
+  correlation = corAR1(),#
+  method = "ML",#
+  data = dat#
+  )#
+summary(m.ar1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m.ar1 <- lme(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, #
+  random = ~ 1 | city,#
+  correlation = corAR1(.5, ~t),#
+  method = "ML",#
+  data = dat#
+  )
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(m.ar1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m.ar1 <- lme(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, #
+  random = ~ 1 | city,#
+  weights = varIdent(form = ~ 1|t#
+  correlation = corAR1(),#
+  method = "ML",#
+  data = dat#
+  )#
+summary(m.ar1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+m.ar1 <- lme(luclms ~ d81 + d82 + d83 + d84 + d85 + d86 +d87 + d88 + ez, #
+  random = ~ 1 | city,#
+  weights = varIdent(form = ~ 1|t),#
+  correlation = corAR1(),#
+  method = "ML",#
+  data = dat#
+  )
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.4-ezunem')
+summary(m.ar1)
+rm(list=ls())
+ls()
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+library(lme4)#
+library(reshape)#
+library(foreign)#
+#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/cogstyle.dta")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-05.1-taxprep')
+library(lme4)#
+library(reshape)#
+library(foreign)#
+#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/cogstyle.dta")
+quit()
