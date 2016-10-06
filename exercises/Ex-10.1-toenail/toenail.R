@@ -35,7 +35,6 @@ table(by(dat$outcomen, list(dat$patient), function(x) paste(as.numeric(!is.na(x)
 
 library(lattice)
 
-
 t1 <- table(dat$outcome, dat$visit, dat$treatment)
 t1p <- prop.table(t1)
 t1pdf <- as.data.frame(t1p)
@@ -66,6 +65,26 @@ dat$trt_month <- dat$treatmentn * dat$month
 ## See RHS 527
 m2 <- glmer(outcome ~ treatment * month + (1 | patient),
             data = dat, family = binomial(link = "logit"), nAGQ = 30)
-
-            
 summary(m2)
+#1
+m3 <- glmer(outcome ~ treatment * month + (1|patient),
+             data = dat, family = binomial(link = "probit"), nAGQ=30)
+summary(m3)
+
+#2
+# See RHS p 532
+#ICC for latent response
+4.484/(4.484 + 1)
+
+#3
+re2 <- ranef(m2, condVar = T)
+re3 <- ranef(m3, condVar = T)
+ree2 <- unlist(unname(re2[[1]]))
+ree3 <- unlist(unname(re3[[1]]))
+
+c <- ree2[1]/ree3[1]
+approx_log <- ree3 * c
+plot(approx_log ~ ree2)
+diff <- approx_log - ree2
+summarize(diff)
+
