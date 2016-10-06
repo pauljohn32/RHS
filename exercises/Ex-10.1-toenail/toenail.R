@@ -25,7 +25,7 @@ dat$patient <- as.integer(dat$patient)
 
 summarize(dat)
 
-str(dat)
+ str(dat)
 
 ## Does R have something like xtdescribe
 
