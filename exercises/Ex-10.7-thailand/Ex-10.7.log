@@ -1,0 +1,188 @@
+------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand/Ex-10.7.log
+  log type:  text
+ opened on:   5 Oct 2016, 20:30:42
+
+. 
+. use http://www.stata-press.com/data/mlmus3/thailand, clear
+
+. * saveold thailand.dta12, version(12) replace
+. use thailand.dta12, clear
+file thailand.dta12 not found
+r(601);
+
+end of do-file
+
+r(601);
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. gllamm rep male pped mses, i(school) link(logit) family(binom) weight(wt) adapt
+
+Running adaptive quadrature
+Iteration 0:    log likelihood = -2827.5764
+Iteration 1:    log likelihood = -2721.3265
+Iteration 2:    log likelihood = -2720.8399
+Iteration 3:    log likelihood = -2720.8393
+
+
+Adaptive quadrature has converged, running Newton-Raphson
+Iteration 0:   log likelihood = -2720.8393  
+Iteration 1:   log likelihood = -2720.8393  (backed up)
+Iteration 2:   log likelihood = -2720.8391  
+ 
+number of level 1 units = 7516
+number of level 2 units = 356
+ 
+Condition Number = 3.9285653
+ 
+gllamm model 
+ 
+log likelihood = -2720.8391
+ 
+------------------------------------------------------------------------------
+         rep |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        male |   .5352029   .0759868     7.04   0.000     .3862716    .6841342
+        pped |  -.6271234   .1002719    -6.25   0.000    -.8236528   -.4305941
+        mses |  -.2958522   .2171487    -1.36   0.173    -.7214558    .1297514
+       _cons |  -2.242161    .106753   -21.00   0.000    -2.451393   -2.032929
+------------------------------------------------------------------------------
+ 
+ 
+Variances and covariances of random effects
+------------------------------------------------------------------------------
+
+ 
+***level 2 (school)
+ 
+    var(1): 1.6842414 (.20870283)
+------------------------------------------------------------------------------
+
+ 
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. estimates restore gllamm1
+estimation result gllamm1 not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. estimates store gllamm1
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. estimates restore gllamm1
+(results gllamm1 are active now)
+
+. gllapred mu, mu
+(mu will be stored in mu)
+Non-adaptive log-likelihood: -2722.2211
+-2723.0700 -2720.8854 -2720.8393 -2720.8393  
+log-likelihood:-2720.8393
+
+. gllapred mumarg, mu marginal
+(mu will be stored in mumarg)
+
+. gllapred xb, xb
+(xb will be stored in xb)
+
+. gllapred latent, u
+(means and standard deviations will be stored in latentm1 latents1)
+Non-adaptive log-likelihood: -2722.2211
+-2723.0700 -2720.8854 -2720.8393 -2720.8393  
+log-likelihood:-2720.8393
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. list schoolid rep male pped wt1 mu if schoolid==10104
+
+      +------------------------------------------------+
+      | schoolid   rep   male   pped   wt1          mu |
+      |------------------------------------------------|
+   5. |    10104     0      0      0     7   .03065107 |
+   6. |    10104     0      0      1     8   .01677408 |
+   7. |    10104     0      1      0     6   .05054833 |
+   8. |    10104     0      1      1     8   .02808518 |
+      +------------------------------------------------+
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. graph box mu if rep==0, by(male) over(pped)
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. graph box mu if rep==0, by(male) over(pped)
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. graph box mu if rep==0, by(male) over(pped)
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. margins, at(male = (0 1)) 
+
+Predictive margins                              Number of obs     =      1,569
+Model VCE    : OIM
+
+Expression   : predict()
+
+1._at        : male            =           0
+
+2._at        : male            =           1
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |  -2.528827   .0988526   -25.58   0.000    -2.722574   -2.335079
+          2  |  -1.993624   .0924835   -21.56   0.000    -2.174888    -1.81236
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. marginsplot
+
+  Variables that uniquely identify margins: male
+
+. 
+end of do-file
+
+. do "/var/folders/dk/0z2w17n13cj4d_hdc1r9f7kw0000gn/T//SD42354.000000"
+
+. graph box mu if rep==0, by(male) over(pped)
+
+. 
+end of do-file
+

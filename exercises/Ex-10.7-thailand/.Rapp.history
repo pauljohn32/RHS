@@ -1,0 +1,438 @@
+means.l
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+within.ss <- mapply('-', clust.subj, means.l, simplify = FALSE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+within.ss <- mapply('-', clust.subj, means.l, simplify = T)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+within.ss <- mapply('-', c(clust.subj, means.l), simplify = FALSE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clust.subj <- clust.subj[lapply(clust.subj,length)>0]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clust.subj
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+within.ss <- mapply('-', clust.subj, means.l, simplify = FALSE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+within.ss
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+mapply('-', clust.subj, means.l, simplify = FALSE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+means.l
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(length(unique(x))-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(length(unique(x))-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}#
+#
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_list <- list()#
+for (i in names(clus_mn[,-1])){#
+  bw_list[[i]] <- sqrt(1/(nrow(clus_mn)-1) * sum((clus_mn[,i] - ov_all[i, ])^2))#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_list
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(length(unique(x))-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(length(unique(x))-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}#
+#
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(nrow(x))-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}#
+#
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd <- function(x, y, z, id){#
+  zz <- 1/(nrow(x)-1)#
+  bw_list <- list()#
+  for (i in names(x[,-1])){#
+    bw_list[[i]] <- sqrt(zz * sum((x[,i] - y[i, ])^2))#
+  }#
+  df <- data.frame(matrix(unlist(unique(bw_list)), nrow = nrow(y), byrow = T))#
+  colnames(df)[1] <- "BW SD"#
+  rownames(df) <- rownames(y)#
+  df$MN <- y[,1]#
+  return(df)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+for (x in dat$nr){#
+  subset(dat, nr == i)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+for (x in dat$nr){#
+  print(subset(dat, nr == i))#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+subset(dat, nr == 5))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+subset(dat, nr == 5)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+subset(dat, nr == 533)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+subset(dat, nr = 533)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+subset(dat, nr == "13")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+for (x in dat$nr){#
+  print(subset(dat, nr == paste(x))#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+for (x in dat$nr){#
+  print(subset(dat, nr == paste(x)))#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use <- dat[,c("union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use - clus_mn[-,1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use - clus_mn[,-1]
+ncol(d.use)
+ncol(clus_mn)
+ncol(clus_mn)[-,1]
+ncol(clus_mn)[,-1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn[, -1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn1 <- clus_mn[-,1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn1 <- clus_mn[, -1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use - clus_mn1
+sapply(c(clus_mn1, d.use), dim)
+sapply(list(clus_mn1, d.use), dim)
+d.use
+dim(d.use)
+sapply(list(clus_mn1, d.use), dim)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+aggregate(dat, by = list(nr = dat$nr), FUN = dat-clus_mn1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+library(dplyr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use %>%#
+mutate_each(funs(.-means(.), matches('^col')) %>%#
+select(-nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use %>%#
+mutate_each(funs(.-means(.), matches('^col')) %>%#
+select(-d.use$nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use %>%#
+mutate_each(funs(.-means(.), matches('^col')) %>%#
+select(-nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+rownames(clus_mn) <- clus_mn$nr
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+dat[,11:21] <- clus_mn[1, 2:10]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use[,11:21] <- clus_mn[1, 2:10]
+head(d.use)
+head(d.use, 100)
+head(d.use, 30)
+head(d.use, 50)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use <- dat[,c("nr", "union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+rownames(clus_mn) <- clus_mn$nr#
+d.use[,11:21] <- clus_mn[1, 2:10]
+head(d.use, 20)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use[,11:21] <- clus_mn[d.use$.nr, 2:10]
+head(d.use, 20)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use[,11:21] <- clus_mn[d.use$nr, 2:10]
+head(d.use, 20)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use <- dat[,c("nr", "union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use[,11:21] <- clus_mn[d.use$nr, 2:10]
+head(d.use, 20)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+[,11:21] <- clus_mn[d.use$nr, 2:10]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use[,11:21] <- clus_mn[d.use$nr, 2:10]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use <- dat[,c("nr", "union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")]#
+#
+rownames(clus_mn) <- clus_mn$nr#
+d.use[,11:21] <- clus_mn[d.use$nr, 2:10]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn <- aggregate(dat[,c("union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")], list(nr = dat$nr),FUN = mean(x, na.rm = T)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn <- aggregate(dat[,c("union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")], list(nr = dat$nr),FUN = mean(x, na.rm = T))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+clus_mn <- aggregate(dat[,c("union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")], list(nr = dat$nr),FUN ={mean(x, na.rm = T)})
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+rownames(clus_mn)
+summary(d.use)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.btw.summary <- function(mydata, idim) {#
+# Summarize the grand mean and unit means#
+# Example invocation: pan.btw.summary(dframe, dframe$i)#
+mydata <- mydata#
+idim <- as.vector(idim)#
+identifier <- table(idim)#
+pan.cen.nls <- matrix(nrow=length(identifier), ncol=dim(mydata)[[2]])#
+for (i in 1:length(identifier)) {#
+  friend.nls <- NULL#
+  friend.big.nls <- NULL#
+  id.val <- as.numeric(names(identifier)[[i]])#
+  for (j in 1:dim(mydata)[[2]]) {#
+  friend.nls <- mean(mydata[idim==id.val,j], na.rm=TRUE)#
+  friend.big.nls <- c(friend.big.nls,friend.nls)#
+}#
+pan.cen.nls[i,] <- friend.big.nls#
+}#
+ret.sum <- apply(pan.cen.nls, 2, sd, na.rm=TRUE)#
+mean.mat <- pan.cen.nls#
+pan.sum <- list(summary.btw=ret.sum, mean.mat.btw=mean.mat)#
+return(pan.sum)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.btw.summary(d.use, d.use$nr)
+names(d.use)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+btw <- pan.btw.summary(d.use, d.use$nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+btw[1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+d.use <- dat[,c("nr", "union", "educ", "black", "hisp", "exper", "married", "rur", "nrtheast", "nrthcen", "south")]
+head(d.use)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+btw <- pan.btw.summary(d.use, d.use$nr)#
+btw[1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+btw
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.with.summary(d.use, d.use$nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.with.summary <- function(mydata, idim) {#
+# Within deviations#
+# Example invocation: pan.with.summary(dframe, dframe$i)#
+mydata <- mydata#
+idim <- as.vector(idim)#
+pan.mean <- matrix(nrow=dim(mydata)[[1]], ncol=dim(mydata)[[2]])#
+for (i in 1:dim(mydata)[[1]]) {#
+  friend.nls <- NULL#
+  friend.big.nls <- NULL#
+  id.val <- idim[[i]]#
+  for (j in 1:dim(mydata)[[2]]) {#
+  friend.nls <- mean(mydata[idim==id.val,j], na.rm=TRUE)#
+  friend.big.nls <- c(friend.big.nls,friend.nls)#
+}#
+pan.mean[i,] <- friend.big.nls#
+}#
+res.mat <- mydata - pan.mean#
+ret.sum <- apply(res.mat, 2, sd, na.rm=TRUE)#
+mean.mat <- res.mat#
+pan.sum <- list(summary.with=ret.sum, mean.mat.with=mean.mat)#
+return(pan.sum)#
+}
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.with.summary(d.use, d.use$nr)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.with.summary(d.use, d.use$nr)[1]
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(m2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+library(gee)#
+#
+m2 <- gee(union ~ educ + black + hisp + exper + married +#
+  rur + nrtheast + nrthcen + south,#
+  nr,#
+  dat,#
+  corstr = "exchangeable",#
+  family = binomial(link = "logit")#
+  )#
+summary(m2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+m2 <- gee(union ~ educ + black + hisp + exper + married +#
+  rur + nrtheast + nrthcen + south,#
+  nr,#
+  dat,#
+  corstr = "exchangeable",#
+  family = binomial(link = "logit")#
+  )
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/wagepan.dta")#
+#
+#1#
+m1 <- glmer(union ~ educ + black + hisp + exper + married #
+            + rur + nrtheast + nrthcen + south + (1 | nr), #
+            family = binomial(link = "logit"), nAGQ = 30, data = dat)#
+summary(m1)# failed to converge
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+library(gee)#
+#
+m2 <- gee(union ~ educ + black + hisp + exper + married +#
+  rur + nrtheast + nrthcen + south,#
+  nr,#
+  dat,#
+  corstr = "exchangeable",#
+  family = binomial(link = "logit")#
+  )
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(m2)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+pan.with.summary(d.use, d.use$nr)[1]
+install.packages("survival", dep = T)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+library(survival)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+mc <- clogit(union ~ educ + black + hisp + exper + married +#
+  rur + nrtheast + nrthcen + south + strata(nr),#
+  data = dat,#
+  na.rm = TRUE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+mc <- clogit(union ~ educ + black + hisp + exper + married +#
+  rur + nrtheast + nrthcen + south + strata(nr),#
+  data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(mc)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+exp(coef(mc))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+bw_sd(clus_mn, ov_all)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+exp(fixef(m1))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+exp(coef(mc))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+m1_prob <- glmer(union ~ educ + black + hisp + exper + married #
+            + rur + nrtheast + nrthcen + south + (1 | nr), #
+            family = binomial(link = "probit"), nAGQ = 30, data = dat)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(m_prob)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.6-wagepan')
+summary(m1_prob)
+rm(list=ls())
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(foreign)#
+library(lme4)#
+#
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/thailand.dta")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+m1 <- glmer(rep ~ pped + male + mses + (1|schoolid),#
+            weights = wt1, nAGQ = 30, data = dat, family =        #
+            binomial(link="logit")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+m1 <- glmer(rep ~ pped + male + mses + (1|schoolid),#
+            weights = wt1, nAGQ = 30, data = dat, family =        #
+            binomial(link="logit"))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+m1 <- glmer(rep ~ pped + male + mses + (1|schoolid),#
+            weights = wt1, nAGQ = 30, data = dat, family =        #
+            binomial(link="logit"))#
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+cc <- confint(m1, parm = "beta_")#error in calculating CIs#
+tab <- cbind(estimate = fixef(m1), cc)#
+etab <- exp(tab)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+etab
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+re1 <- ranef(m1, condVar = T, drop = TRUE)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+dotplot(re1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(lattice)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+dotplot(re1)
+re1
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+1.686/(1.686 + (pi^2/3))
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+pred1 <- predict(m1, re.form = ~(1|schoolid), type = "response")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+head(pred1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+re1
+pred1
+install.package("sjPlot", dep = T)
+install.packages("sjPlot", dep = T)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(sjPlot)
+rm(list=ls())
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+dat <- read.dta("http://www.stata-press.com/data/mlmus3/thailand.dta")
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(lme4)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+m1 <- glmer(rep ~ pped + male + mses + (1|schoolid),#
+            weights = wt1, nAGQ = 30, data = dat, family =        #
+            binomial(link="logit"))#
+summary(m1)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(sjPlot)
+install.packages("pbkrtest", dep = T)
+setwd('/Users/eliebmann/Dropbox/PJ_2016/RHS/exercises/Ex-10.7-thailand')
+library(sjPlot)
+quit()
