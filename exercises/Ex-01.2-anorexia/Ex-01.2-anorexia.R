@@ -1,0 +1,134 @@
+## Paul Johnson
+## 2017-01-24
+
+library(foreign)
+
+dat <- read.dta("anorexia.dta12")
+rockchalk::summarize(dat)
+
+## Seems more tedious than I remember to build summary
+## table
+
+t1 <- aggregate(dat, by = list(dat$treat), mean, na.rm = TRUE)
+t1N <- table(dat$treat)
+t1[ , "treat"] <- t1N
+colnames(t1)[1] <- ""
+t1
+
+
+library(lattice)
+histogram( ~ weight2 | treat, data = dat)
+boxplot(weight2 ~ treat, data = dat)
+
+dat$treat <- relevel(dat$treat, "contrl")
+contrasts(dat$treat)
+m1 <- lm(weight2 ~ weight1 + treat, data = dat)
+
+library(rockchalk)
+predictOMatic(m1, predVals = c("weight1", "treat"))
+
+plotSlopes(m1, plotx = "weight1", modx = "treat")
+plotSlopes(m1, plotx = "weight1", modx = "treat", interval = "confidence")
+
+
+##' T-test for the difference in 2 regression parameters
+##'
+##' This is the one the students call the "fancy t test".
+##'
+##' I did this because I have trouble understanding terminology
+##' in canned functions in other R packages
+##' @param parm1 A parameter name, in quotes!
+##' @param parm2 Another parameter name, in quotes!
+##' @param model A fitted regression model
+##' @return A list with the difference, std. err., t-stat,
+##' and p value
+##' @author Paul Johnson
+fancyt <- function(parm1, parm2, model, model.cov = NULL){
+    V <- function(mat, parm1, parm2 = NULL) {
+        if(is.null(parm2)) return (mat[parm1, parm1])
+        else return(mat[parm1, parm2])
+    }
+    if(is.null(model.cov)) model.cov <- vcov(model)
+    
+    model.coef <- coef(model)[c(parm1, parm2)]
+    se <- sqrt(V(model.cov, parm1) + V(model.cov, parm2) - 2*V(model.cov, parm1, parm2))
+    diff <- model.coef %*% c(1, -1)
+    t <-  diff/se
+    pval <- pt(abs(t), lower.tail = FALSE, df = model$df) * 2
+    c(diff = diff, Std.Err. = se, t = t, p = pval)
+}
+fancyt("treatcbt", "treatft", m1)
+
+plot(m1)
+
+## Exercise asks about homoskedasticity, do robust standard errors
+library(sandwich)
+m1.robust <- vcovHC(m1)
+m1.robust.se <- sqrt(diag(sandwich(m1)))
+m1.robust.se
+
+fancyt("treatcbt", "treatft", m1, m1.robust)
+
+
+outreg(list("m1 homo" = m1, "m1 robust" = m1 ),
+       SElist = list("m1 robust" = m1.robust.se),
+       type = "html")
+
+m1.resid <- resid(m1)
+
+hist(m1.resid)
+
+
+##' Histogram with added Kernel Density Smooth and Normal Probability
+##'
+##' See the working example at
+##' http://pj.freefaculty.org/guides/Rcourse/WorkingExamples/
+##' plot-histogramWithLinesAndLegend.html.. content for \details{} ..
+##' @title 
+##' @param x 
+##' @param main 
+##' @return 
+##' @author Paul Johnson
+drawHist <- function(x, main = "Histogram"){
+    xlab <- deparse(substitute(x))
+    par(mai=c(1,1,2.5,1)) ## margins
+    par(xpd=TRUE) ## write outside plot region
+    
+    myhist <- hist(x, prob = TRUE, main=main, xlab = xlab)
+    lines(density(x))
+    xseq1 <- seq(min(x), max(x), length.out=100)
+    m1 <- mean(x)
+    sd1 <- sd(x)
+    obsNormal <- dnorm(xseq1, mean=m1, sd=sd1)
+    lines(xseq1, obsNormal, lty=2, col="red")
+    
+    legend(min(xseq1),1.3*max(myhist$density),
+           legend=c("observed density", "normal with observed mean & sd"),
+           lty=c(1,2), col=c("black", "red"))
+}
+
+drawHist(resid(m1), main = "Regression residuals")
+
+
+## I'd rather have an interaction
+
+m3 <- lm(weight2 ~ weight1 * treat, data = dat)
+
+plotSlopes(m3, plotx = "weight1", modx = "treat", interval = "confidence")
+
+m3.robust <- vcovHC(m3)
+m3.robust.se <- sqrt(diag(sandwich(m3)))
+
+outreg(list("m3 homo" = m3, "m3 robust" = m3 ),
+       SElist = list("m3 robust" = m3.robust.se),
+       type = "html")
+
+fancyt("treatcbt", "treatft", m3, m3.robust)
+fancyt("weight1:treatcbt", "weight1:treatft", m3)
+fancyt("weight1:treatcbt", "weight1:treatft", m3, m3.robust)
+
+
+drawHist(resid(m3), main = "Regression residuals")
+
+
+plot(m3)
