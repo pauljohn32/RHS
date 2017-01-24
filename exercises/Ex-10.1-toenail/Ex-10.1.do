@@ -42,7 +42,7 @@ gllamm outcome treatment month trt_month, i(patient) family(binom) ///
   link(logit) nip(32) adapt
 gllapred logit, u
 
-twoway (scatter probitm1 logitm1)
+twoway (scatter probit logit)
 
 regress probitm1 logitm1 if visit==1, noconstant
 

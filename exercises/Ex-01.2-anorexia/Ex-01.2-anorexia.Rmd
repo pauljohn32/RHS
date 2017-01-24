@@ -1,6 +1,7 @@
 ## Paul Johnson
 ## 2017-01-24
 
+```{r}
 library(foreign)
 
 dat <- read.dta("anorexia.dta12")
@@ -57,10 +58,16 @@ fancyt <- function(parm1, parm2, model, model.cov = NULL){
     pval <- pt(abs(t), lower.tail = FALSE, df = model$df) * 2
     c(diff = diff, Std.Err. = se, t = t, p = pval)
 }
+
+```{r}
 fancyt("treatcbt", "treatft", m1)
+```
 
+```{r}
 plot(m1)
+```
 
+```{r}
 ## Exercise asks about homoskedasticity, do robust standard errors
 library(sandwich)
 m1.robust <- vcovHC(m1)
@@ -68,12 +75,16 @@ m1.robust.se <- sqrt(diag(sandwich(m1)))
 m1.robust.se
 
 fancyt("treatcbt", "treatft", m1, m1.robust)
+```
 
-
-outreg(list("m1 homo" = m1, "m1 robust" = m1 ),
+```{r, results="asis"}
+o1 <- outreg(list("m1 homo" = m1, "m1 robust" = m1 ),
        SElist = list("m1 robust" = m1.robust.se),
        type = "html")
+cat(o1)
+```
 
+```{r}
 m1.resid <- resid(m1)
 
 hist(m1.resid)
@@ -118,17 +129,25 @@ plotSlopes(m3, plotx = "weight1", modx = "treat", interval = "confidence")
 
 m3.robust <- vcovHC(m3)
 m3.robust.se <- sqrt(diag(sandwich(m3)))
+```
 
-outreg(list("m3 homo" = m3, "m3 robust" = m3 ),
+```{r, results="asis"}
+o3 <- outreg(list("m3 homo" = m3, "m3 robust" = m3 ),
        SElist = list("m3 robust" = m3.robust.se),
        type = "html")
+cat(o3)
+```
 
+```{r}
 fancyt("treatcbt", "treatft", m3, m3.robust)
 fancyt("weight1:treatcbt", "weight1:treatft", m3)
 fancyt("weight1:treatcbt", "weight1:treatft", m3, m3.robust)
+```
 
-
+```{r}
 drawHist(resid(m3), main = "Regression residuals")
+```
 
-
+```{r}
 plot(m3)
+```

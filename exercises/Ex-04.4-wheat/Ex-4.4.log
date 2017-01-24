@@ -1,21 +1,23 @@
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.4/Ex-4.4.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.4-wheat/Ex-4.4.log
   log type:  text
- opened on:   5 Jun 2016, 22:39:05
+ opened on:   9 Jun 2016, 13:40:55
 
 . 
-end of do-file
-
-. do "/tmp/SD03528.000000"
-
+. * Wheat data
+. * use http://www.stata-press.com/data/mlmus3/wheat, clear
+. * saveold wheat.dta12, version(12) replace
 . use wheat.dta12
 
 . 
-end of do-file
-
-. do "/tmp/SD03528.000000"
-
+. * Comment: This data has the smallest error variance I've ever seen
+. * in supposedly "real" empirical data.
+. 
+. 
+. * One student fit a model that is over-identified, I'm going
+. * to find out what is going on here later. Appears the
+. * following is overidentified, should not be estimated at all.
 . 
 . mixed yield c.moist##i.variety || variety:moist, mle stddev
 
@@ -41,36 +43,35 @@ Group variable: variety                         Number of groups  =         10
                                                 Wald chi2(19)     =   37795.42
 Log likelihood = -41.520012                     Prob > chi2       =     0.0000
 
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6077128   .0124644    48.76   0.000      .583283    .6321425
-             |
-     variety |
-          2  |  -2.844581   .8429087    -3.37   0.001    -4.496652   -1.192511
-          3  |  -1.871277   .7903544    -2.37   0.018    -3.420343   -.3222105
-          4  |  -.3432833   .7323671    -0.47   0.639    -1.778696     1.09213
-          5  |   .2294764   1.121912     0.20   0.838     -1.96943    2.428383
-          6  |    3.46207    .690504     5.01   0.000     2.108707    4.815433
-          7  |  -12.05622   .6729943   -17.91   0.000    -13.37527   -10.73718
-          8  |   1.175528   .7302294     1.61   0.107    -.2556957    2.606751
-          9  |  -1.434985   .7917805    -1.81   0.070    -2.986846    .1168767
-         10  |   3.494313   1.392236     2.51   0.012     .7655807    6.223044
-             |
-     variety#|
-     c.moist |
-          2  |  -.0354326   .0260328    -1.36   0.173    -.0864559    .0155908
-          3  |   .1297872   .0190785     6.80   0.000     .0923941    .1671804
-          4  |   .0264085   .0210603     1.25   0.210    -.0148689     .067686
-          5  |   .0284318   .0240342     1.18   0.237    -.0186744     .075538
-          6  |   .0790988   .0161154     4.91   0.000     .0475132    .1106844
-          7  |   .1164752   .0189384     6.15   0.000     .0793566    .1535938
-          8  |   .0791545   .0188487     4.20   0.000     .0422118    .1160972
-          9  |    .080266   .0190236     4.22   0.000     .0429804    .1175516
-         10  |   .0027604   .0282729     0.10   0.922    -.0526535    .0581742
-             |
-       _cons |   34.58378   .5478187    63.13   0.000     33.51007    35.65748
-------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+          yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+----------------+----------------------------------------------------------------
+          moist |   .6077128   .0124644    48.76   0.000      .583283    .6321425
+                |
+        variety |
+             2  |  -2.844581   .8429087    -3.37   0.001    -4.496652   -1.192511
+             3  |  -1.871277   .7903544    -2.37   0.018    -3.420343   -.3222105
+             4  |  -.3432833   .7323671    -0.47   0.639    -1.778696     1.09213
+             5  |   .2294764   1.121912     0.20   0.838     -1.96943    2.428383
+             6  |    3.46207    .690504     5.01   0.000     2.108707    4.815433
+             7  |  -12.05622   .6729943   -17.91   0.000    -13.37527   -10.73718
+             8  |   1.175528   .7302294     1.61   0.107    -.2556957    2.606751
+             9  |  -1.434985   .7917805    -1.81   0.070    -2.986846    .1168767
+            10  |   3.494313   1.392236     2.51   0.012     .7655807    6.223044
+                |
+variety#c.moist |
+             2  |  -.0354326   .0260328    -1.36   0.173    -.0864559    .0155908
+             3  |   .1297872   .0190785     6.80   0.000     .0923941    .1671804
+             4  |   .0264085   .0210603     1.25   0.210    -.0148689     .067686
+             5  |   .0284318   .0240342     1.18   0.237    -.0186744     .075538
+             6  |   .0790988   .0161154     4.91   0.000     .0475132    .1106844
+             7  |   .1164752   .0189384     6.15   0.000     .0793566    .1535938
+             8  |   .0791545   .0188487     4.20   0.000     .0422118    .1160972
+             9  |    .080266   .0190236     4.22   0.000     .0429804    .1175516
+            10  |   .0027604   .0282729     0.10   0.922    -.0526535    .0581742
+                |
+          _cons |   34.58378   .5478187    63.13   0.000     33.51007    35.65748
+---------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -88,56 +89,21 @@ Note: LR test is conservative and provided only for reference.
 . estimates store m1 
 
 . 
-end of do-file
-
-. do "/tmp/SD03528.000000"
+. * Is the problem caused by the fact that the stata file has
+. * variety coded as a floating point number? Yikes!
+. 
+. recast int variety , force
 
 . 
-. xtset variety
-       panel variable:  variety (balanced)
+. mixed yield moist##i.variety || variety:moist, mle stddev;
+option ; not allowed
+r(198);
 
-. xtreg yield moist, mle
-
-Fitting constant-only model:
-Iteration 0:   log likelihood =  -229.0959
-Iteration 1:   log likelihood =   -229.084
-Iteration 2:   log likelihood = -229.08398
-
-Fitting full model:
-Iteration 0:   log likelihood = -120.97316
-Iteration 1:   log likelihood = -111.42322
-Iteration 2:   log likelihood = -111.42256
-Iteration 3:   log likelihood = -111.42256
-
-Random-effects ML regression                    Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-Random effects u_i ~ Gaussian                   Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                LR chi2(1)        =     235.32
-Log likelihood  = -111.42256                    Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6731315   .0147105    45.76   0.000     .6442994    .7019636
-       _cons |   32.94774   1.340335    24.58   0.000     30.32073    35.57475
--------------+----------------------------------------------------------------
-    /sigma_u |   3.852903   .8857246                      2.455329    6.045978
-    /sigma_e |   1.510232          .                             .           .
-         rho |   .8668197          .                             .           .
-------------------------------------------------------------------------------
-LR test of sigma_u=0: chibar2(01) = 109.24             Prob >= chibar2 = 0.000
-
-. estimates store xt1
-
-. 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+r(198);
+
+. do "/tmp/SD08825.000000"
 
 . mixed yield moist, mle stddev
 
@@ -164,7 +130,7 @@ Log likelihood = -166.04356                     Prob > chi2       =     0.0000
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
 . mixed yield moist || variety: , mle  stddev
 
@@ -207,68 +173,10 @@ LR test vs. linear model: chibar2(01) = 131.83        Prob >= chibar2 = 0.0000
 
 . estimates store m2
 
-. lrtest m1 m2
-
-Likelihood-ratio test                                 LR chi2(1)  =    131.83
-(Assumption: m1 nested in m2)                         Prob > chi2 =    0.0000
-
-Note: The reported degrees of freedom assumes the null hypothesis is not on the boundary of the
-      parameter space.  If this is not true, then the reported test is conservative.
-
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
-
-. mixed yield moist || variety: moist, mle covariance(unstructured)  stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -91.027788  
-Iteration 1:   log likelihood = -91.027788  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-                                                Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                Wald chi2(1)      =    1737.56
-Log likelihood = -91.027788                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6619952   .0158813    41.68   0.000     .6308685    .6931219
-       _cons |   33.42029   1.327296    25.18   0.000     30.81884    36.02174
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-variety: Unstructured        |
-                   sd(moist) |   .0458393   .0125294      .0268272    .0783248
-                   sd(_cons) |   4.118142   .9440067      2.627721    6.453915
-           corr(moist,_cons) |  -.3398586   .3044418     -.7733255    .3101244
------------------------------+------------------------------------------------
-                sd(Residual) |   .5936776   .0666898      .4763568    .7398931
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 150.03                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store m3
-
-. 
-end of do-file
-
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
 . lrtest m2 m3
 
@@ -281,8 +189,21 @@ Note: The reported degrees of freedom assumes the null hypothesis is not on the 
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
+. predict b0 b1, reffects
+too many variables specified
+you must specify 1 new variable(s)
+r(103);
+
+end of do-file
+
+r(103);
+
+. do "/tmp/SD08825.000000"
+
+. 
+. * Considered blowing this up by excluding the covariance, but not real reason
 . mixed yield moist || variety: moist, mle  stddev
 
 Performing EM optimization: 
@@ -343,9 +264,26 @@ Note: LR test is conservative and provided only for reference.
 . twoway(scatter b0 b1)
 
 . 
+. 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
+
+. hist b0 if pickone == 1
+(bin=3, start=-.06648263, width=.04375659)
+
+. 
+end of do-file
+
+. do "/tmp/SD08825.000000"
+
+. hist b1 if pickone == 1, bin(6)
+(bin=6, start=-10.536839, width=2.5301774)
+
+. 
+end of do-file
+
+. do "/tmp/SD08825.000000"
 
 . predict yieldfit, fitted
 
@@ -354,29 +292,28 @@ end of do-file
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
 . twoway (scatter yield moist) , by(variety) 
 
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
 . twoway (scatter yield moist) , by(variety, compact legend(off)) 
 
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
-. 
 . twoway (scatter yield moist) , by(variety, compact legend(off) cols(5)) 
 
 . 
 end of do-file
 
-. do "/tmp/SD03528.000000"
+. do "/tmp/SD08825.000000"
 
 . twoway (scatter yield moist)(line yieldfit moist, connect(ascending)), ///
 >             by(variety, compact legend(off) cols(5)) 
