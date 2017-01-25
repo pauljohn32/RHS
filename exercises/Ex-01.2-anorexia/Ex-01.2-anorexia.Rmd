@@ -7,6 +7,16 @@ library(foreign)
 dat <- read.dta("anorexia.dta12")
 rockchalk::summarize(dat)
 
+## Jake and Jihong say dplyr to rescue:
+
+t0.dplyr <- dat %>%
+    group_by(treat) %>%
+    summarize(N = n(), Preweight = mean(weight1, na.rm = TRUE),
+              Postweight = mean(weight2, na.rm = TRUE))
+
+t0.dplyr
+
+## Before that, I did it the old fashioned way..
 ## Seems more tedious than I remember to build summary
 ## table
 
