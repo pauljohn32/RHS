@@ -80,8 +80,10 @@ plot(m1)
 ```{r}
 ## Exercise asks about homoskedasticity, do robust standard errors
 library(sandwich)
-m1.robust <- vcovHC(m1)
-m1.robust.se <- sqrt(diag(sandwich(m1)))
+## To match stata, we need type HC1
+m1.robust <- vcovHC(m1, type = "HC1")
+## StdError
+m1.robust.se <- sqrt(diag(m1.robust))
 m1.robust.se
 
 fancyt("treatcbt", "treatft", m1, m1.robust)
@@ -134,6 +136,7 @@ drawHist(resid(m1), main = "Regression residuals")
 ## I'd rather have an interaction
 
 m3 <- lm(weight2 ~ weight1 * treat, data = dat)
+summary(m3)
 
 plotSlopes(m3, plotx = "weight1", modx = "treat", interval = "confidence")
 
