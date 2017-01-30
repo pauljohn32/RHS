@@ -1,5 +1,5 @@
 ## Paul Johnson
-## 2017-01-24
+## 2017-01-30
 
 ```{r}
 library(foreign)
@@ -8,7 +8,7 @@ dat <- read.dta("anorexia.dta12")
 rockchalk::summarize(dat)
 
 ## Jake and Jihong say dplyr to rescue:
-
+library(dplyr)
 t0.dplyr <- dat %>%
     group_by(treat) %>%
     summarize(N = n(), Preweight = mean(weight1, na.rm = TRUE),
@@ -85,6 +85,11 @@ m1.robust <- vcovHC(m1, type = "HC1")
 ## StdError
 m1.robust.se <- sqrt(diag(m1.robust))
 m1.robust.se
+
+## Can compare to HC2 and HC3 in Stata, which are same:
+sqrt(diag(vcovHC(m1, type = "HC2")))
+sqrt(diag(vcovHC(m1, type = "HC3")))
+
 
 fancyt("treatcbt", "treatft", m1, m1.robust)
 ```

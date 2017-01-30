@@ -7,6 +7,10 @@ log using "Ex-01.2-anorexia.log", replace text
 
 use anorexia.dta12, clear
 
+regress weight2 weight1 i.treat
+
+regress weight2 weight1 ib2.treat
+
 
 * uses HC1 by default:
 regress weight2 weight1 ib2.treat, vce(robust)
