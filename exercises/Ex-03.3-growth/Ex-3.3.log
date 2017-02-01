@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-03.3-growth/Ex-3.3.log
   log type:  text
- opened on:   5 Jun 2016, 23:15:44
+ opened on:   1 Feb 2017, 10:32:00
 
 . 
 . * JPotthoff & Roy jaw growth data
@@ -37,7 +37,10 @@
 
 . * want to label "1" and "2" in plot
 . 
-. * Go back and label the data
+end of do-file
+
+. do "/tmp/SD14196.000000"
+
 . label define sex 1 "boy" 2 "girl"
 
 . label values sex sex
@@ -47,8 +50,10 @@
 . twoway (line measure age, connect(ascending)), by(sex)
 
 . 
-. * 3.3.2
-. 
+end of do-file
+
+. do "/tmp/SD14196.000000"
+
 . xtmixed measure age i2.sex || idnr: , mle
 
 Performing EM optimization: 
@@ -92,8 +97,10 @@ idnr: Identity               |
 LR test vs. linear model: chibar2(01) = 45.83         Prob >= chibar2 = 0.0000
 
 . 
-. 
-. * 3.3.3
+end of do-file
+
+. do "/tmp/SD14196.000000"
+
 . 
 . xtmixed measure c.age##i2.sex || idnr: , mle
 
@@ -204,17 +211,6 @@ LR test vs. linear model: chibar2(01) = 49.80         Prob >= chibar2 = 0.0000
 
 . 
 . predict m1re, reffects
-
-. 
-. 
-. gen m1gp = m1re + m1
-
-. twoway (line m1gp age, connect(ascending) lcolor("pink"))
-
-. 
-. twoway (line measure age, connect(ascending) lcolor("gs10")) ///
->     (line m1 age, connect(ascending)) ///
->     (line m1gp age, connect(ascending) lcolor("pink"))
 
 . 
 end of do-file

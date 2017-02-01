@@ -1,14 +1,18 @@
-library(reshape)
+## Eddie Liebmann
+## Paul Johnson
+## 2017-02-01
 library(foreign)
 library(lme4)
 
-grow <- read.dta("http://www.stata-press.com/data/mlmus3/growth.dta")
+grow <- read.dta("growth.dta12")
 grow$sex <- factor(grow$sex)
 
 #1
-plot(measure ~ age, data = grow[grow$sex == "1", ], type = 'l', col = "blue", main = "Grow Trajectories by Gender")
+plot(measure ~ age, data = grow[grow$sex == "1", ],
+     type = 'l', col = "blue", main = "Grow Trajectories by Gender")
 lines(measure ~ age, data = grow[grow$sex == "2", ], col = "green")
-legend(8, 30, c("boys", "girls"), lty =c(1,1), col = c("blue", "green"), cex = .60, bty = 'n')
+legend(8, 30, c("boys", "girls"), lty =c(1,1), col = c("blue", "green"),
+       cex = .60, bty = 'n')
 
 #2 
 m1 <- lmer(measure ~ age + sex + (1 | idnr), data = grow, REML = FALSE)
@@ -31,8 +35,11 @@ bb1_m1 <- unname(coef(summary(m1_b))[ , "Estimate"][2])
 ag_m1 <- unname(coef(summary(m1_g))[ , "Estimate"][1])
 bg1_m1 <- unname(coef(summary(m1_g))[ , "Estimate"][2])
 
-plot(measure ~ age, data = grow[grow$sex == "1", ], type = 'l', col = "grey", main = "Grow Trajectories by Gender", ylim = c(15, 35))
+plot(measure ~ age, data = grow[grow$sex == "1", ], type = 'l',
+     col = "grey", main = "Grow Trajectories by Gender",
+     ylim = c(15, 35))
 lines(measure ~ age, data = grow[grow$sex == "2", ], col = "pink")
-legend(8, 32, c("boys", "girls","boys", "girls"), lty =c(1,1,3,4), lwd=c(1,1,3,3), col = c("grey", "pink", "black", "black"), cex = .60, bty = 'n')
+legend(8, 32, c("boys", "girls","boys", "girls"),
+       lty =c(1,1,3,4), lwd=c(1,1,3,3), col = c("grey", "pink", "black", "black"), cex = .60, bty = 'n')
 abline(a = ab_m1, b = bb1_m1, lty = 3, lwd = 3)
 abline(a = ag_m1, b = bg1_m1, lty = 4, lwd = 3)
