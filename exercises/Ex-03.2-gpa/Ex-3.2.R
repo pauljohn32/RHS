@@ -1,7 +1,7 @@
-library(reshape)
+## library(reshape)
 library(foreign)
-#gpa <- read.dta("gpa.dta12")
-gpa <- read.dta("http://www.stata-press.com/data/mlmus3/gpa.dta")
+
+gpa <- read.dta("gpa.dta12")
 
 ##reshape(gpa, paste0("job", 1:6), "job", direction = "long")
 
@@ -34,6 +34,8 @@ plot(resid.m2 ~ gpa2$job, xlab = "Job",ylab = "Residual", cex.axis = .75)
 plot(resid.m2 ~ gpa2$time, xlab = "Time", ylab = "Residual", cex.axis = .75)
 plot(resid.m2 ~ gpa2$highgpa, xlab = "HS GPA",ylab = "Residual", cex.axis = .75)
 plot(gpa_new$pred ~ resid.m2, xlab = "Residual", ylab = "Pred. Val", cex.axis = .75)
+par(mfrow=c(1,1))
+
 ## library(rockchalk)
 #plotSlopes(m2, plotx = "time", modx = "job")
 

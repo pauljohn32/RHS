@@ -1,15 +1,13 @@
 * Paul E. Johnson
-* 20160202
+* 20170202
 
 capture log close
 set more off
-log using Ex-3.2.log, replace text
+log using "Ex-3.2.log", replace text
 
 * Joop Hox's data
-* use http://www.stata-press.com/data/mlmus3/gpa, clear
-* save gpa.dta
-use gpa.dta, replace
-saveold gpa.dta12, version(12)
+use gpa.dta12, replace
+
 * Stack.
 reshape long gpa job, i(student)
 rename _j time1
