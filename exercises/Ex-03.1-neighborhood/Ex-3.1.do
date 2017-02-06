@@ -1,14 +1,11 @@
 * Paul E. Johnson
 * 20160202
 capture log close
-set more off
-log using 3.1.log, replace text
+set more off, permanently
+log using "3.1.log", replace text
 
 
-*use http://www.stata-press.com/data/mlmus3/neighborhood, clear
-*save neighborhood.dta
-
-use neighborhood.dta
+use neighborhood.dta12
 
 xtmixed attain || neighid:  , mle
 estimates store empty
@@ -30,3 +27,17 @@ lrtest l1l2re l1l2nore
 
 xtmixed attain p7vrq p7read dadocc i.dadunemp i.daded i.momed i.male deprive || neighid: , mle
 
+
+
+* After I worked those out in 2017, I learned that the preferred method
+* in newer Stata is the mixed function.
+
+mixed attain || neighid:  , mle
+estimates store empty2
+
+xtmixed attain deprive || neighid: , mle
+estimates store l2re2
+
+xtmixed attain deprive, mle
+estimates store l2nore2
+lrtest l2re l2nore2
