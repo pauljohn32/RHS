@@ -3,14 +3,9 @@
 
 capture log close
 set more off
-log using Ex-3.3.log, replace text
-
-* JPotthoff & Roy jaw growth data
-* use http://www.stata-press.com/data/mlmus3/growth, clear
-* saveold growth.dta12, version(12)
+log using "Ex-3.3.log", replace text
 
 use growth.dta12, replace
-
 
 sum
 
