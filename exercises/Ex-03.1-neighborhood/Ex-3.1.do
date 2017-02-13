@@ -7,6 +7,8 @@ log using "3.1.log", replace text
 
 use neighborhood.dta12
 
+tab neighid
+
 xtmixed attain || neighid:  , mle
 estimates store empty
 

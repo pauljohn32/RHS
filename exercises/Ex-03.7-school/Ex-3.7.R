@@ -1,11 +1,39 @@
 library(foreign)
-library(reshape2)
 library(lme4)
 library(lmerTest)
 library(plyr)
 
-dat1 <- read.dta("http://www.stata-press.com/data/mlmus3/hsb.dta")
-dat1$schoolid <- factor(dat1$schoolid)
+hsb <- read.dta("hsb.dta12")
+hsb$schoolidf <- factor(dat1$schoolid)
+
+
+
+## Variable "mmses" is the mean of ses, within schools, which we verify here
+ses.agg.mean <- aggregate(hsb$ses,
+                          by = list("schoolidf" = hsb$schoolidf),  mean, na.rm = TRUE)
+
+crap2 <- tapply(hsb$ses, hsb$schoolidf, mean, na.rm = TRUE)
+guess1 <- merge(hsb, ses.agg.mean, by = "schoolidf")
+
+
+## Map that back onto the data frame for comparison (2 steps)
+rownames(ses.agg.mean) <- ses.agg.mean$schoolidf
+hsb$mmses.pj <- ses.agg.mean$x[hsb$schoolidf]
+hsb$ses.group.diff <- hsb$ses - hsb$mmses.pj
+
+
+library(data.table)
+hsbdt <- as.data.table(hsb)
+setkey(hsbdt, schoolidf)
+hsbdt[ , sesmean2:=mean(ses), by = schoolidf]
+
+
+for (i in c("ses", "female")){
+    hsb[ , i] <- magicfunction_here_like_stata_egen( )
+}
+
+
+
 
 #1
 m1_hs <- lmer(mathach ~ ses + (1 | schoolid), data = dat1, REML = FALSE)

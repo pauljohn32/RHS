@@ -1,19 +1,531 @@
--------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-3.2/Ex-3.2.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-03.2-gpa/Ex-3.2.log
   log type:  text
- opened on:  23 Feb 2016, 14:00:35
+ opened on:   7 Feb 2017, 16:35:23
 
 . 
 . * Joop Hox's data
-. * use http://www.stata-press.com/data/mlmus3/gpa, clear
-. * save gpa.dta
-. use gpa.dta, replace
+. use gpa.dta12, replace
 
-. saveold gpa.dta12, version(12)
-(saving in Stata 12 format, which can be read by Stata 11 or 12)
-file gpa.dta12 already exists
-r(602);
+. 
+. * Stack.
+. reshape long gpa job, i(student)
+(note: j = 1 2 3 4 5 6)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                      200   ->    1200
+Number of variables                  16   ->       7
+j variable (6 values)                     ->   _j
+xij variables:
+                     gpa1 gpa2 ... gpa6   ->   gpa
+                     job1 job2 ... job6   ->   job
+-----------------------------------------------------------------------------
+
+. rename _j time1
+
+. 
+. xtmixed gpa time1 i.job highgpa i1.sex || student: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood =  -147.0445  
+Iteration 1:   log likelihood =  -147.0445  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(5)      =     820.70
+Log likelihood =  -147.0445                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1025993   .0040836    25.12   0.000     .0945956     .110603
+             |
+         job |
+    2 hours  |  -.1853078   .0392284    -4.72   0.000     -.262194   -.1084217
+    3 hours  |  -.3397274   .0435998    -7.79   0.000    -.4251815   -.2542733
+             |
+     highgpa |   .0860032   .0279401     3.08   0.002     .0312417    .1407648
+             |
+         sex |
+       male  |   -.149112   .0332846    -4.48   0.000    -.2143486   -.0838754
+       _cons |   2.520134   .0959271    26.27   0.000      2.33212    2.708147
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |    .213554   .0131002      .1893615    .2408372
+-----------------------------+------------------------------------------------
+                sd(Residual) |    .235843   .0052903      .2256988    .2464431
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 331.27        Prob >= chibar2 = 0.0000
+
+. estimates store gpa1
+
+. 
+. * Linearity of i.time1
+. xtmixed gpa i.time1  highgpa i1.sex || student: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -184.21732  
+Iteration 1:   log likelihood = -184.21732  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(7)      =     708.91
+Log likelihood = -184.21732                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |
+          2  |       .122   .0240822     5.07   0.000     .0747997    .1692003
+          3  |      .2165   .0240822     8.99   0.000     .1692997    .2637003
+          4  |      .3245   .0240822    13.47   0.000     .2772997    .3717003
+          5  |      .4255   .0240822    17.67   0.000     .3782997    .4727003
+          6  |      .5405   .0240822    22.44   0.000     .4932997    .5877003
+             |
+     highgpa |   .0923924   .0302977     3.05   0.002     .0330101    .1517748
+             |
+         sex |
+       male  |  -.1558122   .0360774    -4.32   0.000    -.2265226   -.0851018
+       _cons |   2.391488   .0939526    25.45   0.000     2.207345    2.575632
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2343333   .0138099       .208771    .2630254
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2408221   .0053849      .2304958    .2516111
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 419.59        Prob >= chibar2 = 0.0000
+
+. estimates store gpaitime1
+
+. lrtest gpaitime1 gpa1
+
+Likelihood-ratio test                                 LR chi2(2)  =    -74.35
+(Assumption: gpa1 nested in gpaitime1)                Prob > chi2 =    1.0000
+
+. 
+. 
+. 
+. * Linearity highgpa
+. hist highgpa
+(bin=30, start=2, width=.06666667)
+
+. table highgpa
+
+----------------------
+gpa in    |
+high      |
+school    |      Freq.
+----------+-----------
+        c |         48
+      2.1 |         48
+      2.2 |         66
+      2.3 |         78
+      2.4 |         42
+      2.5 |         90
+      2.6 |         42
+      2.7 |         30
+      2.8 |         84
+      2.9 |         90
+        b |         36
+      3.1 |         42
+      3.2 |         36
+      3.3 |         36
+      3.4 |         78
+      3.5 |         78
+      3.6 |         54
+      3.7 |         84
+      3.8 |         48
+      3.9 |         66
+        a |         24
+----------------------
+
+. 
+. gen highgpasq = highgpa^2
+
+. xtmixed gpa time1  highgpa highgpasq i1.sex || student: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -184.50463  
+Iteration 1:   log likelihood = -184.50463  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(4)      =     707.93
+Log likelihood = -184.50463                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1063143   .0040719    26.11   0.000     .0983336     .114295
+     highgpa |   .0291958   .3581234     0.08   0.935    -.6727133    .7311048
+   highgpasq |   .0105716   .0596924     0.18   0.859    -.1064234    .1275665
+             |
+         sex |
+       male  |  -.1557058   .0360796    -4.32   0.000    -.2264205   -.0849911
+       _cons |   2.381547   .5204147     4.58   0.000     1.361553    3.401541
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2342992   .0138098      .2087373    .2629913
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2408951   .0053866      .2305656    .2516874
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 419.22        Prob >= chibar2 = 0.0000
+
+. estimates store gpahighgpasq
+
+. 
+. lrtest gpahighgpasq gpa1
+
+Likelihood-ratio test                                 LR chi2(1)  =     74.92
+(Assumption: gpahighgpasq nested in gpa1)             Prob > chi2 =    0.0000
+
+. predict lev2, reffects
+
+. predict comp_se, reses
+
+. 
+. mkspline hsgpa = highgpa, cubic 
+
+. xtmixed gpa time1  hsgpa1 hsgpa2 hsgpa3 hsgpa4 i1.sex || student: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -183.10975  
+Iteration 1:   log likelihood = -183.10975  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(6)      =     711.10
+Log likelihood = -183.10975                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1063143   .0040719    26.11   0.000     .0983336     .114295
+      hsgpa1 |  -.1016671    .229997    -0.44   0.658     -.552453    .3491189
+      hsgpa2 |   .7459737   1.609772     0.46   0.643    -2.409121    3.901068
+      hsgpa3 |  -.8845702   4.502754    -0.20   0.844    -9.709806    7.940665
+      hsgpa4 |  -1.195784    4.52594    -0.26   0.792    -10.06646    7.674895
+             |
+         sex |
+       male  |  -.1497538   .0360156    -4.16   0.000    -.2203431   -.0791646
+       _cons |   2.728154   .5165315     5.28   0.000     1.715771    3.740537
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2323827   .0137317      .2069691    .2609168
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2408951   .0053866      .2305656    .2516874
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 412.47        Prob >= chibar2 = 0.0000
+
+. estimates store gpahsgpaspline
+
+. lrtest gpahsgpaspline gpa1
+
+Likelihood-ratio test                                 LR chi2(1)  =    -72.13
+(Assumption: gpa1 nested in gpahsgpaspline)           Prob > chi2 =    1.0000
+
+. 
+. 
+. xtmixed gpa i.time1##i1.sex highgpa i1.sex || student: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood =  -177.2894  
+Iteration 1:   log likelihood =  -177.2894  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(12)     =     732.39
+Log likelihood =  -177.2894                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |
+          2  |   .1314286   .0330071     3.98   0.000     .0667357    .1961214
+          3  |   .2428571   .0330071     7.36   0.000     .1781643      .30755
+          4  |        .38   .0330071    11.51   0.000     .3153072    .4446928
+          5  |   .4847619   .0330071    14.69   0.000     .4200691    .5494547
+          6  |   .6009524   .0330071    18.21   0.000     .5362596    .6656452
+             |
+         sex |
+       male  |  -.0817771   .0475106    -1.72   0.085    -.1748961     .011342
+             |
+   time1#sex |
+     2#male  |  -.0198496   .0478918    -0.41   0.679    -.1137158    .0740166
+     3#male  |  -.0554887   .0478918    -1.16   0.247     -.149355    .0383775
+     4#male  |  -.1168421   .0478918    -2.44   0.015    -.2107083   -.0229759
+     5#male  |  -.1247619   .0478918    -2.61   0.009    -.2186281   -.0308957
+     6#male  |  -.1272682   .0478918    -2.66   0.008    -.2211344    -.033402
+             |
+     highgpa |   .0923924   .0302977     3.05   0.002     .0330101    .1517748
+       _cons |   2.356322   .0950757    24.78   0.000     2.169977    2.542667
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2346169   .0137924      .2090835    .2632684
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2391595   .0053478      .2289044     .249874
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 426.36        Prob >= chibar2 = 0.0000
+
+. estimates store gpaint1
+
+. lrtest gpa1 gpaint1
+
+Likelihood-ratio test                                 LR chi2(7)  =    -60.49
+(Assumption: gpa1 nested in gpaint1)                  Prob > chi2 =    1.0000
+
+. 
+. estimates restore gpa1
+(results gpa1 are active now)
+
+. predict lev2, reffects
+variable lev2 already defined
+r(110);
 
 end of do-file
-r(602);
+
+r(110);
+
+. do "/tmp/SD04684.000000"
+
+. mixed gpa time highgpa job ib2.sex || student: , reml stddeviations
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log restricted-likelihood = -163.27098  
+Iteration 1:   log restricted-likelihood = -163.27098  
+
+Computing standard errors:
+
+Mixed-effects REML regression                   Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(4)      =     817.70
+Log restricted-likelihood = -163.27098          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1031566   .0040061    25.75   0.000     .0953048    .1110085
+     highgpa |   .0858555   .0281988     3.04   0.002     .0305869    .1411241
+         job |  -.1613393    .018328    -8.80   0.000    -.1972614   -.1254171
+             |
+         sex |
+       male  |  -.1484166    .033577    -4.42   0.000    -.2142263   -.0826069
+             |
+       _cons |    2.65771   .0967648    27.47   0.000     2.468054    2.847365
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2159048   .0132858      .1913742    .2435798
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2360526   .0052989      .2258921    .2466701
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 336.00        Prob >= chibar2 = 0.0000
+
+. 
+end of do-file
+
+. predict mixedreml, reffects
+
+. do "/tmp/SD04684.000000"
+
+. mixed gpa time highgpa job ib2.sex || student: , mle stddeviations
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -147.27246  
+Iteration 1:   log likelihood = -147.27246  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(4)      =     820.13
+Log likelihood = -147.27246                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1031482   .0040024    25.77   0.000     .0953037    .1109926
+     highgpa |   .0858379   .0279769     3.07   0.002     .0310042    .1406717
+         job |  -.1617732   .0183036    -8.84   0.000    -.1976476   -.1258988
+             |
+         sex |
+       male  |  -.1483967   .0333128    -4.45   0.000    -.2136886   -.0831048
+             |
+       _cons |   2.658696   .0961348    27.66   0.000     2.470276    2.847117
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2139054   .0131047      .1897028    .2411958
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2358326   .0052894      .2256902    .2464308
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 333.27        Prob >= chibar2 = 0.0000
+
+.  predict mixedmle, reffects
+
+. 
+. mixed gpa time highgpa job ib2.sex || student: , reml stddeviations
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log restricted-likelihood = -163.27098  
+Iteration 1:   log restricted-likelihood = -163.27098  
+
+Computing standard errors:
+
+Mixed-effects REML regression                   Number of obs     =      1,200
+Group variable: student                         Number of groups  =        200
+
+                                                Obs per group:
+                                                              min =          6
+                                                              avg =        6.0
+                                                              max =          6
+
+                                                Wald chi2(4)      =     817.70
+Log restricted-likelihood = -163.27098          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+         gpa |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       time1 |   .1031566   .0040061    25.75   0.000     .0953048    .1110085
+     highgpa |   .0858555   .0281988     3.04   0.002     .0305869    .1411241
+         job |  -.1613393    .018328    -8.80   0.000    -.1972614   -.1254171
+             |
+         sex |
+       male  |  -.1484166    .033577    -4.42   0.000    -.2142263   -.0826069
+             |
+       _cons |    2.65771   .0967648    27.47   0.000     2.468054    2.847365
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+student: Identity            |
+                   sd(_cons) |   .2159048   .0132858      .1913742    .2435798
+-----------------------------+------------------------------------------------
+                sd(Residual) |   .2360526   .0052989      .2258921    .2466701
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 336.00        Prob >= chibar2 = 0.0000
+
+.  predict mixedreml, reffects
+variable mixedreml already defined
+r(110);
+
+end of do-file
+
+r(110);
+
+. tab job, nol
+
+        job |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         51        4.25        4.25
+          2 |        971       80.92       85.17
+          3 |        178       14.83      100.00
+------------+-----------------------------------
+      Total |      1,200      100.00
+
+. exit, clear

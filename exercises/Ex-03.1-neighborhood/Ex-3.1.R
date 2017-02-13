@@ -1,10 +1,12 @@
 library(foreign)
-library(reshape2)
+##library(reshape2)
 library(lme4)
 library(lmerTest)
 library(plyr)
 
-dat <- read.dta("http://www.stata-press.com/data/mlmus3/neighborhood.dta")
+##dat <- read.dta("http://www.stata-press.com/data/mlmus3/neighborhood.dta")
+
+dat <- read.dta("neighborhood.dta12")
 
 #1
 m1 <- lmer(attain ~ (1 | neighid), data = dat, REML = FALSE)
@@ -30,6 +32,14 @@ m3 <- lmer(attain ~ p7vrq + p7read + dadunemp + daded + dadocc + momed + male + 
 summary(m3)
 
 #4
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title 
+##' @param x 
+##' @param z 
+##' @return 
+##' @author Paul Johnson
 Rsq <- function(x, z){
   psi_hat0 <- unname(attr(VarCorr(x)$neighid, "stddev"))
   theta_hat0<- attr(VarCorr(x), "sc")

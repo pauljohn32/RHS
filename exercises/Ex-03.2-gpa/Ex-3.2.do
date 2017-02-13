@@ -56,3 +56,32 @@ twoway (scatter lev2std lev2)
 * want to run RHS p. 161, but idx missing
 histogram lev2 if idx==1, normal
 egen pickone = tag(student)
+
+
+
+
+
+
+* Stata "vce" give same param estimates, but different std. err
+reg gpa time highgpa job ib2.sex
+
+reg gpa time highgpa job ib2.sex, vce(cluster student)
+
+
+* Some tests we tried for not good reason, just fun:
+xtset student
+
+xtreg gpa time highgpa job ib2.sex 
+* Open question: why is xtreg output not same as reml from xtmixed or mixed?
+
+
+xtmixed gpa time highgpa job ib2.sex || student: , mle
+
+xtmixed gpa time highgpa job ib2.sex || student: , reml
+
+mixed gpa time highgpa job ib2.sex || student: , mle stddeviations
+ predict mixedmle, reffects
+
+mixed gpa time highgpa job ib2.sex || student: , reml stddeviations
+ predict mixedreml, reffects
+
