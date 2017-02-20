@@ -1,0 +1,320 @@
+---
+title: "Group Means, Group Mean Deviations"
+subtitle: "Multilevel recoding chores"
+author:
+ - name: Paul Johnson
+   affiliation: Center for Research Methods and Data Analysis, University of Kansas
+   email: pauljohn@ku.edu
+ - name: "CRMDA Guide #43. Please visit [http://crmda.ku.edu/guides](http://crmda.ku.edu/guides) for updates."
+ - name: "Tags: guides, R, multilevel models"
+
+abstract:
+    This is about recoding chores that come with multilevel models
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%Y %B %d')`"
+output:
+  html_document:
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+##This Invisible Chunk is required in all CRMDA documents
+outdir <- paste0("tmpout")
+if (!file.exists(outdir)) dir.create(outdir, recursive = TRUE)
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.path=paste0(outdir, "/p-"))
+options(width = 70)
+```
+
+# Multilevel modelers need group means
+
+Multilevel modelers might need group-level summary information for
+various reasons.  Here are two of them.
+
+1. "Mundlak's" suggestion for exploring the effect of a numeric
+predictors requires us to include, as a predictor, the within group mean.
+
+As discussed in Snijders and Bosker, it is necessary to also include
+
+2. The individual level predictor in either of 2 forms. The can be
+   coded either as
+A. the "as observed" predictor at the individual level, or
+B. the predictor recoded as individual-level deviations about the
+group mean
+
+Regression models with these two are equivalent, there are pros and
+cons about the interpretation of these methods.
+
+## Example data
+
+The High School and Beyond data set summarizes mathematical
+and English language achievement for students. I have instructions
+about downloading and importing that data on this web page:
+
+http://pj.freefaculty.org/guides/stat/DataSets/HSB/00-README.txt
+
+The following will download a copy of the data if one is not
+already available in the working directory.
+
+```{r}
+library(foreign)
+
+if (file.exists("hsb.rds")){
+    hsb <- readRDS("hsb.rds")
+} else {
+    hsb.url <- "http://www.stata-press.com/data/mlmus3/hsb.dta"
+    hsb <- read.dta(hsb.url)
+    saveRDS(hsb, "hsb.rds")
+}
+```
+
+```{r}
+hsb$schoolidf <- factor(hsb$schoolid)
+```
+
+
+## Stata offers egen
+
+If a variable is named ```ses``` and we want to calculate
+the mean for each school, we run 
+
+```
+egen ses_mn = mean(ses), by(schoolid)
+```
+
+The deviation within group is easy to calculate after that.
+
+```
+gen ses_dev = ses - ses_mn 
+```
+
+
+In Stata, one is accustomed to the idea that the data
+frame will be altered by the addition of a new variable.
+
+In the Rabe-Hesketh and Skrondal book, a method is
+describe to use a for loop to iterate through many
+variables and create group mean columns for them.
+
+Here we can practice by getting the group means
+for the variables ses and female.
+
+```
+foreach var of varlist ses female {
+    egen `var'_mn = mean(`var'), by(schoolid)
+}
+
+foreach var of varlist ses  female {
+    gen `var'_dev = `var' - `var'_mn
+}
+```
+
+
+## How to get the same work done with R
+
+R offers many functions in the base that can produce the group means.
+The more difficult challenge is to "duplicate" the means back 
+onto the data frame so that we can put them to use.
+
+### Base functions
+
+```aggregate``` and ```by``` are convenience functions in the R base that are intended
+to simplify the use of ```tapply```.
+
+
+```{r}
+ses_mn1 <- aggregate(hsb[, "ses", drop=FALSE], by = list(schoolid = hsb$schoolidf), mean, na.rm = TRUE)
+head(ses_mn1)
+str(ses_mn1)
+class(ses_mn1)
+```
+
+```{r}
+ses_mn2 <- by(hsb$ses, hsb$schoolidf, mean, na.rm = TRUE)
+head(ses_mn2)
+str(ses_mn2)
+class(ses_mn2)
+```
+
+```{r}
+ses_mn3 <- tapply(hsb$ses, hsb$schoolidf, mean, na.rm = TRUE)
+head(ses_mn3)
+str(ses_mn3)
+class(ses_mn3)
+```
+
+Using any of these methods, we are able to retrieve the means of the
+groups.
+
+The challenge is to put those means back onto the data frame. It is
+easy to get this wrong because the results from tapply do not come
+back in the expected order. Here is a toy example to demonstrate that.
+
+```{r}
+toy <- data.frame(x1 = rnorm(13),
+                  x2 = c(rep("Z", 3), rep("P", 2), rep("A", 3), rep("C", 5)),
+                  stringsAsFactors = FALSE)
+toy
+x1_mn <- tapply(toy$x1, toy$x2, mean)
+x1_mn
+```
+
+Note that the ordering from top to bottom in the data frame has groups
+Z, P, A and C, the ordering of tapply is different.  tapply creates a
+factor variable, which, by default, uses the available values in 
+alphabetical order as the levels.  Hence, a decision to manufacture
+a vector by the obvious sort of trick will result in a ghastly error.
+
+<!-- ```{r} -->
+<!-- x1_mn <- aggregate(toy, by = list(toy$x2), function(d){ -->
+<!--     mean(d[ , "x1"]) -->
+<!--     ##rep(mean(d[ , "x1"], NROW(d))) -->
+<!-- }) -->
+<!-- ``` -->
+
+To put the data "back onto" the data frame requires the careful use of
+index subscripts or the merge function. 
+
+```{r}
+x1_mn <- aggregate(toy[ , "x1", drop = FALSE], by = list("x2" = toy$x2), mean, na.rm = TRUE)
+x1_mn
+toy2 <- merge(toy, x1_mn, by = "x2", suffix = c("", "_mn"), sort = FALSE)
+toy2
+```
+
+#### You usually want more than one variable {.bs-callout .bs-callout-red}
+
+Variable "mmses" is the mean of ses, within schools, which we verify here
+Create a vector of variable names for which we need school level means
+
+```{r}
+vars <- c("ses", "female")
+ses_mn <- aggregate(hsb[ , vars],
+                          by = list("schoolidf" = hsb$schoolidf),  mean, na.rm = TRUE)
+
+hsb2 <- merge(hsb, ses_mn, by = "schoolidf", suffix = c("", "_mn"))
+for(i in vars){
+    hsb2[ , paste0(i, "_dev")] <- hsb2[ , i] - hsb2[ , paste0(i, "_mn")]
+}
+```
+
+
+#### An R function like Stata's egen {.bs-callout .bs-callout-green}
+
+```{r}
+##' Generate group mean and individual deviations within groups
+##'
+##' Similar to Stata egen, except more versatile and fun! Will
+##' create a new data frame that includes the new columns.
+##'
+##' I'm replacing the whole data frame here, I agree that's
+##' wasteful, but it is also convenient.  Will reconsider
+##' Just returning the new columns
+##' @param dframe a data frame
+##' @param x Variable names or a vector of variable names
+##' @param grp A grouping variable name or a vector of grouping names
+##' @param FUN Defaults to the mean, have not tested alternatives
+##' @return new data frame with "x_mn" and "x_dev" added as variables
+##' @author Paul Johnson
+##' @examples
+##' Suppose you get the MLMUS hsb data frame, somehow
+##' xx1 <- egen_level_2(hsb, "ses", "schoolidf")
+##' xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
+##' xx3 <- egen_level_2(hsb, c("ses", "female"), c("schoolidf", "sector"))
+##' xx4 <- egen_level_2(hsb, c("ses", "female"),
+##'                    c("schoolidf"), FUN = median)
+egen_level_2 <- function(dframe, x, grp, FUN = mean){
+    xmean <- aggregate(dframe[ , x, drop = FALSE],
+                       dframe[ , grp, drop = FALSE], FUN,
+                       na.rm = TRUE)
+    df2 <- merge(dframe, xmean, by = grp, suffix = c("", "_mn"))
+    for(i in x){
+        df2[ , paste0(i, "_dev")] <- df2[ , i] - df2[ , paste0(i, "_mn")]
+    }
+    df2
+}
+
+xx1 <- egen_level_2(hsb, "ses", "schoolidf")
+head(xx1[ , c("schoolidf", "ses", "ses_mn", "ses_dev")])
+xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
+head(xx2[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
+```
+
+#### What's wrong with that? {.bs-callout .bs-callout-orange}
+
+Perhaps nothing is wrong, but I suspect it is inefficient to copy the 
+whole data frame just to add 2 columns.
+
+There is a lot of fear, uncertainty, and confusion about what is
+"fast" in R, what is slow, and what idioms can scale up.  This one
+certainly appears to be slow because of all of the object copying. If
+we could simply insert a column into a data.frame without re-writing
+it, this would surely go faster.  The fear of excess data copying is
+what fuels innovations during the past 5-10 years, such as the
+packages ```data.table``` ```plyr``` and ```dplyr```. 
+
+All of these packages sit on top of the famous R package "Rcpp", which
+is rightly praised as a revolutionary advance in R for high
+performance problems.  Unfortunately, it is also one of the sources of 
+periodic project failures because certain data sets expose bugs (which
+are fixed eventually, usually quickly).
+
+####  Why do I bother with base functions?{.bs-callout .bs-callout-red}
+
+Simply put, relying on more contributed packages can cause project
+failures.  Recently, we have had 2 projects come to a halt because
+of little bugs in packages that were relied upon by other packages
+that we were using.  These problems get fixed, eventually, 
+
+
+
+#### If you are willing to use data.table {.bs-callout .bs-callout-blue}
+
+When data sets are truly immense, the ```data.table``` package offers
+the only tools I've found to quickly sort, merge, and
+calculate-by-subgroup. ```data.table``` introduces an entirely new
+style of R programming, touted by its advocates as more "elegant" and
+"understandable". The CRMDA has a ```data.table``` guide available in
+our collection.
+
+Here is an example of data.table in action.
+
+
+```{r}
+library(data.table)
+hsbdt <- as.data.table(hsb)
+setkey(hsbdt, schoolidf)
+hsbdt[ , ses_mn2 := mean(ses, na.rm = TRUE), by = schoolidf]
+hsbdt[ , ses_dev2 := ses - ses_mn2]
+hsbnew <- as.data.frame(hsbdt)
+head(hsbnew[ , c("schoolidf", "ses", "ses_mn2", "ses_dev2")])
+```
+
+#### If you are willing to use plyr {.bs-callout .bs-callout-blue}
+
+
+#### Confusion about R's transform function
+
+The transform function's help page warns us not to use it.
+
+Except for that, it appears to be an efficiency enhancing function 
+because it can do a calculation for a column and simply add the result
+to the data frame.
+
+The plyr package supplies a function called ```mutate```.
+
+# Wide to Long format data
+
+# Long to Wide format data
+
+
+[//]: (All guides must have this as the final stanza)
+
+```{r sessionInfo, echo = FALSE}
+sessionInfo()
+```
+
+Available under
+[Created Commons license 3.0 <img src="http://crmda.dept.ku.edu/images/cc-3.0.png" alt="CC BY"
+style="width: 75px;height: 20px;"/>](http://creativecommons.org/licenses/by/3.0/)
+

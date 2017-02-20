@@ -4,28 +4,70 @@ library(lmerTest)
 library(plyr)
 
 hsb <- read.dta("hsb.dta12")
-hsb$schoolidf <- factor(dat1$schoolid)
-
-
+hsb$schoolidf <- factor(hsb$schoolid)
 
 ## Variable "mmses" is the mean of ses, within schools, which we verify here
-ses.agg.mean <- aggregate(hsb$ses,
+## Create a vector of variable names for which we need school level means
+vars <- c("ses", "female")
+ses_mn <- aggregate(hsb[ , vars],
                           by = list("schoolidf" = hsb$schoolidf),  mean, na.rm = TRUE)
 
-crap2 <- tapply(hsb$ses, hsb$schoolidf, mean, na.rm = TRUE)
-guess1 <- merge(hsb, ses.agg.mean, by = "schoolidf")
+hsb2 <- merge(hsb, ses_mn, by = "schoolidf", suffix = c("", "_mn"))
+for(i in vars){
+    hsb2[ , paste0(i, "_dev")] <- hsb2[ , i] - hsb2[ , paste0(i, "_mn")]
+}
 
 
-## Map that back onto the data frame for comparison (2 steps)
-rownames(ses.agg.mean) <- ses.agg.mean$schoolidf
-hsb$mmses.pj <- ses.agg.mean$x[hsb$schoolidf]
-hsb$ses.group.diff <- hsb$ses - hsb$mmses.pj
-
-
+## Another way to do same calculation
 library(data.table)
 hsbdt <- as.data.table(hsb)
 setkey(hsbdt, schoolidf)
-hsbdt[ , sesmean2:=mean(ses), by = schoolidf]
+hsbdt[ , ses_mn2 := mean(ses), by = schoolidf]
+hsbdt[ , ses_dev2 := ses - ses_mn2]
+
+
+
+##' Generate group mean and individual deviations within groups
+##'
+##' Similar to Stata egen, except more versatile and fun! Will
+##' create a new data frame that includes the new columns.
+##'
+##' I'm replacing the whole data frame here, I agree that's
+##' wasteful, but it is also convenient.  Will reconsider
+##' Just returning the new columns
+##' @param dframe a data frame
+##' @param x Variable names or a vector of variable names
+##' @param grp A grouping variable name or a vector of grouping names
+##' @param FUN Defaults to the mean, have not tested alternatives
+##' @return new data frame with "x_mn" and "x_dev" added as variables
+##' @author Paul Johnson
+##' @examples
+##' Suppose you get the MLMUS hsb data frame, somehow
+##' xx1 <- egen_level_2(hsb, "ses", "schoolidf")
+##' xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
+##' xx3 <- egen_level_2(hsb, c("ses", "female"), c("schoolidf", "sector"))
+##' xx4 <- egen_level_2(hsb, c("ses", "female"),
+##'                    c("schoolidf"), FUN = median)
+egen_level_2 <- function(dframe, x, grp, FUN = mean){
+    xmean <- aggregate(dframe[ , x, drop = FALSE],
+                       dframe[ , grp, drop = FALSE], FUN,
+                       na.rm = TRUE)
+    df2 <- merge(dframe, xmean, by = grp, suffix = c("", "_mn"))
+    for(i in x){
+        df2[ , paste0(i, "_dev")] <- df2[ , i] - df2[ , paste0(i, "_mn")]
+    }
+    df2
+}
+
+xx1 <- egen_level_2(hsb, "ses", "schoolidf")
+xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
+xx3 <- egen_level_2(hsb, c("ses", "female"), c("schoolidf", "sector"))
+xx4 <- egen_level_2(hsb, c("ses", "female"),
+
+
+
+                    c("schoolidf"), FUN = median)
+
 
 
 for (i in c("ses", "female")){
