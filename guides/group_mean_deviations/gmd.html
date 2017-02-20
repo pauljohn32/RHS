@@ -240,24 +240,24 @@ head(ses_mn3)</code></pre>
                   x2 = c(rep(&quot;Z&quot;, 3), rep(&quot;P&quot;, 2), rep(&quot;A&quot;, 3), rep(&quot;C&quot;, 5)),
                   stringsAsFactors = FALSE)
 toy</code></pre>
-<pre><code>             x1 x2
-1  -1.107076416  Z
-2  -0.591966239  Z
-3   1.721018016  Z
-4  -0.215539353  P
-5   0.072944760  P
-6   0.334462281  A
-7  -0.607609159  A
-8  -0.001493768  A
-9   1.255133196  C
-10 -0.219286760  C
-11 -0.766847440  C
-12  1.531107489  C
-13  0.409103919  C</code></pre>
+<pre><code>            x1 x2
+1  -0.60310550  Z
+2  -0.37981816  Z
+3  -0.09194766  Z
+4   0.48844454  P
+5  -0.15710292  P
+6   1.29121058  A
+7  -0.85115308  A
+8   0.94025058  A
+9   0.15209141  C
+10 -0.71733244  C
+11 -0.34382832  C
+12 -0.30783343  C
+13 -1.12376253  C</code></pre>
 <pre class="r"><code>x1_mn &lt;- tapply(toy$x1, toy$x2, mean)
 x1_mn</code></pre>
-<pre><code>          A           C           P           Z 
--0.09154688  0.44184208 -0.07129730  0.00732512 </code></pre>
+<pre><code>         A          C          P          Z 
+ 0.4601027 -0.4681331  0.1656708 -0.3582904 </code></pre>
 <p>Note that the ordering from top to bottom in the data frame has groups Z, P, A and C, the ordering of tapply is different. tapply creates a factor variable, which, by default, uses the available values in alphabetical order as the levels. Hence, a decision to manufacture a vector by the obvious sort of trick will result in a ghastly error.</p>
 <!-- ```{r} -->
 <!-- x1_mn <- aggregate(toy, by = list(toy$x2), function(d){ -->
@@ -268,27 +268,27 @@ x1_mn</code></pre>
 <p>To put the data “back onto” the data frame requires the careful use of index subscripts or the merge function.</p>
 <pre class="r"><code>x1_mn &lt;- aggregate(toy[ , &quot;x1&quot;, drop = FALSE], by = list(&quot;x2&quot; = toy$x2), mean, na.rm = TRUE)
 x1_mn</code></pre>
-<pre><code>  x2          x1
-1  A -0.09154688
-2  C  0.44184208
-3  P -0.07129730
-4  Z  0.00732512</code></pre>
+<pre><code>  x2         x1
+1  A  0.4601027
+2  C -0.4681331
+3  P  0.1656708
+4  Z -0.3582904</code></pre>
 <pre class="r"><code>toy2 &lt;- merge(toy, x1_mn, by = &quot;x2&quot;, suffix = c(&quot;&quot;, &quot;_mn&quot;), sort = FALSE)
 toy2</code></pre>
-<pre><code>   x2           x1       x1_mn
-1   Z -1.107076416  0.00732512
-2   Z -0.591966239  0.00732512
-3   Z  1.721018016  0.00732512
-4   P -0.215539353 -0.07129730
-5   P  0.072944760 -0.07129730
-6   A  0.334462281 -0.09154688
-7   A -0.607609159 -0.09154688
-8   A -0.001493768 -0.09154688
-9   C  1.255133196  0.44184208
-10  C -0.219286760  0.44184208
-11  C -0.766847440  0.44184208
-12  C  1.531107489  0.44184208
-13  C  0.409103919  0.44184208</code></pre>
+<pre><code>   x2          x1      x1_mn
+1   Z -0.60310550 -0.3582904
+2   Z -0.37981816 -0.3582904
+3   Z -0.09194766 -0.3582904
+4   P  0.48844454  0.1656708
+5   P -0.15710292  0.1656708
+6   A  1.29121058  0.4601027
+7   A -0.85115308  0.4601027
+8   A  0.94025058  0.4601027
+9   C  0.15209141 -0.4681331
+10  C -0.71733244 -0.4681331
+11  C -0.34382832 -0.4681331
+12  C -0.30783343 -0.4681331
+13  C -1.12376253 -0.4681331</code></pre>
 <div id="you-usually-want-more-than-one-variable" class="section level4 bs-callout bs-callout-red">
 <h4>You usually want more than one variable</h4>
 <p>Variable “mmses” is the mean of ses, within schools, which we verify here Create a vector of variable names for which we need school level means</p>
@@ -505,21 +505,27 @@ head(hsbnew[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn2&quot;, &q
 </div>
 <div id="if-you-are-willing-to-use-plyr" class="section level4 bs-callout bs-callout-blue">
 <h4>If you are willing to use plyr</h4>
+<p>Hadley Wickham has proposed a number of R packages and new idioms. Like data.table, his plyr package, and his successor dplyr, are intended to make R code both more “elegant” (in the eyes of the author, at least), faster, and less error prone. The plyr package implements an approach that is described as the “split, apply, combine” paradigm. It is summarized in this article:</p>
+<p>Wickham, H. (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software, 40(1), 1 - 29. <a href="doi:http://dx.doi.org/10.18637/jss.v040.i01" class="uri">doi:http://dx.doi.org/10.18637/jss.v040.i01</a></p>
+<p>(<a href="https://www.jstatsoft.org/article/view/v040i01/v40i01.pdf" class="uri">https://www.jstatsoft.org/article/view/v040i01/v40i01.pdf</a>)</p>
 </div>
 <div id="confusion-about-rs-transform-function" class="section level4">
 <h4>Confusion about R’s transform function</h4>
 <p>The transform function’s help page warns us not to use it.</p>
 <p>Except for that, it appears to be an efficiency enhancing function because it can do a calculation for a column and simply add the result to the data frame.</p>
 <p>The plyr package supplies a function called <code>mutate</code>.</p>
+<p>I do not know if mutate suffers from the same problems that makes transform so worrisome.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="wide-to-long-format-data" class="section level1">
 <h1>Wide to Long format data</h1>
+<p>Placeholder</p>
 </div>
 <div id="long-to-wide-format-data" class="section level1">
 <h1>Long to Wide format data</h1>
+<p>Placeholder</p>
 <pre><code>R version 3.3.2 (2016-10-31)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 16.10

@@ -292,6 +292,20 @@ head(hsbnew[ , c("schoolidf", "ses", "ses_mn2", "ses_dev2")])
 
 #### If you are willing to use plyr {.bs-callout .bs-callout-blue}
 
+Hadley Wickham has proposed a number of R packages and new
+idioms. Like data.table, his plyr package, and his successor dplyr,
+are intended to make R code both more "elegant" (in the eyes of the
+author, at least), faster, and less error prone.  The plyr package 
+implements an approach that is described as the "split, apply,
+combine" paradigm.  It is summarized in this article:
+ 
+Wickham, H. (2011). The Split-Apply-Combine Strategy for Data
+Analysis. Journal of Statistical Software, 40(1),
+1 - 29. doi:http://dx.doi.org/10.18637/jss.v040.i01
+
+(https://www.jstatsoft.org/article/view/v040i01/v40i01.pdf)
+
+
 
 #### Confusion about R's transform function
 
@@ -303,10 +317,16 @@ to the data frame.
 
 The plyr package supplies a function called ```mutate```.
 
+I do not know if mutate suffers from the same problems that makes
+transform so worrisome.
+
 # Wide to Long format data
+
+Placeholder
 
 # Long to Wide format data
 
+Placeholder
 
 [//]: (All guides must have this as the final stanza)
 
