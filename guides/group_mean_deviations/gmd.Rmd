@@ -202,18 +202,19 @@ for(i in vars){
 #### An R function like Stata's egen {.bs-callout .bs-callout-green}
 
 ```{r}
-##' Generate group mean and individual deviations within groups
+
+##' Generate group summaries and individual deviations within groups
 ##'
 ##' Similar to Stata egen, except more versatile and fun! Will
-##' create a new data frame that includes the new columns.
+##' create a new data frame with 2 columns. Rows match
+##' the rows of the original data frame. 
 ##'
-##' I'm replacing the whole data frame here, I agree that's
-##' wasteful, but it is also convenient.  Will reconsider
-##' Just returning the new columns
+##' Now I return only the new columns
 ##' @param dframe a data frame
 ##' @param x Variable names or a vector of variable names
 ##' @param grp A grouping variable name or a vector of grouping names
 ##' @param FUN Defaults to the mean, have not tested alternatives
+##' @param suffix The suffixes to be added to column 1 and column 2
 ##' @return new data frame with "x_mn" and "x_dev" added as variables
 ##' @author Paul Johnson
 ##' @examples
@@ -223,21 +224,27 @@ for(i in vars){
 ##' xx3 <- egen_level_2(hsb, c("ses", "female"), c("schoolidf", "sector"))
 ##' xx4 <- egen_level_2(hsb, c("ses", "female"),
 ##'                    c("schoolidf"), FUN = median)
-egen_level_2 <- function(dframe, x, grp, FUN = mean){
+egen_level_2 <- function(dframe, x, grp, FUN = mean, suffix = c("_mn", "_dev")){
     xmean <- aggregate(dframe[ , x, drop = FALSE],
                        dframe[ , grp, drop = FALSE], FUN,
                        na.rm = TRUE)
-    df2 <- merge(dframe, xmean, by = grp, suffix = c("", "_mn"))
+    df2 <- merge(dframe, xmean, by = grp, suffix = c("", suffix[1]))
     for(i in x){
-        df2[ , paste0(i, "_dev")] <- df2[ , i] - df2[ , paste0(i, "_mn")]
+        df2[ , paste0(i, suffix[2])] <- df2[ , i] - df2[ , paste0(i, suffix[1])]
     }
-    df2
+    df2[ , colnames(df2)[!colnames(df2) %in% colnames(dframe)]]
 }
 
+
 xx1 <- egen_level_2(hsb, "ses", "schoolidf")
-head(xx1[ , c("schoolidf", "ses", "ses_mn", "ses_dev")])
+head(xx1)
+## Could combine with hsb
+## hsb <- cbind(hsb, xx1)
+## head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev")])
 xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
-head(xx2[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
+head(xx2)
+hsb <- cbind(hsb, xx2)
+head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
 ```
 
 #### What's wrong with that? {.bs-callout .bs-callout-orange}
@@ -319,6 +326,16 @@ The plyr package supplies a function called ```mutate```.
 
 I do not know if mutate suffers from the same problems that makes
 transform so worrisome.
+
+```{r}
+library(dplyr)
+hsb %>% group_by(schoolidf) %>% summarize(ses_mn = mean(ses, na.rm = TRUE)) %>% right_join(hsb, by = "schoolidf")
+hsbdplyr <- hsb %>% group_by(schoolidf) %>% mutate(ses_mn = mean(ses, na.rm=TRUE))
+hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn')]
+hsbdplyr$ses_dev <- hsbdplyr$ses - hsbdplyr$ses_mn
+hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn', 'ses_dev')]
+```
+
 
 # Wide to Long format data
 
