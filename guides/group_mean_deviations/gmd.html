@@ -134,7 +134,7 @@ Center for Research Methods and Data Analysis, University of Kansas<br><a class=
 </address>
 <h4 class="author"><em>CRMDA Guide #43. Please visit <a href="http://crmda.ku.edu/guides" class="uri">http://crmda.ku.edu/guides</a> for updates.</em></h4>
 <h4 class="author"><em>Tags: guides, R, multilevel models</em></h4>
-<h4 class="date"><em>2017 February 20</em></h4>
+<h4 class="date"><em>2017 February 22</em></h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 This is about recoding chores that come with multilevel models
@@ -240,24 +240,24 @@ head(ses_mn3)</code></pre>
                   x2 = c(rep(&quot;Z&quot;, 3), rep(&quot;P&quot;, 2), rep(&quot;A&quot;, 3), rep(&quot;C&quot;, 5)),
                   stringsAsFactors = FALSE)
 toy</code></pre>
-<pre><code>            x1 x2
-1  -0.60310550  Z
-2  -0.37981816  Z
-3  -0.09194766  Z
-4   0.48844454  P
-5  -0.15710292  P
-6   1.29121058  A
-7  -0.85115308  A
-8   0.94025058  A
-9   0.15209141  C
-10 -0.71733244  C
-11 -0.34382832  C
-12 -0.30783343  C
-13 -1.12376253  C</code></pre>
+<pre><code>             x1 x2
+1  -0.025509391  Z
+2  -0.371924835  Z
+3   0.397905512  Z
+4  -1.365291774  P
+5  -0.005067487  P
+6   1.084352084  A
+7  -0.550384375  A
+8  -0.211679010  A
+9  -0.282742444  C
+10 -0.282284566  C
+11 -1.406873691  C
+12 -0.347398715  C
+13 -0.204337351  C</code></pre>
 <pre class="r"><code>x1_mn &lt;- tapply(toy$x1, toy$x2, mean)
 x1_mn</code></pre>
-<pre><code>         A          C          P          Z 
- 0.4601027 -0.4681331  0.1656708 -0.3582904 </code></pre>
+<pre><code>            A             C             P             Z 
+ 0.1074295662 -0.5047273535 -0.6851796304  0.0001570953 </code></pre>
 <p>Note that the ordering from top to bottom in the data frame has groups Z, P, A and C, the ordering of tapply is different. tapply creates a factor variable, which, by default, uses the available values in alphabetical order as the levels. Hence, a decision to manufacture a vector by the obvious sort of trick will result in a ghastly error.</p>
 <!-- ```{r} -->
 <!-- x1_mn <- aggregate(toy, by = list(toy$x2), function(d){ -->
@@ -268,27 +268,27 @@ x1_mn</code></pre>
 <p>To put the data “back onto” the data frame requires the careful use of index subscripts or the merge function.</p>
 <pre class="r"><code>x1_mn &lt;- aggregate(toy[ , &quot;x1&quot;, drop = FALSE], by = list(&quot;x2&quot; = toy$x2), mean, na.rm = TRUE)
 x1_mn</code></pre>
-<pre><code>  x2         x1
-1  A  0.4601027
-2  C -0.4681331
-3  P  0.1656708
-4  Z -0.3582904</code></pre>
+<pre><code>  x2            x1
+1  A  0.1074295662
+2  C -0.5047273535
+3  P -0.6851796304
+4  Z  0.0001570953</code></pre>
 <pre class="r"><code>toy2 &lt;- merge(toy, x1_mn, by = &quot;x2&quot;, suffix = c(&quot;&quot;, &quot;_mn&quot;), sort = FALSE)
 toy2</code></pre>
-<pre><code>   x2          x1      x1_mn
-1   Z -0.60310550 -0.3582904
-2   Z -0.37981816 -0.3582904
-3   Z -0.09194766 -0.3582904
-4   P  0.48844454  0.1656708
-5   P -0.15710292  0.1656708
-6   A  1.29121058  0.4601027
-7   A -0.85115308  0.4601027
-8   A  0.94025058  0.4601027
-9   C  0.15209141 -0.4681331
-10  C -0.71733244 -0.4681331
-11  C -0.34382832 -0.4681331
-12  C -0.30783343 -0.4681331
-13  C -1.12376253 -0.4681331</code></pre>
+<pre><code>   x2           x1         x1_mn
+1   Z -0.025509391  0.0001570953
+2   Z -0.371924835  0.0001570953
+3   Z  0.397905512  0.0001570953
+4   P -1.365291774 -0.6851796304
+5   P -0.005067487 -0.6851796304
+6   A  1.084352084  0.1074295662
+7   A -0.550384375  0.1074295662
+8   A -0.211679010  0.1074295662
+9   C -0.282742444 -0.5047273535
+10  C -0.282284566 -0.5047273535
+11  C -1.406873691 -0.5047273535
+12  C -0.347398715 -0.5047273535
+13  C -0.204337351 -0.5047273535</code></pre>
 <div id="you-usually-want-more-than-one-variable" class="section level4 bs-callout bs-callout-red">
 <h4>You usually want more than one variable</h4>
 <p>Variable “mmses” is the mean of ses, within schools, which we verify here Create a vector of variable names for which we need school level means</p>
@@ -303,18 +303,18 @@ for(i in vars){
 </div>
 <div id="an-r-function-like-statas-egen" class="section level4 bs-callout bs-callout-green">
 <h4>An R function like Stata’s egen</h4>
-<pre class="r"><code>##' Generate group mean and individual deviations within groups
+<pre class="r"><code>##' Generate group summaries and individual deviations within groups
 ##'
 ##' Similar to Stata egen, except more versatile and fun! Will
-##' create a new data frame that includes the new columns.
+##' create a new data frame with 2 columns. Rows match
+##' the rows of the original data frame. 
 ##'
-##' I'm replacing the whole data frame here, I agree that's
-##' wasteful, but it is also convenient.  Will reconsider
-##' Just returning the new columns
+##' Now I return only the new columns
 ##' @param dframe a data frame
 ##' @param x Variable names or a vector of variable names
 ##' @param grp A grouping variable name or a vector of grouping names
 ##' @param FUN Defaults to the mean, have not tested alternatives
+##' @param suffix The suffixes to be added to column 1 and column 2
 ##' @return new data frame with &quot;x_mn&quot; and &quot;x_dev&quot; added as variables
 ##' @author Paul Johnson
 ##' @examples
@@ -324,28 +324,41 @@ for(i in vars){
 ##' xx3 &lt;- egen_level_2(hsb, c(&quot;ses&quot;, &quot;female&quot;), c(&quot;schoolidf&quot;, &quot;sector&quot;))
 ##' xx4 &lt;- egen_level_2(hsb, c(&quot;ses&quot;, &quot;female&quot;),
 ##'                    c(&quot;schoolidf&quot;), FUN = median)
-egen_level_2 &lt;- function(dframe, x, grp, FUN = mean){
+egen_level_2 &lt;- function(dframe, x, grp, FUN = mean, suffix = c(&quot;_mn&quot;, &quot;_dev&quot;)){
     xmean &lt;- aggregate(dframe[ , x, drop = FALSE],
                        dframe[ , grp, drop = FALSE], FUN,
                        na.rm = TRUE)
-    df2 &lt;- merge(dframe, xmean, by = grp, suffix = c(&quot;&quot;, &quot;_mn&quot;))
+    df2 &lt;- merge(dframe, xmean, by = grp, suffix = c(&quot;&quot;, suffix[1]))
     for(i in x){
-        df2[ , paste0(i, &quot;_dev&quot;)] &lt;- df2[ , i] - df2[ , paste0(i, &quot;_mn&quot;)]
+        df2[ , paste0(i, suffix[2])] &lt;- df2[ , i] - df2[ , paste0(i, suffix[1])]
     }
-    df2
+    df2[ , colnames(df2)[!colnames(df2) %in% colnames(dframe)]]
 }
 
+
 xx1 &lt;- egen_level_2(hsb, &quot;ses&quot;, &quot;schoolidf&quot;)
-head(xx1[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn&quot;, &quot;ses_dev&quot;)])</code></pre>
-<pre><code>  schoolidf    ses    ses_mn     ses_dev
-1      1224 -1.528 -0.434383 -1.09361702
-2      1224 -0.588 -0.434383 -0.15361702
-3      1224 -0.528 -0.434383 -0.09361702
-4      1224 -0.668 -0.434383 -0.23361701
-5      1224 -0.158 -0.434383  0.27638297
-6      1224  0.022 -0.434383  0.45638298</code></pre>
-<pre class="r"><code>xx2 &lt;- egen_level_2(hsb, c(&quot;ses&quot;, &quot;female&quot;), &quot;schoolidf&quot;)
-head(xx2[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn&quot;, &quot;ses_dev&quot;, &quot;female&quot;, &quot;female_mn&quot;, &quot;female_dev&quot;)])</code></pre>
+head(xx1)</code></pre>
+<pre><code>     ses_mn     ses_dev
+1 -0.434383 -1.09361702
+2 -0.434383 -0.15361702
+3 -0.434383 -0.09361702
+4 -0.434383 -0.23361701
+5 -0.434383  0.27638297
+6 -0.434383  0.45638298</code></pre>
+<pre class="r"><code>## Could combine with hsb
+## hsb &lt;- cbind(hsb, xx1)
+## head(hsb[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn&quot;, &quot;ses_dev&quot;)])
+xx2 &lt;- egen_level_2(hsb, c(&quot;ses&quot;, &quot;female&quot;), &quot;schoolidf&quot;)
+head(xx2)</code></pre>
+<pre><code>     ses_mn female_mn     ses_dev female_dev
+1 -0.434383 0.5957447 -1.09361702  0.4042553
+2 -0.434383 0.5957447 -0.15361702  0.4042553
+3 -0.434383 0.5957447 -0.09361702 -0.5957447
+4 -0.434383 0.5957447 -0.23361701 -0.5957447
+5 -0.434383 0.5957447  0.27638297 -0.5957447
+6 -0.434383 0.5957447  0.45638298 -0.5957447</code></pre>
+<pre class="r"><code>hsb &lt;- cbind(hsb, xx2)
+head(hsb[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn&quot;, &quot;ses_dev&quot;, &quot;female&quot;, &quot;female_mn&quot;, &quot;female_dev&quot;)])</code></pre>
 <pre><code>  schoolidf    ses    ses_mn     ses_dev female female_mn female_dev
 1      1224 -1.528 -0.434383 -1.09361702      1 0.5957447  0.4042553
 2      1224 -0.588 -0.434383 -0.15361702      1 0.5957447  0.4042553
@@ -356,8 +369,8 @@ head(xx2[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn&quot;, &quot;
 </div>
 <div id="whats-wrong-with-that" class="section level4 bs-callout bs-callout-orange">
 <h4>What’s wrong with that?</h4>
-<p>Perhaps nothing is wrong, but I suspect it is inefficient to copy the whole data frame just to add 2 columns.</p>
-<p>There is a lot of fear, uncertainty, and confusion about what is “fast” in R, what is slow, and what idioms can scale up. This one certainly appears to be slow because of all of the object copying. If we could simply insert a column into a data.frame without re-writing it, this would surely go faster. The fear of excess data copying is what fuels innovations during the past 5-10 years, such as the packages <code>data.table</code> <code>plyr</code> and <code>dplyr</code>.</p>
+<p>Perhaps nothing is wrong. It works as intended. Perhaps it is not as fast as we could get with one of the packages build on Rcpp.</p>
+<p>This one certainly appears to be slow because of all of the object copying. If we could simply insert a column into a data.frame without re-writing it, this would surely go faster. The fear of excess data copying is what fuels innovations during the past 5-10 years, such as the packages <code>data.table</code> <code>plyr</code> and <code>dplyr</code>.</p>
 <p>All of these packages sit on top of the famous R package “Rcpp”, which is rightly praised as a revolutionary advance in R for high performance problems. Unfortunately, it is also one of the sources of periodic project failures because certain data sets expose bugs (which are fixed eventually, usually quickly).</p>
 </div>
 <div id="why-do-i-bother-with-base-functions" class="section level4 bs-callout bs-callout-red">
@@ -420,18 +433,18 @@ hsbdt[ , ses_mn2 := mean(ses, na.rm = TRUE), by = schoolidf]</code></pre>
 7183:       0  0.6211525  0.6211525 16.32676  3.31423950      9586
 7184:       0  0.6211525  0.6211525 16.32676 -0.08576202      9586
 7185:       0  0.6211525  0.6211525 16.32676  6.40623856      9586
-         ses_mn2
-   1: -0.4343830
-   2: -0.4343830
-   3: -0.4343830
-   4: -0.4343830
-   5: -0.4343830
-  ---           
-7181:  0.6211525
-7182:  0.6211525
-7183:  0.6211525
-7184:  0.6211525
-7185:  0.6211525</code></pre>
+          ses_mn female_mn     ses_dev female_dev    ses_mn2
+   1: -0.4343830 0.5957447 -1.09361702  0.4042553 -0.4343830
+   2: -0.4343830 0.5957447 -0.15361702  0.4042553 -0.4343830
+   3: -0.4343830 0.5957447 -0.09361702 -0.5957447 -0.4343830
+   4: -0.4343830 0.5957447 -0.23361701 -0.5957447 -0.4343830
+   5: -0.4343830 0.5957447  0.27638297 -0.5957447 -0.4343830
+  ---                                                       
+7181:  0.6211525 1.0000000  0.89084742  0.0000000  0.6211525
+7182:  0.6211525 1.0000000 -0.65915254  0.0000000  0.6211525
+7183:  0.6211525 1.0000000  0.71084748  0.0000000  0.6211525
+7184:  0.6211525 1.0000000 -0.62915254  0.0000000  0.6211525
+7185:  0.6211525 1.0000000  0.17084745  0.0000000  0.6211525</code></pre>
 <pre class="r"><code>hsbdt[ , ses_dev2 := ses - ses_mn2]</code></pre>
 <pre><code>      minority female    ses mathach size sector pracad disclim
    1:        0      1 -1.528   5.876  842      0   0.35   1.597
@@ -481,18 +494,30 @@ hsbdt[ , ses_mn2 := mean(ses, na.rm = TRUE), by = schoolidf]</code></pre>
 7183:       0  0.6211525  0.6211525 16.32676  3.31423950      9586
 7184:       0  0.6211525  0.6211525 16.32676 -0.08576202      9586
 7185:       0  0.6211525  0.6211525 16.32676  6.40623856      9586
-         ses_mn2    ses_dev2
-   1: -0.4343830 -1.09361702
-   2: -0.4343830 -0.15361702
-   3: -0.4343830 -0.09361702
-   4: -0.4343830 -0.23361701
-   5: -0.4343830  0.27638297
-  ---                       
-7181:  0.6211525  0.89084742
-7182:  0.6211525 -0.65915254
-7183:  0.6211525  0.71084748
-7184:  0.6211525 -0.62915254
-7185:  0.6211525  0.17084745</code></pre>
+          ses_mn female_mn     ses_dev female_dev    ses_mn2
+   1: -0.4343830 0.5957447 -1.09361702  0.4042553 -0.4343830
+   2: -0.4343830 0.5957447 -0.15361702  0.4042553 -0.4343830
+   3: -0.4343830 0.5957447 -0.09361702 -0.5957447 -0.4343830
+   4: -0.4343830 0.5957447 -0.23361701 -0.5957447 -0.4343830
+   5: -0.4343830 0.5957447  0.27638297 -0.5957447 -0.4343830
+  ---                                                       
+7181:  0.6211525 1.0000000  0.89084742  0.0000000  0.6211525
+7182:  0.6211525 1.0000000 -0.65915254  0.0000000  0.6211525
+7183:  0.6211525 1.0000000  0.71084748  0.0000000  0.6211525
+7184:  0.6211525 1.0000000 -0.62915254  0.0000000  0.6211525
+7185:  0.6211525 1.0000000  0.17084745  0.0000000  0.6211525
+         ses_dev2
+   1: -1.09361702
+   2: -0.15361702
+   3: -0.09361702
+   4: -0.23361701
+   5:  0.27638297
+  ---            
+7181:  0.89084742
+7182: -0.65915254
+7183:  0.71084748
+7184: -0.62915254
+7185:  0.17084745</code></pre>
 <pre class="r"><code>hsbnew &lt;- as.data.frame(hsbdt)
 head(hsbnew[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn2&quot;, &quot;ses_dev2&quot;)])</code></pre>
 <pre><code>  schoolidf    ses   ses_mn2    ses_dev2
@@ -515,6 +540,78 @@ head(hsbnew[ , c(&quot;schoolidf&quot;, &quot;ses&quot;, &quot;ses_mn2&quot;, &q
 <p>Except for that, it appears to be an efficiency enhancing function because it can do a calculation for a column and simply add the result to the data frame.</p>
 <p>The plyr package supplies a function called <code>mutate</code>.</p>
 <p>I do not know if mutate suffers from the same problems that makes transform so worrisome.</p>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>--------------------------------------------------------------------</code></pre>
+<pre><code>data.table + dplyr code now lives in dtplyr.
+Please library(dtplyr)!</code></pre>
+<pre><code>--------------------------------------------------------------------</code></pre>
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+<pre><code>The following objects are masked from 'package:data.table':
+
+    between, first, last</code></pre>
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>hsb %&gt;% group_by(schoolidf) %&gt;% summarize(ses_mn = mean(ses, na.rm = TRUE)) %&gt;% right_join(hsb, by = &quot;schoolidf&quot;)</code></pre>
+<pre><code># A tibble: 7,185 × 32
+   schoolidf  ses_mn.x minority female    ses mathach  size sector
+      &lt;fctr&gt;     &lt;dbl&gt;    &lt;int&gt;  &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;int&gt;
+1       1224 -0.434383        0      1 -1.528   5.876   842      0
+2       1224 -0.434383        0      1 -0.588  19.708   842      0
+3       1224 -0.434383        0      0 -0.528  20.349   842      0
+4       1224 -0.434383        0      0 -0.668   8.781   842      0
+5       1224 -0.434383        0      0 -0.158  17.898   842      0
+6       1224 -0.434383        0      0  0.022   4.583   842      0
+7       1224 -0.434383        0      1 -0.618  -2.832   842      0
+8       1224 -0.434383        0      0 -0.998   0.523   842      0
+9       1224 -0.434383        0      1 -0.888   1.527   842      0
+10      1224 -0.434383        0      0 -0.458  21.521   842      0
+# ... with 7,175 more rows, and 24 more variables: pracad &lt;dbl&gt;,
+#   disclim &lt;dbl&gt;, himinty &lt;int&gt;, schoolid &lt;dbl&gt;, mean &lt;dbl&gt;,
+#   sd &lt;dbl&gt;, sdalt &lt;dbl&gt;, junk &lt;dbl&gt;, sdalt2 &lt;dbl&gt;, num &lt;dbl&gt;,
+#   se &lt;dbl&gt;, sealt &lt;dbl&gt;, sealt2 &lt;dbl&gt;, t2 &lt;dbl&gt;, t2alt &lt;dbl&gt;,
+#   pickone &lt;int&gt;, mmses &lt;dbl&gt;, mnses &lt;dbl&gt;, xb &lt;dbl&gt;, resid &lt;dbl&gt;,
+#   ses_mn.y &lt;dbl&gt;, female_mn &lt;dbl&gt;, ses_dev &lt;dbl&gt;, female_dev &lt;dbl&gt;</code></pre>
+<pre class="r"><code>hsbdplyr &lt;- hsb %&gt;% group_by(schoolidf) %&gt;% mutate(ses_mn = mean(ses, na.rm=TRUE))
+hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn')]</code></pre>
+<pre><code>Source: local data frame [7,185 x 3]
+Groups: schoolidf [160]
+
+   schoolidf    ses    ses_mn
+      &lt;fctr&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+1       1224 -1.528 -0.434383
+2       1224 -0.588 -0.434383
+3       1224 -0.528 -0.434383
+4       1224 -0.668 -0.434383
+5       1224 -0.158 -0.434383
+6       1224  0.022 -0.434383
+7       1224 -0.618 -0.434383
+8       1224 -0.998 -0.434383
+9       1224 -0.888 -0.434383
+10      1224 -0.458 -0.434383
+# ... with 7,175 more rows</code></pre>
+<pre class="r"><code>hsbdplyr$ses_dev &lt;- hsbdplyr$ses - hsbdplyr$ses_mn
+hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn', 'ses_dev')]</code></pre>
+<pre><code>Source: local data frame [7,185 x 4]
+Groups: schoolidf [160]
+
+   schoolidf    ses    ses_mn     ses_dev
+      &lt;fctr&gt;  &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+1       1224 -1.528 -0.434383 -1.09361702
+2       1224 -0.588 -0.434383 -0.15361702
+3       1224 -0.528 -0.434383 -0.09361702
+4       1224 -0.668 -0.434383 -0.23361701
+5       1224 -0.158 -0.434383  0.27638297
+6       1224  0.022 -0.434383  0.45638298
+7       1224 -0.618 -0.434383 -0.18361699
+8       1224 -0.998 -0.434383 -0.56361705
+9       1224 -0.888 -0.434383 -0.45361703
+10      1224 -0.458 -0.434383 -0.02361703
+# ... with 7,175 more rows</code></pre>
 </div>
 </div>
 </div>
@@ -543,13 +640,14 @@ attached base packages:
 [7] base     
 
 other attached packages:
-[1] data.table_1.10.4 foreign_0.8-67    knitr_1.15.1     
-[4] rmarkdown_1.3    
+[1] dplyr_0.5.0       data.table_1.10.4 foreign_0.8-67   
+[4] knitr_1.15.1      rmarkdown_1.3    
 
 loaded via a namespace (and not attached):
- [1] backports_1.0.5 magrittr_1.5    rprojroot_1.2   tools_3.3.2    
- [5] htmltools_0.3.5 yaml_2.1.14     Rcpp_0.12.9     stringi_1.1.2  
- [9] stringr_1.1.0   digest_0.6.12   evaluate_0.10  </code></pre>
+ [1] Rcpp_0.12.9     digest_0.6.12   rprojroot_1.2   assertthat_0.1 
+ [5] R6_2.2.0        DBI_0.5-1       backports_1.0.5 magrittr_1.5   
+ [9] evaluate_0.10   stringi_1.1.2   lazyeval_0.2.0  tools_3.3.2    
+[13] stringr_1.1.0   yaml_2.1.14     htmltools_0.3.5 tibble_1.2     </code></pre>
 <p>Available under <a href="http://creativecommons.org/licenses/by/3.0/">Created Commons license 3.0 <img src="data:image/png;base64,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" alt="CC BY" style="width: 75px;height: 20px;" /></a></p>
 </div>
 

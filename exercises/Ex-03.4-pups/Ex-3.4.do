@@ -52,7 +52,18 @@ estimates store xtm1
  
 xtset dam 
 xtreg w i.sex i.dose size, fe
-reg w i.sex i.dose i.dam size
+
+* Pooling
+reg w i.sex i.dose size
+
+* More fixed effects comparison
+
+reg w i.sex i.dose size ibn.dam, noconstant
+
+reg w ibn.dam, noconstant
+
+
+
 
 
 *3.4.5
@@ -71,3 +82,4 @@ hist(lev1)
 
 xtmixed w i.sex i.dose size|| dam: , mle vce(robust)
 estimates store xtm2
+

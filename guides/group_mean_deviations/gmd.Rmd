@@ -249,16 +249,14 @@ head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "f
 
 #### What's wrong with that? {.bs-callout .bs-callout-orange}
 
-Perhaps nothing is wrong, but I suspect it is inefficient to copy the 
-whole data frame just to add 2 columns.
+Perhaps nothing is wrong. It works as intended. Perhaps it is not
+as fast as we could get with one of the packages build on Rcpp.
 
-There is a lot of fear, uncertainty, and confusion about what is
-"fast" in R, what is slow, and what idioms can scale up.  This one
-certainly appears to be slow because of all of the object copying. If
-we could simply insert a column into a data.frame without re-writing
-it, this would surely go faster.  The fear of excess data copying is
-what fuels innovations during the past 5-10 years, such as the
-packages ```data.table``` ```plyr``` and ```dplyr```. 
+This one certainly appears to be slow because of all of the object
+copying. If we could simply insert a column into a data.frame without
+re-writing it, this would surely go faster.  The fear of excess data
+copying is what fuels innovations during the past 5-10 years, such as
+the packages ```data.table``` ```plyr``` and ```dplyr```.
 
 All of these packages sit on top of the famous R package "Rcpp", which
 is rightly praised as a revolutionary advance in R for high
