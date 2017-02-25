@@ -1,6 +1,6 @@
 ---
-title: "Group Means, Group Mean Deviations"
-subtitle: "Multilevel recoding chores"
+title: "Group Means, Group Mean Centered Observations"
+subtitle: "Multilevel recoding chores #1"
 author:
  - name: Paul Johnson
    affiliation: Center for Research Methods and Data Analysis, University of Kansas
@@ -8,8 +8,11 @@ author:
  - name: "CRMDA Guide #43. Please visit [http://crmda.ku.edu/guides](http://crmda.ku.edu/guides) for updates."
  - name: "Tags: guides, R, multilevel models"
 
-abstract:
-    This is about recoding chores that come with multilevel models
+abstract: The most common recoding chore that comes with
+    multilevel models is creating the group mean and individual
+    deviations within group variables. This describes how that can be
+    done with tools provided in the base of R, as well as in some
+    addon packages.
 checked_by: "First Last"
 Note to Authors: please_dont_change_the_next 4 lines!
 date: "`r format(Sys.time(), '%Y %B %d')`"
@@ -29,21 +32,75 @@ options(width = 70)
 # Multilevel modelers need group means
 
 Multilevel modelers might need group-level summary information for
-various reasons.  Here are two of them.
+various reasons. They often want to change a multilevel regression
+from this
 
-1. "Mundlak's" suggestion for exploring the effect of a numeric
-predictors requires us to include, as a predictor, the within group mean.
+\begin{equation}
+y_{ji} = \beta_0 + \beta_1 x_{ji} + \epsilon_{ji}
+\label{eq:eq1}
+\end{equation}
 
-As discussed in Snijders and Bosker, it is necessary to also include
+to
 
-2. The individual level predictor in either of 2 forms. The can be
-   coded either as
-A. the "as observed" predictor at the individual level, or
-B. the predictor recoded as individual-level deviations about the
-group mean
+$$
+y_{ji} = \beta_0 + \beta_1 \bar{x}_{j.} + \beta_2 \widetilde{x}_{ji} +
+\epsilon_{ji}
+\label{eq:eq2}
+$$
 
-Regression models with these two are equivalent, there are pros and
-cons about the interpretation of these methods.
+where $\bar{x}_{j.}$ is the mean of $x_{ji}$ within group $j$ and
+$\widetilde{x}_{ji} = x_{ji} -\bar{x}_{j.}$. The variable $\widetilde{x}_{ji}$ is
+the "group mean-centered" value of $x_{ji}$.
+
+Changing the specification from the first equation \ref{eq:eq1} to the
+second equation \ref{eq:eq2} is a way of checking for the model's
+specification.  If the effect of changing the within group mean is
+markedly different from changing the value of the individual's score,
+then the ecological fallacy might be in evidence.  This specification
+is widely known as "Mundlak's suggestion" for exploring the effect of
+a numeric predictor at the contextual and individual levels.
+
+There is an extended discussion of this coding in Snijders and
+Bosker(). It turns out that the preceeding model \ref{eq:eq2} is
+statistically equivalent to this,
+
+$$
+y_{ji} = \beta_0 + \beta_3 \bar{x}_{j.} + \beta_4 x_{ji} +
+\epsilon_{ji}
+\label{eq:eq3}
+$$
+
+This model appears to be more simple because it includes the
+individual variable, $x_{ji}$, as a predictor, rather than
+$\widetilde{x}_{ji}$. However, this fit is statistically
+equivalent. The fitted regression lines are identical and the
+difference between the fits is a bit of an illusion. All of the
+information contained in one is actually present in the other.
+
+\begin{align}
+y_{ji} & = \beta_0 + \beta_1 \bar{x}_{j.} + \beta_2 \widetilde{x}_{ji} + \epsilon_{ji}\\
+       & = \beta_0 + \beta_1 \bar{x}_{j.} + \beta_2( x_{ji} -\bar{x}_{j.}) + \epsilon_{ji}\\
+	   & = \beta_0 + (\beta_1-\beta_2)\bar{x}_{j.} + \beta_2(x_{ji}) + \epsilon_{ji}
+\end{align}
+
+Clearly, the "individual level effect" is the same in both models,
+$\beta_2 = \beta_4$. And, equally clearly, the superficial difference we see
+in the parameter estimates is easily understood as $\beta_3 = (\beta_1-\beta_2)$.
+
+While these are equivalent models, estimating a model with
+$\widetilde{x}_{ji}$, the individual deviations within groups, is
+considered to be suggestive by some authors. It is a way of explicitly
+estimationg a "big fish in a small pond" effect, as if to say that
+individual variations about the group mean are somehow more
+interesting that individual variations themselves. 
+
+In Raudenbush and Bryk (), the variable $\widetilde{x}_{ji}$ is given
+a random intercept. That is an entirely different specification, of
+course.
+
+In any case, the group means are necessary for the analysis and, for
+some purposes, the "group mean centered" individual data is
+thought-provoking.
 
 ## Example data
 
@@ -57,11 +114,10 @@ The following will download a copy of the data if one is not
 already available in the working directory.
 
 ```{r}
-library(foreign)
-
 if (file.exists("hsb.rds")){
     hsb <- readRDS("hsb.rds")
 } else {
+    library(foreign)
     hsb.url <- "http://www.stata-press.com/data/mlmus3/hsb.dta"
     hsb <- read.dta(hsb.url)
     saveRDS(hsb, "hsb.rds")
@@ -88,16 +144,15 @@ The deviation within group is easy to calculate after that.
 gen ses_dev = ses - ses_mn 
 ```
 
+In Stata, one is accustomed to the idea that the data frame will be
+altered by the addition of a new variable.
 
-In Stata, one is accustomed to the idea that the data
-frame will be altered by the addition of a new variable.
+In the Rabe-Hesketh and Skrondal book, a method is describe to use a
+for loop to iterate through many variables and create group mean
+columns for them.
 
-In the Rabe-Hesketh and Skrondal book, a method is
-describe to use a for loop to iterate through many
-variables and create group mean columns for them.
-
-Here we can practice by getting the group means
-for the variables ses and female.
+Here we can practice by getting the group means for the variables ses
+and female.
 
 ```
 foreach var of varlist ses female {
@@ -212,23 +267,23 @@ for(i in vars){
 ##' Now I return only the new columns
 ##' @param dframe a data frame
 ##' @param x Variable names or a vector of variable names
-##' @param grp A grouping variable name or a vector of grouping names
+##' @param by A grouping variable name or a vector of grouping names
 ##' @param FUN Defaults to the mean, have not tested alternatives
 ##' @param suffix The suffixes to be added to column 1 and column 2
 ##' @return new data frame with "x_mn" and "x_dev" added as variables
 ##' @author Paul Johnson
 ##' @examples
 ##' Suppose you get the MLMUS hsb data frame, somehow
-##' xx1 <- egen_level_2(hsb, "ses", "schoolidf")
-##' xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
-##' xx3 <- egen_level_2(hsb, c("ses", "female"), c("schoolidf", "sector"))
-##' xx4 <- egen_level_2(hsb, c("ses", "female"),
+##' xx1 <- gmd(hsb, "ses", "schoolidf")
+##' xx2 <- gmd(hsb, c("ses", "female"), "schoolidf")
+##' xx3 <- gmd(hsb, c("ses", "female"), c("schoolidf", "sector"))
+##' xx4 <- gmd(hsb, c("ses", "female"),
 ##'                    c("schoolidf"), FUN = median)
-egen_level_2 <- function(dframe, x, grp, FUN = mean, suffix = c("_mn", "_dev")){
+gmd <- function(dframe, x, by, FUN = mean, suffix = c("_mn", "_dev")){
     xmean <- aggregate(dframe[ , x, drop = FALSE],
-                       dframe[ , grp, drop = FALSE], FUN,
+                       dframe[ , by, drop = FALSE], FUN,
                        na.rm = TRUE)
-    df2 <- merge(dframe, xmean, by = grp, suffix = c("", suffix[1]))
+    df2 <- merge(dframe, xmean, by = by, suffix = c("", suffix[1]))
     for(i in x){
         df2[ , paste0(i, suffix[2])] <- df2[ , i] - df2[ , paste0(i, suffix[1])]
     }
@@ -236,42 +291,40 @@ egen_level_2 <- function(dframe, x, grp, FUN = mean, suffix = c("_mn", "_dev")){
 }
 
 
-xx1 <- egen_level_2(hsb, "ses", "schoolidf")
+xx1 <- gmd(hsb, "ses", "schoolidf")
 head(xx1)
 ## Could combine with hsb
 ## hsb <- cbind(hsb, xx1)
 ## head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev")])
-xx2 <- egen_level_2(hsb, c("ses", "female"), "schoolidf")
+xx2 <- gmd(hsb, c("ses", "female"), "schoolidf")
 head(xx2)
 hsb <- cbind(hsb, xx2)
 head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
 ```
 
-#### What's wrong with that? {.bs-callout .bs-callout-orange}
+####  Why do I bother with base functions?{.bs-callout .bs-callout-red}
 
-Perhaps nothing is wrong. It works as intended. Perhaps it is not
-as fast as we could get with one of the packages build on Rcpp.
+This function, which uses only R base tools, is not
+as fast as possible. The \emph{hsb} data set is is only 7185 rows with 
+26 columns, not big data by any sense of the imagination.
 
-This one certainly appears to be slow because of all of the object
-copying. If we could simply insert a column into a data.frame without
-re-writing it, this would surely go faster.  The fear of excess data
-copying is what fuels innovations during the past 5-10 years, such as
-the packages ```data.table``` ```plyr``` and ```dplyr```.
+If we could simply insert a column into a data.frame without causing a
+full memory re-write of the data.frame within R, it would be faster.
+The fear of excess data copying is what fuels innovations during the
+past 5-10 years, such as the packages ```data.table``` ```plyr``` and
+```dplyr```.
 
 All of these packages sit on top of the famous R package "Rcpp", which
 is rightly praised as a revolutionary advance in R for high
-performance problems.  Unfortunately, it is also one of the sources of 
+performance problems.  Unfortunately, it is also one of the sources of
 periodic project failures because certain data sets expose bugs (which
 are fixed eventually, usually quickly).
-
-####  Why do I bother with base functions?{.bs-callout .bs-callout-red}
 
 Simply put, relying on more contributed packages can cause project
 failures.  Recently, we have had 2 projects come to a halt because
 of little bugs in packages that were relied upon by other packages
-that we were using.  These problems get fixed, eventually, 
-
-
+that we were using.  These problems get fixed, eventually, but why
+complicate the workflow unnecessarily.
 
 #### If you are willing to use data.table {.bs-callout .bs-callout-blue}
 
@@ -295,13 +348,50 @@ hsbnew <- as.data.frame(hsbdt)
 head(hsbnew[ , c("schoolidf", "ses", "ses_mn2", "ses_dev2")])
 ```
 
-#### If you are willing to use plyr {.bs-callout .bs-callout-blue}
+The beauty of the data.table is that memory is used efficiently. The
+new columns, ses_mn2 and ses_dev2, are added without re-copying the
+rest of the data.  In fact, we could snug these 2 column creations
+into one command, thus reducing the memory allocation to a single step.
 
-Hadley Wickham has proposed a number of R packages and new
-idioms. Like data.table, his plyr package, and his successor dplyr,
-are intended to make R code both more "elegant" (in the eyes of the
-author, at least), faster, and less error prone.  The plyr package 
-implements an approach that is described as the "split, apply,
+ <!--TODO: write out example  -->
+
+```{r, include=F}
+detach(package:data.table)
+```
+
+#### The peril of transform()
+
+The base R offers a function called ```transform``` which seems, at
+least in theory, to offer an avenue to efficiently append the column
+results onto the original data frame.  This one is actually not more
+efficient, it is simply different syntax.  It seems to some to offer
+the best of both worlds.
+
+```{r}
+xxx <- transform(hsb, ses_mn = xx1$ses_mn, ses_dev = xx1$ses_dev)
+```
+
+What's the problem? Well, it is not faster, and it is dangerous. There
+is a stern warning about the transform function.  It is among the most
+clear cautions in all of the R documentation.  Run "?transform", look
+for "Warning". The help page says
+
+> "This is a convenience function
+> intended for use interactively.  For programming it is better to use
+> the standard subsetting arithmetic functions, and in particular the
+> non-standard evaluation of argument ‘transform’ can have unanticipated
+> consequences."
+
+Speaking sarcastically, except for that warning, the transform function
+looks like a good way to go at this.
+
+#### Enter mutate
+
+Hadley Wickham has offered a number of R packages and new idioms. Like
+```data.table```, his ````plyr``` package, and its successor
+```dplyr```, are intended to make R code both more "elegant" (in the
+eyes of the author, at least), faster, and less error prone.  The ```plyr```
+package implements an approach that is described as the "split, apply,
 combine" paradigm.  It is summarized in this article:
  
 Wickham, H. (2011). The Split-Apply-Combine Strategy for Data
@@ -310,38 +400,32 @@ Analysis. Journal of Statistical Software, 40(1),
 
 (https://www.jstatsoft.org/article/view/v040i01/v40i01.pdf)
 
+The plyr package supplies a function called ```mutate```, a
+replacement for transform.
 
+```{r}
+library(plyr)
+hsb2 <- ddply(hsb, "schoolidf", mutate, ses_mn = mean(ses, na.rm = TRUE), ses_dev = ses - ses_mn)
+head(hsb2)
+```
 
-#### Confusion about R's transform function
+```{r, include=F}
+detach(package:plyr)
+```
 
-The transform function's help page warns us not to use it.
-
-Except for that, it appears to be an efficiency enhancing function 
-because it can do a calculation for a column and simply add the result
-to the data frame.
-
-The plyr package supplies a function called ```mutate```.
-
-I do not know if mutate suffers from the same problems that makes
-transform so worrisome.
+If one enjoys the "pipe" notation that is supported by the newer dplyr
+(_which I do not_), the same is written as
 
 ```{r}
 library(dplyr)
-hsb %>% group_by(schoolidf) %>% summarize(ses_mn = mean(ses, na.rm = TRUE)) %>% right_join(hsb, by = "schoolidf")
-hsbdplyr <- hsb %>% group_by(schoolidf) %>% mutate(ses_mn = mean(ses, na.rm=TRUE))
-hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn')]
-hsbdplyr$ses_dev <- hsbdplyr$ses - hsbdplyr$ses_mn
-hsbdplyr[ , c('schoolidf', 'ses', 'ses_mn', 'ses_dev')]
+hsb3 <- hsb %>% group_by(schoolidf) %>% mutate(ses_mn = mean(ses, na.rm=TRUE), ses_dev = ses - ses_mn)
+hsb3[ , c('schoolidf', 'ses', 'ses_mn', 'ses_dev')]
 ```
+<!-- ##hsb %>% group_by(schoolidf) %>% summarize(ses_mn = mean(ses, na.rm = TRUE)) %>% right_join(hsb, by = "schoolidf") -->
 
-
-# Wide to Long format data
-
-Placeholder
-
-# Long to Wide format data
-
-Placeholder
+```{r}
+table(hsb3$ses_mn == hsb$ses_mn)
+```
 
 [//]: (All guides must have this as the final stanza)
 

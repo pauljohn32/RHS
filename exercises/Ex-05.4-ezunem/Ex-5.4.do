@@ -22,7 +22,7 @@ gen uclmslog = log(uclms)
 
 reg uclmslog i.t i.city ez
 
-
+reg uclmslog i.t ibn.city ez, noconstant
 
 xtreg uclmslog i.t ez, fe 
 
