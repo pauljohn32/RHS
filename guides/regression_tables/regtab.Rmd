@@ -1,0 +1,142 @@
+---
+title: "Regression Tables"
+subtitle: "Getting Started"
+author:
+ - name: Paul Johnson
+   affiliation: Center for Research Methods and Data Analysis, University of Kansas
+   email: pauljohn@ku.edu
+ - name: "CRMDA Guide #43. Please visit [http://crmda.ku.edu/guides](http://crmda.ku.edu/guides) for updates."
+ - name: "Tags: guides, R, multilevel models"
+
+abstract: The most common recoding chore that comes with
+    multilevel models is creating the group mean and individual
+    deviations within group variables. This describes how that can be
+    done with tools provided in the base of R, as well as in some
+    addon packages.
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%Y %B %d')`"
+output:
+  html_document:
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+##This Invisible Chunk is required in all CRMDA documents
+outdir <- paste0("tmpout")
+if (!file.exists(outdir)) dir.create(outdir, recursive = TRUE)
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.path=paste0(outdir, "/p-"))
+options(width = 70)
+```
+
+# This should be the workflow
+
+1. Estimate models!
+
+2. Write model results into files in the project folder. (I use a
+   folder named output).
+   
+3. In your document, input the table file. Do not "copy and paste" the
+table file into the document. Rather, insert a reference to the table
+in your document. 
+
+## Example data
+
+The High School and Beyond data set summarizes mathematical
+and English language achievement for students. I have instructions
+about downloading and importing that data on this web page:
+
+http://pj.freefaculty.org/guides/stat/DataSets/HSB/00-README.txt
+
+The following will download a copy of the data if one is not
+already available in the working directory.
+
+```{r}
+if (file.exists("hsb.rds")){
+    hsb <- readRDS("hsb.rds")
+} else {
+    library(foreign)
+    hsb.url <- "http://www.stata-press.com/data/mlmus3/hsb.dta"
+    hsb <- read.dta(hsb.url)
+    saveRDS(hsb, "hsb.rds")
+}
+```
+
+```{r}
+hsb$schoolidf <- factor(hsb$schoolid)
+```
+
+## R packages for table making
+
+My notes about regression tables within R:
+
+http://pj.freefaculty.org/guides/Rcourse/regression-tables-1/regression-tables-1.pdf
+
+I'm partial to my package, rockchalk, and the function outreg, because 
+it provides the minimal approach that is 1) certainly ready to show a 
+class and 2) good enough for a convention paper and 3) close to being
+good enough for a publication (but not extremely close). 
+
+## Outreg example
+
+```{r, results='tex'}
+library(rockchalk)
+odir <- "output/"
+if(!file.exists(odir)) dir.create(odir, recursive=TRUE)
+library(rockchalk)
+m1 <- lm(mathach ~ female + minority + sector + ses, data = hsb)
+summary(m1)
+m1.o <- outreg(list("A Pooled Regression" = m1), type = "latex", tight = FALSE)
+cat(m1.o, file = file.path(odir, "reg1.tex"))      
+```
+
+```{r, results='tex'}
+m2 <- lm(mathach ~ female + minority + ses, data = hsb)
+summary(m2)
+varlabs <- c("female"="Female", "minority" = "Non-White", "sector" = "Public School", "ses" = "Socio-economic Status")
+m2.o <- outreg(list("A Pooled Regression" = m1, "Fewer Predictors" = m2), type = "latex", tight = FALSE, varLabels = varlabs)
+cat(m2.o, file = file.path(odir, "reg2.tex"))      
+```
+
+
+## Stata offers addons
+
+The leading competitors in the Stata world are the packages outreg2
+and estout. I've checked with my stata using friends. They say
+both are nice, but estout is better.
+
+To get started, read this:
+
+1. UCLA FAQ
+http://www.ats.ucla.edu/stat/stata/faq/estout.htm
+
+2. Stata docs for the package
+http://repec.org/bocode/e/estout/esttab.html
+
+```
+ssc install estout, replace
+```
+
+3. Other handy web pages
+
+http://www.jwe.cc/2012/03/stata-latex-tables-estout
+
+
+I did not add this into my stata example code, but will
+have example here.
+
+
+
+
+
+
+[//]: (All guides must have this as the final stanza)
+
+```{r sessionInfo, echo = FALSE}
+sessionInfo()
+```
+
+Available under
+[Created Commons license 3.0 <img src="http://crmda.dept.ku.edu/images/cc-3.0.png" alt="CC BY"
+style="width: 75px;height: 20px;"/>](http://creativecommons.org/licenses/by/3.0/)
+

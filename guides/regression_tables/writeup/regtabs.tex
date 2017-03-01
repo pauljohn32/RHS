@@ -1,0 +1,212 @@
+%% LyX 2.2.0 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[11pt,letterpaper,english]{scrartcl}
+\usepackage{lmodern}
+\renewcommand{\sfdefault}{lmss}
+\renewcommand{\ttdefault}{lmtt}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{array}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{setspace}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\pdfpageheight\paperheight
+\pdfpagewidth\paperwidth
+
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\@ifundefined{date}{}{\date{}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{Sweavel}
+\usepackage[includehead,includefoot]{geometry}
+\geometry{
+lmargin=1in,
+rmargin=1in,
+tmargin=0.75in,
+bmargin=1.0in,
+headheight=0pt,
+headsep=0pt,
+marginparwidth=0pt,
+footskip=1.5\baselineskip,
+}
+
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\lstset{tabsize=2, breaklines=true, 
+  breakatwhitespace=true,
+  %language=R,
+  captionpos=b,
+  frame=single,
+  framerule=0.2pt,
+  framesep=1pt,
+  numbersep=5pt,
+  showstringspaces=false,
+  basicstyle=\footnotesize,
+  identifierstyle=,
+  keywordstyle=\bfseries,
+  commentstyle=\color{darkgreen},
+  stringstyle=,
+  backgroundcolor=\color[gray]{0.935}
+}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{babel}
+% Now fancy header/footer settings
+\lhead{}
+\chead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{}
+\cfoot{{Page} \thepage { of} \pageref{LastPage}}
+\rfoot{}
+
+\fancypagestyle{firststyle}
+{
+\lfoot{}
+%\cfoot{{Page} \thepage { of} \pageref{LastPage}}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{1425 Jayhawk Blvd.\\470 Watson Library\\ Lawrence, KS 66045-7555}
+\fancyfoot[R]{Phone: 785-864-3353\\ Website: crmda.ku.edu\\ Email: crmda@ku.edu}
+\renewcommand{\footrulewidth}{.1pt}
+}
+
+\pagestyle{fancy}
+
+
+%graphics and such inside floats are centered by default
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+\thispagestyle{firststyle}
+
+\usepackage{dcolumn}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{graphicx}
+
+%% PJ 20161110
+%% I want to use listings in the document and I want nice/same as knitr.
+%% Does knitr provide all of these settings for other listing uses outside
+%% weaved part?
+\usepackage{fancyvrb}
+\fvset{listparameters={\setlength{\topsep}{0em}}}
+\usepackage{listings}
+\def\Sweavesize{\normalsize} 
+\def\Rcolor{\color{black}} 
+\def\Rbackground{\color[gray]{0.95}}
+\providecommand{\Rcolor}{\color[rgb]{0, 0.5, 0.5}}
+%%\providecommand{\Routcolor}{\color[rgb]{0.461, 0.039, 0.102}}
+\providecommand{\Routcolor}{\color[rgb]{1.0, 0.0, 0.0}}
+\providecommand{\Rcommentcolor}{\color[rgb]{0.101, 0.043, 0.432}}
+
+\providecommand{\Rbackground}{\color[gray]{0.95}}
+\providecommand{\Routbackground}{\color[gray]{0.80}}
+% Can specify \color[gray]{1} for white background or just \color{white}
+
+
+\lstdefinestyle{Rstyle}{fancyvrb=false,
+                        frame=none,
+                        escapechar=`,
+                        language=R,%
+                        basicstyle={\Rcolor\Sweavesize},%
+                        backgroundcolor=\Rbackground,%
+                        showstringspaces=false,%
+                        keywordstyle=\Rcolor,%
+                        commentstyle={\Rcommentcolor\ttfamily\itshape},%
+                        literate={<-}{{$\leftarrow$}}2{<<-}{{$\twoheadleftarrow$}}2{~}{{$\sim$}}1{<=}{{$\leq$}}2{>=}{{$\geq$}}2{^}{{$^{\scriptstyle\wedge}$}}1,%
+                        alsoother={$},%
+                        alsoletter={.<-},%
+                        otherkeywords={!,!=,~,$,*,\&,\%/\%,\%*\%,\%\%,<-,<<-,/},%
+                        escapeinside={(*}{*)}}%
+
+\lstset{tabsize=2, breaklines=true, style=Rstyle}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+\begin{minipage}[t]{1\columnwidth}%
+\begin{center}
+\begin{tabular}[t]{>{\raggedright}p{4in}>{\centering}p{2.25in}}
+\hline 
+\medskip{}
+
+\textsc{\Large{}A document that uses regression tables}{\Large \par}
+
+\medskip{}
+ & \medskip{}
+
+\includegraphics[width=2in]{theme/CRMDA_logo}\tabularnewline
+\hline 
+\multicolumn{2}{>{\raggedright}p{5in}}{\medskip{}
+Paul Johnson, Director, CRMDA
+
+<pauljohn@ku.edu>
+
+\begin{singlespace}
+\raggedright{}\textbf{\today}
+\end{singlespace}
+}\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+\medskip{}
+%
+\end{minipage}
+
+This started as a standard Sweave-able document, but I cut out the
+moving parts and now it just a regular LaTeX document. 
+
+Please see the floating Table \ref{tab:reg1} to see how awesome a
+table can get.
+
+\begin{table}[H]
+\caption{My First Regression\label{tab:reg1}}
+
+\input{../output/reg1.tex}
+
+\end{table}
+
+A more elaborate table.
+
+\begin{table}[H]
+\caption{Is this table awesome?\label{tab:reg2}}
+
+\input{../output/reg2.tex}
+\end{table}
+
+\end{document}
