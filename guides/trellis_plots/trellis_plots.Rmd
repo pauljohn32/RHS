@@ -1,0 +1,284 @@
+---
+title: "Trellis Plots"
+subtitle: "Getting Started"
+author:
+ - name: Paul Johnson
+   affiliation: Center for Research Methods and Data Analysis, University of Kansas
+   email: pauljohn@ku.edu
+ - name: "CRMDA Guide #45. Please visit [http://crmda.ku.edu/guides](http://crmda.ku.edu/guides) for updates."
+ - name: "Tags: guides, R, graphics, trellis plots"
+abstract: In multi-level modeling, it is very common to subdivide
+   the data into subgroups for the creation of graphs. The "trellis"
+   plot, poineered by Wm. Cleveland, was first offered in S+. Since
+   then, many programs have implemented functions to generate this
+   same type of plot.
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%Y %B %d')`"
+output:
+  html_document:
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+##This Invisible Chunk is required in all CRMDA documents
+outdir <- paste0("tmpout")
+if (!file.exists(outdir)) dir.create(outdir, recursive = TRUE)
+knitr::opts_chunk$set(echo=TRUE, comment=NA, fig.path=paste0(outdir, "/p-"))
+options(width = 70)
+```
+
+
+## Example data
+   
+The High School and Beyond data set summarizes mathematical
+and English language achievement for students. I have instructions
+about downloading and importing that data on this web page:
+
+http://pj.freefaculty.org/guides/stat/DataSets/HSB/00-README.txt
+
+The following will download a copy of the data if one is not
+already available in the working directory.
+
+```{r}
+if (file.exists("hsb.rds")){
+    hsb <- readRDS("hsb.rds")
+} else {
+    library(foreign)
+    hsb.url <- "http://www.stata-press.com/data/mlmus3/hsb.dta"
+    hsb <- read.dta(hsb.url)
+    saveRDS(hsb, "hsb.rds")
+}
+hsb$schoolidf <- factor(hsb$schoolid)
+```
+
+## R packages for trellis plots
+
+1 ```coplot``` in base R. Syntax: y ~ x | z, where z is the grouping variable.
+
+```{r}
+#coplot(mathach ~ ses | schoolidf, hsb)
+```
+
+Choose sample of 27 schools	
+```{r}
+#id27 <- sample(x = unique(hsb$schoolid), size = 27)
+#hsbsub <- hsb[hsb$schoolid %in% id27, ] 
+#coplot(mathach ~ ses | schoolidf, hsbsub)
+```			   
+
+Now "unused levels" in schoolidf must be dropped for purpose
+	of analysis
+	
+```{r}
+id27 <- sample(x = unique(hsb$schoolid), size = 27)
+hsbsub <- hsb[hsb$schoolid %in% id27, ]
+hsbsub$schoolidf <- factor(hsbsub$schoolidf)
+coplot(mathach ~ ses | schoolidf, hsbsub)
+```			   
+
+2 ```lattice``` package
+
+Fearing that usage of the name "trellis" might invite either confusion
+or complaint from ATT, the early R facility to do same sort of graph
+was named "lattice". Development work was done by U. Wisconsin Deepayan Sarkar,
+who wrote a book about it named *Lattice: Multivariate Data Visualization
+with R* (Springer, 2008).
+
+The workhorse function for 2D plots is ```xyplot```. 
+```{r}
+library(lattice)
+xyplot(mathach ~ ses | schoolidf, hsbsub)
+xyplot(mathach ~ female | schoolidf, hsbsub)
+```
+
+The style of the presentation is patterned after the original 
+ATT trellis graphs:
+
+   1. School ID printed in small title box for each display
+   2. default plot for numeric variables is a scatterplot
+   3. Tightly placed subplots with no space between
+   4. Re-use axes to avoid clutter
+
+The design of the lattice function is intricate. It is possible to 
+add features within each panel.
+
+Like R base plots, xyplot will try to detect the variable types
+being used and adjust accordingly.  Note the difference between
+the xyplot using female as a numeric variable code 0 or 1
+
+```{r}
+xyplot(mathach ~ female | schoolidf, hsbsub)
+```
+
+and the xyplot in which the factor gender is used.
+
+
+```{r}
+hsbsub$gender <- factor(hsbsub$female, levels = c(0,1), labels = c("male", "female"))
+xyplot(mathach ~ gender | schoolidf, hsbsub)
+```
+
+Please read the manual, ```?xyplot```. As one can see, there is a
+very elaborate design that allows one to add detailed features within
+each subplot. 
+
+Over the past few years, several of our graduate students have
+mastered lattice graphics.  I have to admit, I find it rather
+difficult to wrap all of the required code into a single very large
+function call.  That reluctance about ```lattice``` is somewhat 
+widely shared, it was one of the motivations for development of
+alternative plotting frameworks.  The leading alternative at the
+current time is ```ggplot2```
+
+
+
+3. ```ggplot2```
+
+Like lattice, ggplot2 was a doctoral dissertation project. It was
+Hadley Wickham's thesis project at Iowa State University. It is
+discussed in his book, 
+
+One of the themes is that people who make graphics should be guided by
+a more formal, carefully elucidated framework.  Hence the reliance on
+recommendations in the book, *The Grammar of Graphics*, from which the
+"gg" in the package's title eminates.
+	
+The main difference between lattice and ggplot2 is in the style
+with which individual plot pieces are added.
+
+   * In lattice, one writes a single, large function call that
+   adds all of the elements
+   
+   * ggplot2, like R base plots, allows one to add individual
+   plot elements, one at a time.
+   
+The original ggplot syntax, to which I am still partial, resembles
+object oriented programming. For example 
+
+```
+p <- ggplot(...code here...)
+p <- p + ggplot_function(...more code here...)
+p <- p + ggplot_function(...more code here...)
+```
+
+While that is my favorite way, the youngsters seem to prefer to 
+write out the plot as a long sum of statements, like this:
+```
+p <- ggplot(...code here...)
+     + ggplot_function(...more code here...)
+     +  ggplot_function(...more code here...)
+```
+
+
+## Stata 
+
+Stata is not my preferred graphics framework. I learned these
+examples by studying Rabe-Hesketh & Skrondal's book, *Multilevel
+and Longitudinal Modeling using Stata*.
+
+The Stata framework for trellis graphics is rather closer to
+the R lattice package than to base R graphics or ggplot2. One can
+create an initial plot and then add features in parentheses after
+that.
+
+One interesting feature is that Stata uses the same basic command
+to produce a plot for a single sample and for many subsamples.
+
+
+### Explore twoway: Simple Scatterplot in Stata
+   * Scatterplot
+   
+   Suppose we have columns y, x, and yhat (predicted values from regression).
+   
+#### twoay (line..) versus twoway (scatter...)
+   
+```
+regress y x
+predict yhat, xb
+twoway (scatter y x)
+```
+
+   * Add a regression line
+```
+twoway (scatter y x)(line yhat x, sort)
+```
+
+   * Embellish with axis titles
+```
+twoway (scatter y x)(line yhat x, sort), ytitle(my y var is),
+xtitle(my xvar is)
+```
+
+These examples work well if there is one sample, not separate
+groups.  For multiple groups, we need the trellis graph
+
+
+### Trellis
+
+Suppose there is a grouping variable z
+
+add a comma, then by  ```, by(z)```
+
+I generally do not want the extra space that inserts, so by habit I
+insert ```,by(z compact)```
+
+```
+twoway (scatter y x)(lfit y x, sort lpatt(solild)), ///
+by(z, compact legend(off) cols(5)) ///
+xtitle(whatever) ytitle(somethingelse) ysize(3) xsize(2)
+```
+
+### Examples to run for example
+
+Illustration: 
+
+1. Ex-03.3-growth
+
+2. Ex-04.1 has subset example
+
+3. The wheat yield data, RHS Ex-04.4
+
+
+
+
+<!-- #### Create subsample of 27 groups -->
+
+<!-- egen pickone = tag(schoolid) -->
+
+<!-- See RHS p. 237 -->
+<!-- format lwage* %9.0g -->
+<!-- sort nr year -->
+<!-- set seed 123123 -->
+<!-- generate r = runiform() if year==1980 -->
+<!-- * Choose 12 at random as follows -->
+<!-- egen num = rank(r) if r < . -->
+<!-- egen number = mean(num), by(nr) -->
+<!-- twoway line lwage year if number<=12, by(nr, compact) ytitle(whatever) xtitle(whatever) xlabel( , angle(45)) -->
+
+#### Spaghetti plot
+
+egen mn_lwage = mean(lwage), by(year)
+sort nr year
+twoway (scatter lwage year, jitter(2) msym(0) msize(tiny)) ///
+    (line lwage year if number <= 12, connect(ascending) ///
+    lwidth(vthin) lpatt(solid)) ///
+    (line mn_lwage year, sort lpatt(longdash)) if lwage >-2, ///
+    ytitle(whatever) xtitle(whatever) ///
+    legend(order( 2 "Individual" 3 "Mean"))
+
+
+
+
+
+	
+[//]: (All guides must have this as the final stanza)
+
+```{r sessionInfo, echo = FALSE}
+sessionInfo()
+```
+
+Available under
+[Created Commons license 3.0 <img src="http://crmda.dept.ku.edu/images/cc-3.0.png" alt="CC BY"
+style="width: 75px;height: 20px;"/>](http://creativecommons.org/licenses/by/3.0/)
+
