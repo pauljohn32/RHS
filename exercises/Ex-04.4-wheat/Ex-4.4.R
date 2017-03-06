@@ -41,3 +41,15 @@ apply(m2coef, 1, function(x){ browser();  abline(a = x[1], b = x[2], col = x["va
 
 ## If Var(e) is small enough, even trivial slope differences are
 ## "statistically significant".
+
+xyplot(yield ~ moist | varietyf, dat)
+
+## Gave up trying to figure how to draw regression lines from lmer
+## xyplot(yield ~ moist | varietyf, dat,
+##        xlab = "Moisture",
+##        ylab = "Yield",
+##        panel = function(x, y){
+##            points(x,y)
+##            lines(x,y)
+##        }
+##        )

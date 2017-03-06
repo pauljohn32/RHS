@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-4.3/Ex-4.3.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.3-homework/Ex-4.3.log
   log type:  text
- opened on:  23 Feb 2016, 13:52:20
+ opened on:   6 Mar 2017, 06:51:31
 
 . 
 . * Kreft and de Leew (1998) homework data
@@ -13,20 +13,10 @@
 . use homework.dta12
 
 . 
-. 
-. 
-. 
-. 
-. 
-. 
-. 
-. * 4.3.1
-. 
-. * math_ji = beta_0 + beta_1 homework_ji + beta_2 white_ji + beta_3 ratio
-. *           + b0_j + b1_j homework + e_ji
-. 
-. 
-. * 4.3.2
+end of do-file
+
+. do "/tmp/SD07349.000000"
+
 . 
 . mixed math homework white ratio || schid: , mle
 
@@ -125,9 +115,9 @@ Note: LR test is conservative and provided only for reference.
 Likelihood-ratio test                                 LR chi2(2)  =     89.75
 (Assumption: m0 nested in m1)                         Prob > chi2 =    0.0000
 
-Note: The reported degrees of freedom assumes the null hypothesis is not on
-      the boundary of the parameter space.  If this is not true, then the
-      reported test is conservative.
+Note: The reported degrees of freedom assumes the null hypothesis is not on the boundary
+      of the parameter space.  If this is not true, then the reported test is 
+      conservative.
 
 . 
 . 
@@ -142,8 +132,7 @@ Note: The reported degrees of freedom assumes the null hypothesis is not on
 . *
 . * Random slope is more work. See RHS p. 191. I refuse to write zeta, though :)
 . * Combined error is {b0_j + b1_j homework + e_ji}
-. * Apply the variance law to terms grouped like this (b0_j + b1_j homework) + e
-> _ji)
+. * Apply the variance law to terms grouped like this (b0_j + b1_j homework) + e_ji)
 . * Var(b0_j + b1_j homework + e_ji) = Var(b0_j + b1_j homework) + Var(e_ji)
 . *   + 2 Cov(b1_j, e_ji)
 . * < Last term is equal to 0 because b's and e are uncorrelated>*
@@ -191,18 +180,17 @@ Group variable: schid                           Number of groups  =         23
                                                 Wald chi2(4)      =      15.43
 Log likelihood = -1826.2164                     Prob > chi2       =     0.0039
 
-------------------------------------------------------------------------------
-        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-    homework |   1.970192   .8001468     2.46   0.014     .4019333    3.538451
-             |
-  c.homework#|
-   c.meanses |   .6261543   1.407001     0.45   0.656    -2.131516    3.383825
-             |
-       white |   3.029962   1.019558     2.97   0.003     1.031664    5.028259
-       ratio |  -.0958036    .311293    -0.31   0.758    -.7059267    .5143195
-       _cons |   46.01789   5.620507     8.19   0.000      35.0019    57.03389
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+                math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+            homework |   1.970192   .8001468     2.46   0.014     .4019333    3.538451
+                     |
+c.homework#c.meanses |   .6261543   1.407001     0.45   0.656    -2.131516    3.383825
+                     |
+               white |   3.029962   1.019558     2.97   0.003     1.031664    5.028259
+               ratio |  -.0958036    .311293    -0.31   0.758    -.7059267    .5143195
+               _cons |   46.01789   5.620507     8.19   0.000      35.0019    57.03389
+--------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -244,19 +232,18 @@ Group variable: schid                           Number of groups  =         23
                                                 Wald chi2(5)      =      18.36
 Log likelihood = -1825.0746                     Prob > chi2       =     0.0025
 
-------------------------------------------------------------------------------
-        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-    homework |    1.97359   .7866738     2.51   0.012     .4317376    3.515442
-     meanses |   4.116118   2.635728     1.56   0.118    -1.049814     9.28205
-             |
-  c.homework#|
-   c.meanses |   .4054292   1.389929     0.29   0.771    -2.318782     3.12964
-             |
-       white |   2.915928   1.021643     2.85   0.004     .9135446     4.91831
-       ratio |   .0186849   .3029815     0.06   0.951     -.575148    .6125178
-       _cons |   44.54374   5.389595     8.26   0.000     33.98033    55.10715
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+                math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+            homework |    1.97359   .7866738     2.51   0.012     .4317376    3.515442
+             meanses |   4.116118   2.635728     1.56   0.118    -1.049814     9.28205
+                     |
+c.homework#c.meanses |   .4054292   1.389929     0.29   0.771    -2.318782     3.12964
+                     |
+               white |   2.915928   1.021643     2.85   0.004     .9135446     4.91831
+               ratio |   .0186849   .3029815     0.06   0.951     -.575148    .6125178
+               _cons |   44.54374   5.389595     8.26   0.000     33.98033    55.10715
+--------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -273,6 +260,11 @@ Note: LR test is conservative and provided only for reference.
 
 . 
 . 
+end of do-file
+
+. do "/tmp/SD07349.000000"
+
+. 
 . estimates store m4
 
 . 
@@ -288,13 +280,20 @@ Note: LR test is conservative and provided only for reference.
 . predict b0_se b1_se, reses
 
 . 
-. * what is this? see p. 208. read help gsort
+end of do-file
+
+. do "/tmp/SD07349.000000"
+
 . 
 . gsort + eb0 - pickone
 
 . generate rank = sum(pickone)
 
 . 
+end of do-file
+
+. do "/tmp/SD07349.000000"
+
 . serrbar eb0 b0_se rank
 
 . * See how to elaborate that p. 208
@@ -304,40 +303,21 @@ Note: LR test is conservative and provided only for reference.
 > addplot(scatter labpos rank, mlabel(schid) msymbol(none) mlabpos(0))
 
 . 
-. 
-. 
-. 
-. gsort + eb1 - pickone
+end of do-file
 
-. generate rank_b1 = sum(pickone)
+. do "/tmp/SD07349.000000"
 
-. 
-. serrbar eb1 b1_se rank_b1
-
-. * See how to elaborate that p. 208
-. gen labpos_b1 = eb1 + 1.96 * b1_se + 1
-
-. serrbar eb1 b1_se rank_b1, scale(1.96) ///
-> addplot(scatter labpos_b1 rank_b1, mlabel(schid) msymbol(none))
-
-. 
-. * Don't understand why following fails, don't know rules on "m" notation
-. * serrbar eb1 b1_se rank_b1, scale(1.96) ///
-> * addplot(scatter labpos_b1 rank_b1, mlabel(schid) msymbol(none) mlabpos_b1(0)
-> )
-. 
 . 
 . 
 . * Horrible
 . hist eb0 if pickone==1
 (bin=4, start=-5.997335, width=2.636449)
 
-. hist eb1 if pickone==1
-(bin=4, start=-8.5722094, width=4.494107)
-
 . 
-. * Can't make spaghetti plot unless we deal with white, ratio
-. * See the problem? Its something I deal with in rockchalk plotSlopes a lot
+end of do-file
+
+. do "/tmp/SD07349.000000"
+
 . mixed math c.homework##c.meanses || schid: homework, mle
 
 Performing EM optimization: 
@@ -360,17 +340,16 @@ Group variable: schid                           Number of groups  =         23
                                                 Wald chi2(3)      =       9.83
 Log likelihood =  -1829.132                     Prob > chi2       =     0.0201
 
-------------------------------------------------------------------------------
-        math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-    homework |   2.046041   .7957887     2.57   0.010     .4863238    3.605758
-     meanses |   4.654497   2.607217     1.79   0.074    -.4555545    9.764548
-             |
-  c.homework#|
-   c.meanses |   .3900578    1.40682     0.28   0.782    -2.367259    3.147374
-             |
-       _cons |   46.96294   1.474616    31.85   0.000     44.07274    49.85313
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------
+                math |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+            homework |   2.046041   .7957887     2.57   0.010     .4863238    3.605758
+             meanses |   4.654497   2.607217     1.79   0.074    -.4555545    9.764548
+                     |
+c.homework#c.meanses |   .3900578    1.40682     0.28   0.782    -2.367259    3.147374
+                     |
+               _cons |   46.96294   1.474616    31.85   0.000     44.07274    49.85313
+--------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -390,10 +369,7 @@ Note: LR test is conservative and provided only for reference.
 . twoway(line m4hat2 homework, connect(ascending))
 
 . 
-. 
-. 
-. 
-. 
 end of do-file
 
+. 
 . exit, clear

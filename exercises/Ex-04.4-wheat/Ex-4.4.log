@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.4-wheat/Ex-4.4.log
   log type:  text
- opened on:   9 Jun 2016, 13:40:55
+ opened on:   6 Mar 2017, 06:18:55
 
 . 
 . * Wheat data
@@ -11,87 +11,10 @@
 . use wheat.dta12
 
 . 
-. * Comment: This data has the smallest error variance I've ever seen
-. * in supposedly "real" empirical data.
-. 
-. 
-. * One student fit a model that is over-identified, I'm going
-. * to find out what is going on here later. Appears the
-. * following is overidentified, should not be estimated at all.
-. 
-. mixed yield c.moist##i.variety || variety:moist, mle stddev
+end of do-file
 
-Performing EM optimization: 
+. do "/tmp/SD06722.000000"
 
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -42.123671  
-Iteration 1:   log likelihood = -41.540417  
-Iteration 2:   log likelihood = -41.520012  
-Iteration 3:   log likelihood = -41.520012  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =         60
-Group variable: variety                         Number of groups  =         10
-
-                                                Obs per group:
-                                                              min =          6
-                                                              avg =        6.0
-                                                              max =          6
-
-                                                Wald chi2(19)     =   37795.42
-Log likelihood = -41.520012                     Prob > chi2       =     0.0000
-
----------------------------------------------------------------------------------
-          yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
-----------------+----------------------------------------------------------------
-          moist |   .6077128   .0124644    48.76   0.000      .583283    .6321425
-                |
-        variety |
-             2  |  -2.844581   .8429087    -3.37   0.001    -4.496652   -1.192511
-             3  |  -1.871277   .7903544    -2.37   0.018    -3.420343   -.3222105
-             4  |  -.3432833   .7323671    -0.47   0.639    -1.778696     1.09213
-             5  |   .2294764   1.121912     0.20   0.838     -1.96943    2.428383
-             6  |    3.46207    .690504     5.01   0.000     2.108707    4.815433
-             7  |  -12.05622   .6729943   -17.91   0.000    -13.37527   -10.73718
-             8  |   1.175528   .7302294     1.61   0.107    -.2556957    2.606751
-             9  |  -1.434985   .7917805    -1.81   0.070    -2.986846    .1168767
-            10  |   3.494313   1.392236     2.51   0.012     .7655807    6.223044
-                |
-variety#c.moist |
-             2  |  -.0354326   .0260328    -1.36   0.173    -.0864559    .0155908
-             3  |   .1297872   .0190785     6.80   0.000     .0923941    .1671804
-             4  |   .0264085   .0210603     1.25   0.210    -.0148689     .067686
-             5  |   .0284318   .0240342     1.18   0.237    -.0186744     .075538
-             6  |   .0790988   .0161154     4.91   0.000     .0475132    .1106844
-             7  |   .1164752   .0189384     6.15   0.000     .0793566    .1535938
-             8  |   .0791545   .0188487     4.20   0.000     .0422118    .1160972
-             9  |    .080266   .0190236     4.22   0.000     .0429804    .1175516
-            10  |   .0027604   .0282729     0.10   0.922    -.0526535    .0581742
-                |
-          _cons |   34.58378   .5478187    63.13   0.000     33.51007    35.65748
----------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-variety: Independent         |
-                   sd(moist) |   3.46e-15   2.27e-14      8.96e-21    1.34e-09
-                   sd(_cons) |   1.18e-11   1.34e-07             0           .
------------------------------+------------------------------------------------
-                sd(Residual) |   .4833867   .0441285      .4041925    .5780976
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(2) = 0.00                  Prob > chi2 = 1.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. estimates store m1 
-
-. 
-. * Is the problem caused by the fact that the stata file has
-. * variety coded as a floating point number? Yikes!
-. 
 . recast int variety , force
 
 . 
@@ -103,43 +26,341 @@ end of do-file
 
 r(198);
 
-. do "/tmp/SD08825.000000"
-
-. mixed yield moist, mle stddev
-
-Mixed-effects ML regression                     Number of obs     =         60
-
-                                                Wald chi2(1)      =     536.30
-Log likelihood = -166.04356                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .7373937   .0318416    23.16   0.000     .6749852    .7998022
-       _cons |   30.66107   1.237332    24.78   0.000     28.23595     33.0862
-------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-                sd(Residual) |   3.851467   .3515893      3.220494    4.606064
-------------------------------------------------------------------------------
-
-. estimates store m1
+. do "/tmp/SD06722.000000"
 
 . 
-end of do-file
+. recast int variety , force
 
-. do "/tmp/SD08825.000000"
-
-. mixed yield moist || variety: , mle  stddev
+. 
+. mixed yield moist##i.variety || variety:moist, mle stddev
+note: 10.moist#2.variety identifies no observations in the sample
+note: 10.moist#3.variety identifies no observations in the sample
+note: 10.moist#4.variety identifies no observations in the sample
+note: 10.moist#5.variety identifies no observations in the sample
+note: 10.moist#6.variety identifies no observations in the sample
+note: 10.moist#8.variety identifies no observations in the sample
+note: 10.moist#9.variety identifies no observations in the sample
+note: 10.moist#10.variety identifies no observations in the sample
+note: 11.moist#1.variety identifies no observations in the sample
+note: 11.moist#2.variety identifies no observations in the sample
+note: 11.moist#3.variety identifies no observations in the sample
+note: 11.moist#4.variety identifies no observations in the sample
+note: 11.moist#5.variety identifies no observations in the sample
+note: 11.moist#6.variety omitted because of collinearity
+note: 11.moist#7.variety omitted because of collinearity
+note: 11.moist#8.variety identifies no observations in the sample
+note: 11.moist#9.variety identifies no observations in the sample
+note: 11.moist#10.variety identifies no observations in the sample
+note: 13.moist#1.variety identifies no observations in the sample
+note: 13.moist#2.variety identifies no observations in the sample
+note: 13.moist#3.variety identifies no observations in the sample
+note: 13.moist#5.variety identifies no observations in the sample
+note: 13.moist#6.variety identifies no observations in the sample
+note: 13.moist#7.variety identifies no observations in the sample
+note: 13.moist#8.variety identifies no observations in the sample
+note: 13.moist#9.variety omitted because of collinearity
+note: 13.moist#10.variety identifies no observations in the sample
+note: 15.moist#1.variety identifies no observations in the sample
+note: 15.moist#2.variety identifies no observations in the sample
+note: 15.moist#3.variety identifies no observations in the sample
+note: 15.moist#4.variety identifies no observations in the sample
+note: 15.moist#5.variety identifies no observations in the sample
+note: 15.moist#6.variety identifies no observations in the sample
+note: 15.moist#7.variety identifies no observations in the sample
+note: 15.moist#8.variety omitted because of collinearity
+note: 15.moist#9.variety identifies no observations in the sample
+note: 15.moist#10.variety identifies no observations in the sample
+note: 17.moist#1.variety identifies no observations in the sample
+note: 17.moist#2.variety identifies no observations in the sample
+note: 17.moist#3.variety identifies no observations in the sample
+note: 17.moist#5.variety identifies no observations in the sample
+note: 17.moist#6.variety identifies no observations in the sample
+note: 17.moist#7.variety omitted because of collinearity
+note: 17.moist#8.variety identifies no observations in the sample
+note: 17.moist#9.variety identifies no observations in the sample
+note: 17.moist#10.variety identifies no observations in the sample
+note: 19.moist#1.variety identifies no observations in the sample
+note: 19.moist#2.variety omitted because of collinearity
+note: 19.moist#3.variety identifies no observations in the sample
+note: 19.moist#4.variety identifies no observations in the sample
+note: 19.moist#5.variety identifies no observations in the sample
+note: 19.moist#6.variety identifies no observations in the sample
+note: 19.moist#7.variety identifies no observations in the sample
+note: 19.moist#8.variety identifies no observations in the sample
+note: 19.moist#9.variety identifies no observations in the sample
+note: 19.moist#10.variety identifies no observations in the sample
+note: 20.moist#1.variety identifies no observations in the sample
+note: 20.moist#3.variety identifies no observations in the sample
+note: 20.moist#4.variety identifies no observations in the sample
+note: 20.moist#5.variety identifies no observations in the sample
+note: 20.moist#6.variety identifies no observations in the sample
+note: 20.moist#7.variety omitted because of collinearity
+note: 20.moist#8.variety identifies no observations in the sample
+note: 20.moist#9.variety identifies no observations in the sample
+note: 20.moist#10.variety identifies no observations in the sample
+note: 21.moist#1.variety identifies no observations in the sample
+note: 21.moist#4.variety omitted because of collinearity
+note: 21.moist#5.variety identifies no observations in the sample
+note: 21.moist#6.variety identifies no observations in the sample
+note: 21.moist#7.variety identifies no observations in the sample
+note: 21.moist#8.variety identifies no observations in the sample
+note: 21.moist#9.variety identifies no observations in the sample
+note: 21.moist#10.variety identifies no observations in the sample
+note: 22.moist#1.variety identifies no observations in the sample
+note: 22.moist#2.variety identifies no observations in the sample
+note: 22.moist#3.variety identifies no observations in the sample
+note: 22.moist#4.variety omitted because of collinearity
+note: 22.moist#5.variety identifies no observations in the sample
+note: 22.moist#6.variety identifies no observations in the sample
+note: 22.moist#7.variety identifies no observations in the sample
+note: 22.moist#8.variety identifies no observations in the sample
+note: 22.moist#9.variety identifies no observations in the sample
+note: 22.moist#10.variety identifies no observations in the sample
+note: 23.moist#1.variety identifies no observations in the sample
+note: 23.moist#2.variety identifies no observations in the sample
+note: 23.moist#4.variety identifies no observations in the sample
+note: 23.moist#5.variety identifies no observations in the sample
+note: 23.moist#6.variety identifies no observations in the sample
+note: 23.moist#7.variety identifies no observations in the sample
+note: 23.moist#8.variety omitted because of collinearity
+note: 23.moist#9.variety identifies no observations in the sample
+note: 23.moist#10.variety identifies no observations in the sample
+note: 26.moist#1.variety identifies no observations in the sample
+note: 26.moist#3.variety identifies no observations in the sample
+note: 26.moist#4.variety identifies no observations in the sample
+note: 26.moist#5.variety identifies no observations in the sample
+note: 26.moist#6.variety identifies no observations in the sample
+note: 26.moist#7.variety identifies no observations in the sample
+note: 26.moist#8.variety identifies no observations in the sample
+note: 26.moist#9.variety omitted because of collinearity
+note: 26.moist#10.variety identifies no observations in the sample
+note: 27.moist#1.variety identifies no observations in the sample
+note: 27.moist#2.variety identifies no observations in the sample
+note: 27.moist#3.variety identifies no observations in the sample
+note: 27.moist#4.variety identifies no observations in the sample
+note: 27.moist#5.variety omitted because of collinearity
+note: 27.moist#6.variety identifies no observations in the sample
+note: 27.moist#7.variety identifies no observations in the sample
+note: 27.moist#8.variety identifies no observations in the sample
+note: 27.moist#9.variety identifies no observations in the sample
+note: 27.moist#10.variety identifies no observations in the sample
+note: 28.moist#1.variety identifies no observations in the sample
+note: 28.moist#2.variety identifies no observations in the sample
+note: 28.moist#3.variety identifies no observations in the sample
+note: 28.moist#4.variety identifies no observations in the sample
+note: 28.moist#5.variety identifies no observations in the sample
+note: 28.moist#6.variety identifies no observations in the sample
+note: 28.moist#7.variety identifies no observations in the sample
+note: 28.moist#8.variety omitted because of collinearity
+note: 28.moist#9.variety identifies no observations in the sample
+note: 28.moist#10.variety identifies no observations in the sample
+note: 30.moist#1.variety identifies no observations in the sample
+note: 30.moist#3.variety omitted because of collinearity
+note: 30.moist#4.variety identifies no observations in the sample
+note: 30.moist#5.variety identifies no observations in the sample
+note: 30.moist#6.variety identifies no observations in the sample
+note: 30.moist#7.variety identifies no observations in the sample
+note: 30.moist#8.variety identifies no observations in the sample
+note: 30.moist#9.variety identifies no observations in the sample
+note: 30.moist#10.variety identifies no observations in the sample
+note: 32.moist#2.variety identifies no observations in the sample
+note: 32.moist#3.variety identifies no observations in the sample
+note: 32.moist#4.variety identifies no observations in the sample
+note: 32.moist#5.variety identifies no observations in the sample
+note: 32.moist#6.variety identifies no observations in the sample
+note: 32.moist#7.variety identifies no observations in the sample
+note: 32.moist#8.variety identifies no observations in the sample
+note: 32.moist#9.variety identifies no observations in the sample
+note: 32.moist#10.variety identifies no observations in the sample
+note: 36.moist#1.variety identifies no observations in the sample
+note: 36.moist#2.variety identifies no observations in the sample
+note: 36.moist#3.variety identifies no observations in the sample
+note: 36.moist#4.variety identifies no observations in the sample
+note: 36.moist#5.variety identifies no observations in the sample
+note: 36.moist#6.variety identifies no observations in the sample
+note: 36.moist#7.variety omitted because of collinearity
+note: 36.moist#8.variety identifies no observations in the sample
+note: 36.moist#9.variety identifies no observations in the sample
+note: 36.moist#10.variety identifies no observations in the sample
+note: 37.moist#1.variety identifies no observations in the sample
+note: 37.moist#2.variety identifies no observations in the sample
+note: 37.moist#3.variety identifies no observations in the sample
+note: 37.moist#4.variety identifies no observations in the sample
+note: 37.moist#5.variety identifies no observations in the sample
+note: 37.moist#6.variety identifies no observations in the sample
+note: 37.moist#7.variety identifies no observations in the sample
+note: 37.moist#8.variety identifies no observations in the sample
+note: 37.moist#9.variety identifies no observations in the sample
+note: 37.moist#10.variety omitted because of collinearity
+note: 38.moist#1.variety identifies no observations in the sample
+note: 38.moist#2.variety identifies no observations in the sample
+note: 38.moist#3.variety identifies no observations in the sample
+note: 38.moist#4.variety identifies no observations in the sample
+note: 38.moist#5.variety identifies no observations in the sample
+note: 38.moist#6.variety omitted because of collinearity
+note: 38.moist#7.variety identifies no observations in the sample
+note: 38.moist#8.variety identifies no observations in the sample
+note: 38.moist#9.variety identifies no observations in the sample
+note: 38.moist#10.variety identifies no observations in the sample
+note: 40.moist#1.variety identifies no observations in the sample
+note: 40.moist#2.variety identifies no observations in the sample
+note: 40.moist#5.variety identifies no observations in the sample
+note: 40.moist#6.variety identifies no observations in the sample
+note: 40.moist#7.variety identifies no observations in the sample
+note: 40.moist#8.variety identifies no observations in the sample
+note: 40.moist#9.variety omitted because of collinearity
+note: 40.moist#10.variety identifies no observations in the sample
+note: 41.moist#1.variety identifies no observations in the sample
+note: 41.moist#2.variety identifies no observations in the sample
+note: 41.moist#3.variety identifies no observations in the sample
+note: 41.moist#4.variety identifies no observations in the sample
+note: 41.moist#5.variety identifies no observations in the sample
+note: 41.moist#6.variety identifies no observations in the sample
+note: 41.moist#7.variety identifies no observations in the sample
+note: 41.moist#8.variety omitted because of collinearity
+note: 41.moist#9.variety identifies no observations in the sample
+note: 41.moist#10.variety identifies no observations in the sample
+note: 43.moist#1.variety identifies no observations in the sample
+note: 43.moist#2.variety identifies no observations in the sample
+note: 43.moist#3.variety identifies no observations in the sample
+note: 43.moist#4.variety identifies no observations in the sample
+note: 43.moist#5.variety identifies no observations in the sample
+note: 43.moist#6.variety omitted because of collinearity
+note: 43.moist#7.variety identifies no observations in the sample
+note: 43.moist#8.variety identifies no observations in the sample
+note: 43.moist#9.variety identifies no observations in the sample
+note: 43.moist#10.variety identifies no observations in the sample
+note: 44.moist#1.variety identifies no observations in the sample
+note: 44.moist#2.variety omitted because of collinearity
+note: 44.moist#3.variety identifies no observations in the sample
+note: 44.moist#4.variety omitted because of collinearity
+note: 44.moist#6.variety identifies no observations in the sample
+note: 44.moist#7.variety identifies no observations in the sample
+note: 44.moist#8.variety identifies no observations in the sample
+note: 44.moist#10.variety omitted because of collinearity
+note: 47.moist#2.variety identifies no observations in the sample
+note: 47.moist#3.variety identifies no observations in the sample
+note: 47.moist#4.variety identifies no observations in the sample
+note: 47.moist#5.variety identifies no observations in the sample
+note: 47.moist#6.variety identifies no observations in the sample
+note: 47.moist#7.variety identifies no observations in the sample
+note: 47.moist#8.variety identifies no observations in the sample
+note: 47.moist#9.variety identifies no observations in the sample
+note: 47.moist#10.variety identifies no observations in the sample
+note: 48.moist#2.variety identifies no observations in the sample
+note: 48.moist#3.variety identifies no observations in the sample
+note: 48.moist#4.variety identifies no observations in the sample
+note: 48.moist#5.variety identifies no observations in the sample
+note: 48.moist#6.variety identifies no observations in the sample
+note: 48.moist#8.variety identifies no observations in the sample
+note: 48.moist#10.variety omitted because of collinearity
+note: 49.moist#1.variety identifies no observations in the sample
+note: 49.moist#2.variety identifies no observations in the sample
+note: 49.moist#3.variety identifies no observations in the sample
+note: 49.moist#4.variety identifies no observations in the sample
+note: 49.moist#5.variety omitted because of collinearity
+note: 49.moist#6.variety identifies no observations in the sample
+note: 49.moist#7.variety identifies no observations in the sample
+note: 49.moist#8.variety identifies no observations in the sample
+note: 49.moist#9.variety identifies no observations in the sample
+note: 49.moist#10.variety identifies no observations in the sample
+note: 50.moist#1.variety identifies no observations in the sample
+note: 50.moist#2.variety identifies no observations in the sample
+note: 50.moist#3.variety omitted because of collinearity
+note: 50.moist#4.variety identifies no observations in the sample
+note: 50.moist#5.variety identifies no observations in the sample
+note: 50.moist#6.variety identifies no observations in the sample
+note: 50.moist#7.variety identifies no observations in the sample
+note: 50.moist#8.variety identifies no observations in the sample
+note: 50.moist#9.variety identifies no observations in the sample
+note: 50.moist#10.variety identifies no observations in the sample
+note: 51.moist#1.variety identifies no observations in the sample
+note: 51.moist#2.variety identifies no observations in the sample
+note: 51.moist#3.variety identifies no observations in the sample
+note: 51.moist#4.variety identifies no observations in the sample
+note: 51.moist#5.variety omitted because of collinearity
+note: 51.moist#6.variety identifies no observations in the sample
+note: 51.moist#7.variety identifies no observations in the sample
+note: 51.moist#8.variety identifies no observations in the sample
+note: 51.moist#9.variety identifies no observations in the sample
+note: 51.moist#10.variety identifies no observations in the sample
+note: 52.moist#2.variety identifies no observations in the sample
+note: 52.moist#3.variety identifies no observations in the sample
+note: 52.moist#4.variety identifies no observations in the sample
+note: 52.moist#6.variety identifies no observations in the sample
+note: 52.moist#7.variety identifies no observations in the sample
+note: 52.moist#8.variety identifies no observations in the sample
+note: 52.moist#9.variety identifies no observations in the sample
+note: 52.moist#10.variety identifies no observations in the sample
+note: 53.moist#1.variety identifies no observations in the sample
+note: 53.moist#2.variety identifies no observations in the sample
+note: 53.moist#3.variety identifies no observations in the sample
+note: 53.moist#4.variety identifies no observations in the sample
+note: 53.moist#5.variety identifies no observations in the sample
+note: 53.moist#6.variety identifies no observations in the sample
+note: 53.moist#7.variety identifies no observations in the sample
+note: 53.moist#8.variety identifies no observations in the sample
+note: 53.moist#9.variety omitted because of collinearity
+note: 53.moist#10.variety omitted because of collinearity
+note: 55.moist#1.variety identifies no observations in the sample
+note: 55.moist#2.variety identifies no observations in the sample
+note: 55.moist#3.variety identifies no observations in the sample
+note: 55.moist#4.variety identifies no observations in the sample
+note: 55.moist#5.variety identifies no observations in the sample
+note: 55.moist#6.variety omitted because of collinearity
+note: 55.moist#7.variety identifies no observations in the sample
+note: 55.moist#8.variety identifies no observations in the sample
+note: 55.moist#9.variety identifies no observations in the sample
+note: 55.moist#10.variety identifies no observations in the sample
+note: 57.moist#2.variety identifies no observations in the sample
+note: 57.moist#3.variety identifies no observations in the sample
+note: 57.moist#4.variety identifies no observations in the sample
+note: 57.moist#5.variety omitted because of collinearity
+note: 57.moist#6.variety identifies no observations in the sample
+note: 57.moist#7.variety identifies no observations in the sample
+note: 57.moist#8.variety omitted because of collinearity
+note: 57.moist#9.variety identifies no observations in the sample
+note: 57.moist#10.variety identifies no observations in the sample
+note: 58.moist#1.variety identifies no observations in the sample
+note: 58.moist#2.variety identifies no observations in the sample
+note: 58.moist#3.variety omitted because of collinearity
+note: 58.moist#4.variety identifies no observations in the sample
+note: 58.moist#5.variety identifies no observations in the sample
+note: 58.moist#6.variety identifies no observations in the sample
+note: 58.moist#7.variety identifies no observations in the sample
+note: 58.moist#8.variety identifies no observations in the sample
+note: 58.moist#9.variety identifies no observations in the sample
+note: 58.moist#10.variety omitted because of collinearity
+note: 59.moist#1.variety identifies no observations in the sample
+note: 59.moist#2.variety identifies no observations in the sample
+note: 59.moist#3.variety identifies no observations in the sample
+note: 59.moist#4.variety identifies no observations in the sample
+note: 59.moist#5.variety identifies no observations in the sample
+note: 59.moist#6.variety identifies no observations in the sample
+note: 59.moist#7.variety identifies no observations in the sample
+note: 59.moist#8.variety identifies no observations in the sample
+note: 59.moist#9.variety identifies no observations in the sample
+note: 59.moist#10.variety omitted because of collinearity
+note: 60.moist#1.variety identifies no observations in the sample
+note: 60.moist#2.variety identifies no observations in the sample
+note: 60.moist#3.variety identifies no observations in the sample
+note: 60.moist#4.variety identifies no observations in the sample
+note: 60.moist#5.variety identifies no observations in the sample
+note: 60.moist#6.variety omitted because of collinearity
+note: 60.moist#7.variety identifies no observations in the sample
+note: 60.moist#8.variety identifies no observations in the sample
+note: 60.moist#9.variety identifies no observations in the sample
+note: 60.moist#10.variety identifies no observations in the sample
 
 Performing EM optimization: 
 
 Performing gradient-based optimization: 
 
-Iteration 0:   log likelihood = -100.12929  
-Iteration 1:   log likelihood = -100.12929  
+Iteration 0:   log likelihood =  57.884781  (not concave)
+Iteration 1:   log likelihood =  58.293809  
+Iteration 2:   log likelihood =  58.481504  
+Iteration 3:   log likelihood =   58.48844  
+Iteration 4:   log likelihood =   58.48844  
 
 Computing standard errors:
 
@@ -151,59 +372,425 @@ Group variable: variety                         Number of groups  =         10
                                                               avg =        6.0
                                                               max =          6
 
-                                                Wald chi2(1)      =    6429.93
-Log likelihood = -100.12929                     Prob > chi2       =     0.0000
+                                                Wald chi2(57)     =   1.06e+06
+Log likelihood =   58.48844                     Prob > chi2       =     0.0000
 
-------------------------------------------------------------------------------
-       yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-       moist |   .6715811   .0083752    80.19   0.000      .655166    .6879962
-       _cons |   33.00291   1.271344    25.96   0.000     30.51112     35.4947
-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+        yield |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+        moist |
+          11  |  -2.33e-14   .1290994    -0.00   1.000    -.2530303    .2530303
+          13  |  -2.84e-14   .2236068    -0.00   1.000    -.4382613    .4382613
+          15  |         -1   .1825742    -5.48   0.000    -1.357839   -.6421612
+          17  |          5   .1290994    38.73   0.000      4.74697     5.25303
+          19  |          7   .2236068    31.30   0.000     6.561739    7.438261
+          20  |          7   .1290994    54.22   0.000      6.74697     7.25303
+          21  |          7   .2236068    31.30   0.000     6.561739    7.438261
+          22  |          8   .2236068    35.78   0.000     7.561739    8.438261
+          23  |          5   .1707825    29.28   0.000     4.665272    5.334728
+          26  |          9   .2236068    40.25   0.000     8.561739    9.438261
+          27  |          9   .1825742    49.30   0.000     8.642161    9.357839
+          28  |          7   .1825742    38.34   0.000     6.642161    7.357839
+          30  |          8   .2236068    35.78   0.000     7.561739    8.438261
+          32  |         12   .1290994    92.95   0.000     11.74697    12.25303
+          36  |         19   .1290994   147.17   0.000     18.74697    19.25303
+          37  |         16   .1825742    87.64   0.000     15.64216    16.35784
+          38  |       19.5   .1707825   114.18   0.000     19.16527    19.83473
+          40  |         19   .2236068    84.97   0.000     18.56174    19.43826
+          41  |         17   .1825742    93.11   0.000     16.64216    17.35784
+          43  |       21.5   .1707825   125.89   0.000     21.16527    21.83473
+          44  |         22   .1825742   120.50   0.000     21.64216    22.35784
+          47  |         23   .1290994   178.16   0.000     22.74697    23.25303
+          48  |         23   .1290994   178.16   0.000     22.74697    23.25303
+          49  |         22   .1825742   120.50   0.000     21.64216    22.35784
+          50  |         22   .2236068    98.39   0.000     21.56174    22.43826
+          51  |         25   .1825742   136.93   0.000     24.64216    25.35784
+          52  |         25   .1290994   193.65   0.000     24.74697    25.25303
+          53  |         27   .1825742   147.89   0.000     26.64216    27.35784
+          55  |       30.5   .1707825   178.59   0.000     30.16527    30.83473
+          57  |         28   .1290994   216.89   0.000     27.74697    28.25303
+          58  |         29   .1825742   158.84   0.000     28.64216    29.35784
+          59  |         30   .1825742   164.32   0.000     29.64216    30.35784
+          60  |       33.5   .1707825   196.16   0.000     33.16527    33.83473
+              |
+      variety |
+           2  |         -6   .1825742   -32.86   0.000    -6.357839   -5.642161
+           3  |          6   .1825742    32.86   0.000     5.642161    6.357839
+           4  |         -1   .1825742    -5.48   0.000    -1.357839   -.6421612
+           5  |          2   .1290994    15.49   0.000      1.74697     2.25303
+           6  |        4.5   .1707825    26.35   0.000     4.165272    4.834728
+           7  |        -11   .1290994   -85.21   0.000    -11.25303   -10.74697
+           8  |          6   .1290994    46.48   0.000      5.74697     6.25303
+           9  |          1   .1825742     5.48   0.000     .6421612    1.357839
+          10  |          3   .1290994    23.24   0.000      2.74697     3.25303
+              |
+moist#variety |
+       10  2  |          0  (empty)
+       10  3  |          0  (empty)
+       10  4  |          0  (empty)
+       10  5  |          0  (empty)
+       10  6  |          0  (empty)
+       10  8  |          0  (empty)
+       10  9  |          0  (empty)
+       10 10  |          0  (empty)
+       11  1  |          0  (empty)
+       11  2  |          0  (empty)
+       11  3  |          0  (empty)
+       11  4  |          0  (empty)
+       11  5  |          0  (empty)
+       11  6  |          0  (omitted)
+       11  7  |          0  (omitted)
+       11  8  |          0  (empty)
+       11  9  |          0  (empty)
+       11 10  |          0  (empty)
+       13  1  |          0  (empty)
+       13  2  |          0  (empty)
+       13  3  |          0  (empty)
+       13  4  |          3   .2236068    13.42   0.000     2.561739    3.438261
+       13  5  |          0  (empty)
+       13  6  |          0  (empty)
+       13  7  |          0  (empty)
+       13  8  |          0  (empty)
+       13  9  |          0  (omitted)
+       13 10  |          0  (empty)
+       15  1  |          0  (empty)
+       15  2  |          0  (empty)
+       15  3  |          0  (empty)
+       15  4  |          0  (empty)
+       15  5  |          0  (empty)
+       15  6  |          0  (empty)
+       15  7  |          0  (empty)
+       15  8  |          0  (omitted)
+       15  9  |          0  (empty)
+       15 10  |          0  (empty)
+       17  1  |          0  (empty)
+       17  2  |          0  (empty)
+       17  3  |          0  (empty)
+       17  4  |  -1.42e-14   .2581989    -0.00   1.000    -.5060605    .5060605
+       17  5  |          0  (empty)
+       17  6  |          0  (empty)
+       17  7  |          0  (omitted)
+       17  8  |          0  (empty)
+       17  9  |          0  (empty)
+       17 10  |          0  (empty)
+       19  1  |          0  (empty)
+       19  2  |          0  (omitted)
+       19  3  |          0  (empty)
+       19  4  |          0  (empty)
+       19  5  |          0  (empty)
+       19  6  |          0  (empty)
+       19  7  |          0  (empty)
+       19  8  |          0  (empty)
+       19  9  |          0  (empty)
+       19 10  |          0  (empty)
+       20  1  |          0  (empty)
+       20  2  |          2   .2581989     7.75   0.000     1.493939    2.506061
+       20  3  |          0  (empty)
+       20  4  |          0  (empty)
+       20  5  |          0  (empty)
+       20  6  |          0  (empty)
+       20  7  |          0  (omitted)
+       20  8  |          0  (empty)
+       20  9  |          0  (empty)
+       20 10  |          0  (empty)
+       21  1  |          0  (empty)
+       21  2  |          2   .1825742    10.95   0.000     1.642161    2.357839
+       21  3  |         -6   .2236068   -26.83   0.000    -6.438261   -5.561739
+       21  4  |          0  (omitted)
+       21  5  |          0  (empty)
+       21  6  |          0  (empty)
+       21  7  |          0  (empty)
+       21  8  |          0  (empty)
+       21  9  |          0  (empty)
+       21 10  |          0  (empty)
+       22  1  |          0  (empty)
+       22  2  |          0  (empty)
+       22  3  |          0  (empty)
+       22  4  |          0  (omitted)
+       22  5  |          0  (empty)
+       22  6  |          0  (empty)
+       22  7  |          0  (empty)
+       22  8  |          0  (empty)
+       22  9  |          0  (empty)
+       22 10  |          0  (empty)
+       23  1  |          0  (empty)
+       23  2  |          0  (empty)
+       23  3  |         -2        .25    -8.00   0.000    -2.489991   -1.510009
+       23  4  |          0  (empty)
+       23  5  |          0  (empty)
+       23  6  |          0  (empty)
+       23  7  |          0  (empty)
+       23  8  |          0  (omitted)
+       23  9  |          0  (empty)
+       23 10  |          0  (empty)
+       26  1  |          0  (empty)
+       26  2  |          2   .2236068     8.94   0.000     1.561739    2.438261
+       26  3  |          0  (empty)
+       26  4  |          0  (empty)
+       26  5  |          0  (empty)
+       26  6  |          0  (empty)
+       26  7  |          0  (empty)
+       26  8  |          0  (empty)
+       26  9  |          0  (omitted)
+       26 10  |          0  (empty)
+       27  1  |          0  (empty)
+       27  2  |          0  (empty)
+       27  3  |          0  (empty)
+       27  4  |          0  (empty)
+       27  5  |          0  (omitted)
+       27  6  |          0  (empty)
+       27  7  |          0  (empty)
+       27  8  |          0  (empty)
+       27  9  |          0  (empty)
+       27 10  |          0  (empty)
+       28  1  |          0  (empty)
+       28  2  |          0  (empty)
+       28  3  |          0  (empty)
+       28  4  |          0  (empty)
+       28  5  |          0  (empty)
+       28  6  |          0  (empty)
+       28  7  |          0  (empty)
+       28  8  |          0  (omitted)
+       28  9  |          0  (empty)
+       28 10  |          0  (empty)
+       30  1  |          0  (empty)
+       30  2  |          6   .2236068    26.83   0.000     5.561739    6.438261
+       30  3  |          0  (omitted)
+       30  4  |          0  (empty)
+       30  5  |          0  (empty)
+       30  6  |          0  (empty)
+       30  7  |          0  (empty)
+       30  8  |          0  (empty)
+       30  9  |          0  (empty)
+       30 10  |          0  (empty)
+       32  2  |          0  (empty)
+       32  3  |          0  (empty)
+       32  4  |          0  (empty)
+       32  5  |          0  (empty)
+       32  6  |          0  (empty)
+       32  7  |          0  (empty)
+       32  8  |          0  (empty)
+       32  9  |          0  (empty)
+       32 10  |          0  (empty)
+       36  1  |          0  (empty)
+       36  2  |          0  (empty)
+       36  3  |          0  (empty)
+       36  4  |          0  (empty)
+       36  5  |          0  (empty)
+       36  6  |          0  (empty)
+       36  7  |          0  (omitted)
+       36  8  |          0  (empty)
+       36  9  |          0  (empty)
+       36 10  |          0  (empty)
+       37  1  |          0  (empty)
+       37  2  |          0  (empty)
+       37  3  |          0  (empty)
+       37  4  |          0  (empty)
+       37  5  |          0  (empty)
+       37  6  |          0  (empty)
+       37  7  |          0  (empty)
+       37  8  |          0  (empty)
+       37  9  |          0  (empty)
+       37 10  |          0  (omitted)
+       38  1  |          0  (empty)
+       38  2  |          0  (empty)
+       38  3  |          0  (empty)
+       38  4  |          0  (empty)
+       38  5  |          0  (empty)
+       38  6  |          0  (omitted)
+       38  7  |          0  (empty)
+       38  8  |          0  (empty)
+       38  9  |          0  (empty)
+       38 10  |          0  (empty)
+       40  1  |          0  (empty)
+       40  2  |          0  (empty)
+       40  3  |         -4   .2236068   -17.89   0.000    -4.438261   -3.561739
+       40  4  |          1   .2236068     4.47   0.000     .5617387    1.438261
+       40  5  |          0  (empty)
+       40  6  |          0  (empty)
+       40  7  |          0  (empty)
+       40  8  |          0  (empty)
+       40  9  |          0  (omitted)
+       40 10  |          0  (empty)
+       41  1  |          0  (empty)
+       41  2  |          0  (empty)
+       41  3  |          0  (empty)
+       41  4  |          0  (empty)
+       41  5  |          0  (empty)
+       41  6  |          0  (empty)
+       41  7  |          0  (empty)
+       41  8  |          0  (omitted)
+       41  9  |          0  (empty)
+       41 10  |          0  (empty)
+       43  1  |          0  (empty)
+       43  2  |          0  (empty)
+       43  3  |          0  (empty)
+       43  4  |          0  (empty)
+       43  5  |          0  (empty)
+       43  6  |          0  (omitted)
+       43  7  |          0  (empty)
+       43  8  |          0  (empty)
+       43  9  |          0  (empty)
+       43 10  |          0  (empty)
+       44  1  |          0  (empty)
+       44  2  |          0  (omitted)
+       44  3  |          0  (empty)
+       44  4  |          0  (omitted)
+       44  5  |         -2   .2236068    -8.94   0.000    -2.438261   -1.561739
+       44  6  |          0  (empty)
+       44  7  |          0  (empty)
+       44  8  |          0  (empty)
+       44  9  |         -1   .1825742    -5.48   0.000    -1.357839   -.6421612
+       44 10  |          0  (omitted)
+       47  2  |          0  (empty)
+       47  3  |          0  (empty)
+       47  4  |          0  (empty)
+       47  5  |          0  (empty)
+       47  6  |          0  (empty)
+       47  7  |          0  (empty)
+       47  8  |          0  (empty)
+       47  9  |          0  (empty)
+       47 10  |          0  (empty)
+       48  2  |          0  (empty)
+       48  3  |          0  (empty)
+       48  4  |          0  (empty)
+       48  5  |          0  (empty)
+       48  6  |          0  (empty)
+       48  7  |          4   .1825742    21.91   0.000     3.642161    4.357839
+       48  8  |          0  (empty)
+       48  9  |          2   .1825742    10.95   0.000     1.642161    2.357839
+       48 10  |          0  (omitted)
+       49  1  |          0  (empty)
+       49  2  |          0  (empty)
+       49  3  |          0  (empty)
+       49  4  |          0  (empty)
+       49  5  |          0  (omitted)
+       49  6  |          0  (empty)
+       49  7  |          0  (empty)
+       49  8  |          0  (empty)
+       49  9  |          0  (empty)
+       49 10  |          0  (empty)
+       50  1  |          0  (empty)
+       50  2  |          0  (empty)
+       50  3  |          0  (omitted)
+       50  4  |          0  (empty)
+       50  5  |          0  (empty)
+       50  6  |          0  (empty)
+       50  7  |          0  (empty)
+       50  8  |          0  (empty)
+       50  9  |          0  (empty)
+       50 10  |          0  (empty)
+       51  1  |          0  (empty)
+       51  2  |          0  (empty)
+       51  3  |          0  (empty)
+       51  4  |          0  (empty)
+       51  5  |          0  (omitted)
+       51  6  |          0  (empty)
+       51  7  |          0  (empty)
+       51  8  |          0  (empty)
+       51  9  |          0  (empty)
+       51 10  |          0  (empty)
+       52  2  |          0  (empty)
+       52  3  |          0  (empty)
+       52  4  |          0  (empty)
+       52  5  |   8.44e-15   .1825742     0.00   1.000    -.3578388    .3578388
+       52  6  |          0  (empty)
+       52  7  |          0  (empty)
+       52  8  |          0  (empty)
+       52  9  |          0  (empty)
+       52 10  |          0  (empty)
+       53  1  |          0  (empty)
+       53  2  |          0  (empty)
+       53  3  |          0  (empty)
+       53  4  |          0  (empty)
+       53  5  |          0  (empty)
+       53  6  |          0  (empty)
+       53  7  |          0  (empty)
+       53  8  |          0  (empty)
+       53  9  |          0  (omitted)
+       53 10  |          0  (omitted)
+       55  1  |          0  (empty)
+       55  2  |          0  (empty)
+       55  3  |          0  (empty)
+       55  4  |          0  (empty)
+       55  5  |          0  (empty)
+       55  6  |          0  (omitted)
+       55  7  |          0  (empty)
+       55  8  |          0  (empty)
+       55  9  |          0  (empty)
+       55 10  |          0  (empty)
+       57  2  |          0  (empty)
+       57  3  |          0  (empty)
+       57  4  |          0  (empty)
+       57  5  |          0  (omitted)
+       57  6  |          0  (empty)
+       57  7  |          0  (empty)
+       57  8  |          0  (omitted)
+       57  9  |          0  (empty)
+       57 10  |          0  (empty)
+       58  1  |          0  (empty)
+       58  2  |          0  (empty)
+       58  3  |          0  (omitted)
+       58  4  |          0  (empty)
+       58  5  |          0  (empty)
+       58  6  |          0  (empty)
+       58  7  |          0  (empty)
+       58  8  |          0  (empty)
+       58  9  |          0  (empty)
+       58 10  |          0  (omitted)
+       59  1  |          0  (empty)
+       59  2  |          0  (empty)
+       59  3  |          0  (empty)
+       59  4  |          0  (empty)
+       59  5  |          0  (empty)
+       59  6  |          0  (empty)
+       59  7  |          0  (empty)
+       59  8  |          0  (empty)
+       59  9  |          0  (empty)
+       59 10  |          0  (omitted)
+       60  1  |          0  (empty)
+       60  2  |          0  (empty)
+       60  3  |          0  (empty)
+       60  4  |          0  (empty)
+       60  5  |          0  (empty)
+       60  6  |          0  (omitted)
+       60  7  |          0  (empty)
+       60  8  |          0  (empty)
+       60  9  |          0  (empty)
+       60 10  |          0  (empty)
+              |
+        _cons |         41   .0912871   449.13   0.000     40.82108    41.17892
+-------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
 -----------------------------+------------------------------------------------
-variety: Identity            |
-                   sd(_cons) |   3.892558   .8781672      2.501513    6.057139
+variety: Independent         |
+                   sd(moist) |   4.84e-13          .             .           .
+                   sd(_cons) |   3.35e-11          .             .           .
 -----------------------------+------------------------------------------------
-                sd(Residual) |   .8590415   .0859177      .7061234    1.045076
+                sd(Residual) |   .0912871          .             .           .
 ------------------------------------------------------------------------------
-LR test vs. linear model: chibar2(01) = 131.83        Prob >= chibar2 = 0.0000
+LR test vs. linear model: chi2(2) = 0.00                  Prob > chi2 = 1.0000
 
-. estimates store m2
+Note: LR test is conservative and provided only for reference.
+
+. 
+. estimates store m1 
 
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
-. lrtest m2 m3
-
-Likelihood-ratio test                                 LR chi2(2)  =     18.20
-(Assumption: m2 nested in m3)                         Prob > chi2 =    0.0001
-
-Note: The reported degrees of freedom assumes the null hypothesis is not on the boundary of the
-      parameter space.  If this is not true, then the reported test is conservative.
+. 
+. egen pickone = tag(variety)
 
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
-. predict b0 b1, reffects
-too many variables specified
-you must specify 1 new variable(s)
-r(103);
-
-end of do-file
-
-r(103);
-
-. do "/tmp/SD08825.000000"
-
-. 
-. * Considered blowing this up by excluding the covariance, but not real reason
 . mixed yield moist || variety: moist, mle  stddev
 
 Performing EM optimization: 
@@ -247,11 +834,29 @@ LR test vs. linear model: chi2(2) = 148.99                Prob > chi2 = 0.0000
 Note: LR test is conservative and provided only for reference.
 
 . 
-. 
-. * 4.4.4
+end of do-file
+
+. do "/tmp/SD06722.000000"
+
 . predict b0 b1, reffects
 
 . 
+end of do-file
+
+. do "/tmp/SD06722.000000"
+
+. egen pickone = tag(variety)
+variable pickone already defined
+r(110);
+
+end of do-file
+
+r(110);
+
+.                drop pickone
+
+. do "/tmp/SD06722.000000"
+
 . egen pickone = tag(variety)
 
 . 
@@ -264,26 +869,9 @@ Note: LR test is conservative and provided only for reference.
 . twoway(scatter b0 b1)
 
 . 
-. 
 end of do-file
 
-. do "/tmp/SD08825.000000"
-
-. hist b0 if pickone == 1
-(bin=3, start=-.06648263, width=.04375659)
-
-. 
-end of do-file
-
-. do "/tmp/SD08825.000000"
-
-. hist b1 if pickone == 1, bin(6)
-(bin=6, start=-10.536839, width=2.5301774)
-
-. 
-end of do-file
-
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
 . predict yieldfit, fitted
 
@@ -292,32 +880,33 @@ end of do-file
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
 . twoway (scatter yield moist) , by(variety) 
 
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
 . twoway (scatter yield moist) , by(variety, compact legend(off)) 
 
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
 . twoway (scatter yield moist) , by(variety, compact legend(off) cols(5)) 
 
 . 
 end of do-file
 
-. do "/tmp/SD08825.000000"
+. do "/tmp/SD06722.000000"
 
 . twoway (scatter yield moist)(line yieldfit moist, connect(ascending)), ///
 >             by(variety, compact legend(off) cols(5)) 
 
+. 
 . 
 end of do-file
 

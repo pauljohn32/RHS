@@ -62,6 +62,52 @@ twoway (scatter gcse lrt, msize(small) msymbol(smcircle_hollow) mlwidth(vvthin))
 * dots with the school type that I'm stopping in anger.
 
 
+
+* Goal: create a trellis plot for a subset of the groups
+* This is the method in RHS p. 237. Creates a marker variable for the group
+* then assigns random numbers to groups, then sorts, then creates numerical
+* rank. 
+* create 1 in first row for each school
+* egen pickone = tag(school) 
+set seed 234234
+gen r = uniform() if pickone == 1
+egen num = rank(r) if r < . 
+egen number = mean(num), by(school)
+
+* Here's a partial fail
+twoway (scatter gcse lrt if number<=6, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+    (line gcsefit lrt, connect(ascending)), ///
+    by(school, compact legend(off)) ///
+    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+* Still a fail:
+twoway (scatter gcse lrt if number<=6, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+    (line gcsefit lrt if number<=6, connect(ascending)), ///
+    by(school, compact legend(off)) ///
+    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+    
+keep if number <= 6
+twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+    (line gcsefit lrt, connect(ascending)), ///
+    by(school, compact legend(off)) ///
+    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+* Oops. destroyed data. How to avoid?
+* run this as a block
+preserve
+keep if number <= 6
+twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+    (line gcsefit lrt, connect(ascending)), ///
+    by(school, compact legend(off)) ///
+    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+ 
+preserve
+keep if number <= 6 & number <= 12
+twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+    (line gcsefit lrt, connect(ascending)), ///
+    by(school, compact legend(off)) ///
+    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+    
+    
+    
 * Trellis plot.
 twoway (scatter gcse lrt) ///
     (line gcsefit lrt, connect(ascending)), ///

@@ -179,31 +179,111 @@ if(!file.exists(odir)) dir.create(odir, recursive=TRUE)
 library(rockchalk)
 m1 &lt;- lm(mathach ~ female + minority + sector + ses, data = hsb)
 summary(m1)</code></pre>
-<p>Call: lm(formula = mathach ~ female + minority + sector + ses, data = hsb)</p>
-<p>Residuals: Min 1Q Median 3Q Max -20.2286 -4.5076 0.2104 4.7472 17.8078</p>
-<p>Coefficients: Estimate Std. Error t value Pr(&gt;|t|)<br />
-(Intercept) 13.24158 0.13386 98.924 &lt;2e-16 <strong><em> female -1.42166 0.14608 -9.732 &lt;2e-16 </em></strong> minority -3.11239 0.17029 -18.277 &lt;2e-16 <strong><em> sector 2.25492 0.14906 15.127 &lt;2e-16 </em></strong> ses 2.36392 0.09946 23.768 &lt;2e-16 *** — Signif. codes: 0 ‘<em><strong>’ 0.001 ’</strong>’ 0.01 ’</em>’ 0.05 ‘.’ 0.1 ‘’ 1</p>
-<p>Residual standard error: 6.166 on 7180 degrees of freedom Multiple R-squared: 0.1969, Adjusted R-squared: 0.1965 F-statistic: 440.1 on 4 and 7180 DF, p-value: &lt; 2.2e-16</p>
+<pre><code>
+Call:
+lm(formula = mathach ~ female + minority + sector + ses, data = hsb)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-20.2286  -4.5076   0.2104   4.7472  17.8078 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 13.24158    0.13386  98.924   &lt;2e-16 ***
+female      -1.42166    0.14608  -9.732   &lt;2e-16 ***
+minority    -3.11239    0.17029 -18.277   &lt;2e-16 ***
+sector       2.25492    0.14906  15.127   &lt;2e-16 ***
+ses          2.36392    0.09946  23.768   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.166 on 7180 degrees of freedom
+Multiple R-squared:  0.1969,    Adjusted R-squared:  0.1965 
+F-statistic: 440.1 on 4 and 7180 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>m1.o &lt;- outreg(list(&quot;A Pooled Regression&quot; = m1), type = &quot;latex&quot;, tight = FALSE)</code></pre>
-
+<pre><code>\begin{tabular}{*{3}{l}}
+\hline
+      &amp; \multicolumn{2}{l}{A Pooled Regression}   \tabularnewline
+       &amp;Estimate  &amp;(S.E.)  \tabularnewline
+ \hline
+ \hline
+   (Intercept)    &amp;13.242***   &amp;   (0.134) \tabularnewline
+   female    &amp;-1.422***   &amp;   (0.146) \tabularnewline
+   minority    &amp;-3.112***   &amp;   (0.170) \tabularnewline
+   sector    &amp;2.255***   &amp;   (0.149) \tabularnewline
+   ses     &amp;2.364***   &amp;   (0.099) \tabularnewline
+ \hline
+ N   &amp;7185   &amp;    \tabularnewline
+ RMSE             &amp;6.166         &amp; \tabularnewline
+ $R^2$             &amp;0.197         &amp; \tabularnewline
+ adj $R^2$         &amp;0.196         &amp; \tabularnewline
+ \hline
+\hline
+ 
+ \multicolumn{3}{c}{${*  p}\le 0.05$${*\!\!*  p}\le 0.01$${*\!\!*\!\!*  p}\le 0.001$}\tabularnewline
+ \end{tabular}</code></pre>
 <pre class="r"><code>cat(m1.o, file = file.path(odir, &quot;reg1.tex&quot;))      </code></pre>
-</div>
-<div id="stata-offers-egen" class="section level2">
-<h2>Stata offers egen</h2>
-<p>If a variable is named <code>ses</code> and we want to calculate the mean for each school, we run</p>
-<pre><code>egen ses_mn = mean(ses), by(schoolid)</code></pre>
-<p>The deviation within group is easy to calculate after that.</p>
-<pre><code>gen ses_dev = ses - ses_mn </code></pre>
-<p>In Stata, one is accustomed to the idea that the data frame will be altered by the addition of a new variable.</p>
-<p>In the Rabe-Hesketh and Skrondal book, a method is describe to use a for loop to iterate through many variables and create group mean columns for them.</p>
-<p>Here we can practice by getting the group means for the variables ses and female.</p>
-<pre><code>foreach var of varlist ses female {
-    egen `var'_mn = mean(`var'), by(schoolid)
-}
+<pre class="r"><code>m2 &lt;- lm(mathach ~ female + minority + ses, data = hsb)
+summary(m2)</code></pre>
+<pre><code>
+Call:
+lm(formula = mathach ~ female + minority + ses, data = hsb)
 
-foreach var of varlist ses  female {
-    gen `var'_dev = `var' - `var'_mn
-}</code></pre>
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.6401  -4.5587   0.2658   4.9098  17.5411 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 14.25389    0.11775  121.05   &lt;2e-16 ***
+female      -1.37665    0.14835   -9.28   &lt;2e-16 ***
+minority    -2.83651    0.17198  -16.49   &lt;2e-16 ***
+ses          2.68299    0.09873   27.18   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.263 on 7181 degrees of freedom
+Multiple R-squared:  0.1713,    Adjusted R-squared:  0.171 
+F-statistic: 494.8 on 3 and 7181 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>varlabs &lt;- c(&quot;female&quot;=&quot;Female&quot;, &quot;minority&quot; = &quot;Non-White&quot;, &quot;sector&quot; = &quot;Public School&quot;, &quot;ses&quot; = &quot;Socio-economic Status&quot;)
+m2.o &lt;- outreg(list(&quot;A Pooled Regression&quot; = m1, &quot;Fewer Predictors&quot; = m2), type = &quot;latex&quot;, tight = FALSE, varLabels = varlabs)</code></pre>
+<pre><code>\begin{tabular}{*{5}{l}}
+\hline
+      &amp; \multicolumn{2}{l}{A Pooled Regression} &amp; \multicolumn{2}{l}{Fewer Predictors}   \tabularnewline
+       &amp;Estimate  &amp;(S.E.)    &amp;Estimate  &amp;(S.E.)  \tabularnewline
+ \hline
+ \hline
+   (Intercept)    &amp;13.242***   &amp;   (0.134) &amp;14.254***   &amp;   (0.118) \tabularnewline
+   Female    &amp;-1.422***   &amp;   (0.146) &amp;-1.377***   &amp;   (0.148) \tabularnewline
+   Non-White    &amp;-3.112***   &amp;   (0.170) &amp;-2.837***   &amp;   (0.172) \tabularnewline
+   Public School    &amp;2.255***   &amp;   (0.149)   &amp; .        &amp;         \tabularnewline
+   Socio-economic Status    &amp;2.364***   &amp;   (0.099) &amp;2.683***   &amp;   (0.099) \tabularnewline
+ \hline
+ N   &amp;7185   &amp;    &amp;7185   &amp;    \tabularnewline
+ RMSE             &amp;6.166         &amp; &amp;6.263         &amp; \tabularnewline
+ $R^2$             &amp;0.197         &amp; &amp;0.171         &amp; \tabularnewline
+ adj $R^2$         &amp;0.196         &amp; &amp;0.171         &amp; \tabularnewline
+ \hline
+\hline
+ 
+ \multicolumn{5}{c}{${*  p}\le 0.05$${*\!\!*  p}\le 0.01$${*\!\!*\!\!*  p}\le 0.001$}\tabularnewline
+ \end{tabular}</code></pre>
+<pre class="r"><code>cat(m2.o, file = file.path(odir, &quot;reg2.tex&quot;))      </code></pre>
+</div>
+<div id="stata-offers-addons" class="section level2">
+<h2>Stata offers addons</h2>
+<p>The leading competitors in the Stata world are the packages outreg2 and estout. I’ve checked with my stata using friends. They say both are nice, but estout is better.</p>
+<p>To get started, read this:</p>
+<ol style="list-style-type: decimal">
+<li><p>UCLA FAQ <a href="http://www.ats.ucla.edu/stat/stata/faq/estout.htm" class="uri">http://www.ats.ucla.edu/stat/stata/faq/estout.htm</a></p></li>
+<li><p>Stata docs for the package <a href="http://repec.org/bocode/e/estout/esttab.html" class="uri">http://repec.org/bocode/e/estout/esttab.html</a></p></li>
+</ol>
+<pre><code>ssc install estout, replace</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Other handy web pages</li>
+</ol>
+<p><a href="http://www.jwe.cc/2012/03/stata-latex-tables-estout" class="uri">http://www.jwe.cc/2012/03/stata-latex-tables-estout</a></p>
+<p>I did not add this into my stata example code, but will have example here.</p>
 <pre><code>R version 3.3.2 (2016-10-31)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 16.10

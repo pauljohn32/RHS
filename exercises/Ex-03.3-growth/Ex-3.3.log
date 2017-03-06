@@ -2,16 +2,11 @@
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-03.3-growth/Ex-3.3.log
   log type:  text
- opened on:   1 Feb 2017, 10:32:00
+ opened on:   6 Mar 2017, 08:21:41
 
-. 
-. * JPotthoff & Roy jaw growth data
-. * use http://www.stata-press.com/data/mlmus3/growth, clear
-. * saveold growth.dta12, version(12)
 . 
 . use growth.dta12, replace
 
-. 
 . 
 . sum
 
@@ -28,6 +23,10 @@
 . twoway (scatter measure age, sort)
 
 . 
+. twoway (line measure age)
+
+. 
+. 
 . sort idnr age
 
 . twoway (line measure age, connect(ascending))
@@ -37,10 +36,7 @@
 
 . * want to label "1" and "2" in plot
 . 
-end of do-file
-
-. do "/tmp/SD14196.000000"
-
+. * Go back and label the data
 . label define sex 1 "boy" 2 "girl"
 
 . label values sex sex
@@ -50,10 +46,8 @@ end of do-file
 . twoway (line measure age, connect(ascending)), by(sex)
 
 . 
-end of do-file
-
-. do "/tmp/SD14196.000000"
-
+. * 3.3.2
+. 
 . xtmixed measure age i2.sex || idnr: , mle
 
 Performing EM optimization: 
@@ -97,10 +91,8 @@ idnr: Identity               |
 LR test vs. linear model: chibar2(01) = 45.83         Prob >= chibar2 = 0.0000
 
 . 
-end of do-file
-
-. do "/tmp/SD14196.000000"
-
+. 
+. * 3.3.3
 . 
 . xtmixed measure c.age##i2.sex || idnr: , mle
 
@@ -211,6 +203,38 @@ LR test vs. linear model: chibar2(01) = 49.80         Prob >= chibar2 = 0.0000
 
 . 
 . predict m1re, reffects
+
+. 
+. 
+. gen m1gp = m1re + m1
+
+. twoway (line m1gp age, connect(ascending) lcolor("pink"))
+
+. 
+. twoway (line measure age, connect(ascending) lcolor("gs10")) ///
+>     (line m1 age, connect(ascending)) ///
+>     (line m1gp age, connect(ascending) lcolor("pink"))
+
+. 
+end of do-file
+
+. do "/tmp/SD10159.000000"
+
+. twoway (line measure age)
+
+. 
+end of do-file
+
+. do "/tmp/SD10159.000000"
+
+. twoway (line measure age, connect(ascending))
+
+. 
+end of do-file
+
+. do "/tmp/SD10159.000000"
+
+. twoway (line measure age)
 
 . 
 end of do-file

@@ -1,51 +1,37 @@
-------------------------------------------------------
+--------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-4.1/E
-> x-4.1.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.1-gcse/Ex-4.1.log
   log type:  text
- opened on:  23 Feb 2016, 16:30:20
+ opened on:   6 Mar 2017, 08:45:49
 
 . 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
+. * London inner schools data
+. * use http://www.stata-press.com/data/mlmus3/gcse, clear
+. * saveold gcse.dta12, version(12)
 . 
 . use gcse.dta12
 
 . 
 . sum
 
-    Variable |        Obs        Mean    Std. Dev.    
->    Min        Max
--------------+----------------------------------------
-> -----------------
-      school |      4,059    31.00665    18.93914     
->      1         65
-     student |      4,059    38.69993    30.26442     
->      1        198
-        gcse |      4,059   -.0011786    9.989402    -
-> 36.661     36.661
-         lrt |      4,059    .0180982     9.93223     
-> -29.35      30.16
-        girl |      4,059    .6001478    .4899281     
->      0          1
--------------+----------------------------------------
-> -----------------
-     schgend |      4,059    1.804878    .9141923     
->      1          3
-      avslrt |      4,059    .0181069    3.148704    -
-> 7.5596     6.3766
-       schav |      4,059    2.127125    .6530068     
->      1          3
-      vrband |      4,059    1.843065    .6308623     
->      1          3
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+      school |      4,059    31.00665    18.93914          1         65
+     student |      4,059    38.69993    30.26442          1        198
+        gcse |      4,059   -.0011786    9.989402    -36.661     36.661
+         lrt |      4,059    .0180982     9.93223     -29.35      30.16
+        girl |      4,059    .6001478    .4899281          0          1
+-------------+---------------------------------------------------------
+     schgend |      4,059    1.804878    .9141923          1          3
+      avslrt |      4,059    .0181069    3.148704    -7.5596     6.3766
+       schav |      4,059    2.127125    .6530068          1          3
+      vrband |      4,059    1.843065    .6308623          1          3
 
 . 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
+. * RHS p. 212
+. * schgend 1: mixed school 2: boys 3: girls
+. 
+. * Everything is better with labels
 . label define schtype 1 "mixed" 2 "boys only" 3 "girls only", replace
 
 . label values schgend schtype
@@ -61,10 +47,8 @@ end of do-file
       Total |      4,059      100.00
 
 . 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
+. 
+. * From RHS p. 212
 . mixed gcse i.schgend##c.lrt || school: lrt, covariance(unstructured) mle
 
 Performing EM optimization: 
@@ -118,10 +102,7 @@ LR test vs. linear model: chi2(3) = 381.45                Prob > chi2 = 0.0000
 Note: LR test is conservative and provided only for reference.
 
 . 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
+. * I noticed mixed has different output format than xtmixed
 . 
 . mixed gcse i.schgend##c.lrt || school: lrt, /// 
 >    covariance(unstructured) mle stddev
@@ -179,49 +160,119 @@ Note: LR test is conservative and provided only for reference.
 . 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
 
-. twoway (scatter gcse lrt), by(schgend)
+. 
+. egen pickone = tag(school)
 
 . 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
 
-. twoway (scatter gcse lrt)
+. egen pickone = tag(school) 
+variable pickone already defined
+r(110);
+
+end of do-file
+
+r(110);
+
+. do "/tmp/SD10433.000000"
+
+. preserve
+
+. keep if number <= 6
+number not found
+r(111);
+
+end of do-file
+
+r(111);
+
+. do "/tmp/SD10433.000000"
+
+. set seed 234234
+
+. gen r = uniform() if pickone == 1
+(3,994 missing values generated)
+
+. egen num = rank(r) if r < . 
+(3994 missing values generated)
+
+. egen number = mean(num), by(school)
 
 . 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
 
-. twoway (scatter gcse lrt), by(schgend)
+. preserve
 
-. 
+. keep if number <= 6
+(3,654 observations deleted)
+
+. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+variable gcsefit not found
+r(111);
+
 end of do-file
 
-. do "/tmp/SD04733.000000"
+r(111);
 
-. twoway (scatter gcse lrt) , by(schgend, compact legend(off))
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
 
 . gsort +school +lrt
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
 
 . predict gcsefit, fitted
 
 . 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
+
+. preserve
+
+. keep if number <= 6
+(3,654 observations deleted)
+
+. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+
+.  
+. 
+end of do-file
+
+. do "/tmp/SD10433.000000"
+
+. egen number = mean(num), by(school), replace
+variable number already defined
+r(110);
+
+end of do-file
+
+r(110);
+
+. drop number
+
+. do "/tmp/SD10433.000000"
+
+. egen number = mean(num), by(school)
+
+. 
+end of do-file
+
+. do "/tmp/SD10433.000000"
+
+. preserve
+
+. keep if number <= 6
+(3,654 observations deleted)
 
 . twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
 >     (line gcsefit lrt, connect(ascending)), ///
@@ -231,480 +282,29 @@ end of do-file
 . 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+. do "/tmp/SD10433.000000"
 
-. mixed gcse i.schgend##c.lrt i.girl || school: lrt, ///
->     covariance(unstructured) mle
+. preserve
 
-Performing EM optimization: 
+. keep if number <= 6 && number <= 12
+6& invalid name
+r(198);
 
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(6)      =     823.16
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
--------------------------------------------------------------------------------
-         gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-      schgend |
-   boys only  |   1.665861   1.103862     1.51   0.131    -.4976696    3.829391
-  girls only  |   1.568706   .8664248     1.81   0.070    -.1294558    3.266867
-              |
-          lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-              |
-schgend#c.lrt |
-   boys only  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-  girls only  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
-              |
-       1.girl |   1.676371   .3384293     4.95   0.000     1.013062     2.33968
-        _cons |  -1.810188   .5357075    -3.38   0.001    -2.860156    -.760221
--------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                    var(lrt) |   .0145709   .0045633      .0078869    .0269195
-                  var(_cons) |   7.946854   1.634542      5.310269    11.89252
-              cov(lrt,_cons) |   .2004185   .0668185      .0694566    .3313803
------------------------------+------------------------------------------------
-               var(Residual) |   55.01891   1.241702      52.63826    57.50723
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
 end of do-file
 
-. do "/tmp/SD04733.000000"
+r(198);
 
-. mixed gcse i.schgend##c.lrt##i.girl || school: lrt, ///
->     covariance(unstructured) mle stddev
-note: 2.schgend#1.girl identifies no observations in the sample
-note: 3.schgend#0.girl identifies no observations in the sample
-note: 3.schgend#1.girl omitted because of collinearity
-note: 2.schgend#1.girl#c.lrt identifies no observations in the sample
-note: 3.schgend#0.girl#c.lrt identifies no observations in the sample
-note: 3.schgend#1.girl#c.lrt omitted because of collinearity
+. do "/tmp/SD10433.000000"
 
-Performing EM optimization: 
+. keep if number <= 6 & number <= 12
+(3,654 observations deleted)
 
-Performing gradient-based optimization: 
+. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
-Iteration 0:   log likelihood = -13986.509  
-Iteration 1:   log likelihood = -13986.509  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(7)      =     822.99
-Log likelihood = -13986.509                     Prob > chi2       =     0.0000
-
-------------------------------------------------------------------------------------
-              gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------------+----------------------------------------------------------------
-           schgend |
-        boys only  |   1.671756    1.10358     1.51   0.130    -.4912206    3.834733
-       girls only  |   1.574159   .8662123     1.82   0.069    -.1235864    3.271903
-                   |
-               lrt |   .5575882   .0308811    18.06   0.000     .4970625     .618114
-                   |
-     schgend#c.lrt |
-        boys only  |  -.0096202     .05938    -0.16   0.871    -.1260029    .1067625
-       girls only  |  -.0309505   .0489599    -0.63   0.527    -.1269101    .0650092
-                   |
-            1.girl |   1.677041   .3384244     4.96   0.000     1.013741    2.340341
-                   |
-      schgend#girl |
-      boys only#1  |          0  (empty)
-     girls only#0  |          0  (empty)
-     girls only#1  |          0  (omitted)
-                   |
-        girl#c.lrt |
-                1  |   .0148526    .034126     0.44   0.663    -.0520331    .0817383
-                   |
-schgend#girl#c.lrt |
-      boys only#1  |          0  (empty)
-     girls only#0  |          0  (empty)
-     girls only#1  |          0  (omitted)
-                   |
-             _cons |  -1.816403   .5357118    -3.39   0.001    -2.866378   -.7664268
-------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207742   .0189007      .0888719    .1641285
-                   sd(_cons) |   2.817896   .2898336      2.303429    3.447267
-             corr(lrt,_cons) |   .5910903   .1384768      .2563335    .7992384
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417402      .0837      7.255154    7.583279
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.27                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-.  
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. tab schgend, generate(schgend)
-
-    schgend |      Freq.     Percent        Cum.
-------------+-----------------------------------
-      mixed |      2,169       53.44       53.44
-  boys only |        513       12.64       66.08
- girls only |      1,377       33.92      100.00
-------------+-----------------------------------
-      Total |      4,059      100.00
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. generate boy = 1-girl
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. 
-. mixed gcse i.schgend1#i.girl i.schgend2 i.schgend3 ///
->     lrt i.schgend2#c.lrt i.schgend3#c.lrt ///
->     || school: lrt, covariance(unstructured) mle stddev
-note: 0.schgend1#1.girl omitted because of collinearity
-note: 1.schgend1#1.girl omitted because of collinearity
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(6)      =     823.16
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
---------------------------------------------------------------------------------
-          gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
----------------+----------------------------------------------------------------
- schgend1#girl |
-          0 1  |          0  (omitted)
-          1 0  |  -1.676371   .3384293    -4.95   0.000     -2.33968   -1.013062
-          1 1  |          0  (omitted)
-               |
-    1.schgend2 |  -.0105102   1.105453    -0.01   0.992    -2.177159    2.156139
-    1.schgend3 |   1.568706   .8664248     1.81   0.070    -.1294558    3.266867
-           lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-               |
-schgend2#c.lrt |
-            1  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-               |
-schgend3#c.lrt |
-            1  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
-               |
-         _cons |  -.1338175   .5389784    -0.25   0.804    -1.190196    .9225608
---------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207099   .0189021      .0888081    .1640716
-                   sd(_cons) |   2.819017   .2899136      2.304402    3.448554
-             corr(lrt,_cons) |   .5889754   .1387669      .2539768    .7978006
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417473   .0837011      7.255223    7.583352
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. mixed gcse i.schgend1#i.girl i.schgend2 i.schgend3 ///
->     lrt i.schgend2#c.lrt i.schgend3#c.lrt, noconstant ///
->     || school: lrt, covariance(unstructured) mle stddev
-note: 0.schgend1#1.girl omitted because of collinearity
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(7)      =    1012.59
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
---------------------------------------------------------------------------------
-          gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
----------------+----------------------------------------------------------------
- schgend1#girl |
-          0 1  |          0  (omitted)
-          1 0  |  -1.810188   .5357075    -3.38   0.001    -2.860156    -.760221
-          1 1  |  -.1338175   .5389784    -0.25   0.804    -1.190196    .9225608
-               |
-    1.schgend2 |  -.1443277   .9651578    -0.15   0.881    -2.036002    1.747347
-    1.schgend3 |   1.434888   .6783762     2.12   0.034     .1052953    2.764481
-           lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-               |
-schgend2#c.lrt |
-            1  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-               |
-schgend3#c.lrt |
-            1  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
---------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207099   .0189021      .0888081    .1640716
-                   sd(_cons) |   2.819017   .2899136      2.304402    3.448554
-             corr(lrt,_cons) |   .5889754   .1387669      .2539768    .7978006
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417473   .0837011      7.255223    7.583352
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. mixed gcse i1.schgend1#i.girl i.schgend2 i.schgend3 ///
->     lrt i.schgend2#c.lrt i.schgend3#c.lrt, noconstant ///
->     || school: lrt, covariance(unstructured) mle stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(7)      =    1012.59
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
---------------------------------------------------------------------------------
-          gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
----------------+----------------------------------------------------------------
- schgend1#girl |
-          1 0  |  -1.810188   .5357075    -3.38   0.001    -2.860156    -.760221
-          1 1  |  -.1338175   .5389784    -0.25   0.804    -1.190196    .9225608
-               |
-    1.schgend2 |  -.1443277   .9651578    -0.15   0.881    -2.036002    1.747347
-    1.schgend3 |   1.434888   .6783762     2.12   0.034     .1052953    2.764481
-           lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-               |
-schgend2#c.lrt |
-            1  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-               |
-schgend3#c.lrt |
-            1  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
---------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207099   .0189021      .0888081    .1640716
-                   sd(_cons) |   2.819017   .2899136      2.304402    3.448554
-             corr(lrt,_cons) |   .5889754   .1387669      .2539768    .7978006
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417473   .0837011      7.255223    7.583352
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. 
-. mixed gcse i.girl i.schgend1#i.girl i.schgend2 ///
->     lrt i.schgend2#c.lrt i.schgend3#c.lrt, noconstant ///
->     || school: lrt, covariance(unstructured) mle stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(7)      =    1012.59
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
---------------------------------------------------------------------------------
-          gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
----------------+----------------------------------------------------------------
-        1.girl |   1.434888   .6783762     2.12   0.034     .1052953    2.764481
-               |
- schgend1#girl |
-          1 0  |  -1.810188   .5357075    -3.38   0.001    -2.860156    -.760221
-          1 1  |  -1.568706   .8664248    -1.81   0.070    -3.266867    .1294558
-               |
-    1.schgend2 |  -.1443277   .9651578    -0.15   0.881    -2.036002    1.747347
-           lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-               |
-schgend2#c.lrt |
-            1  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-               |
-schgend3#c.lrt |
-            1  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
---------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207099   .0189021      .0888081    .1640716
-                   sd(_cons) |   2.819017   .2899136      2.304402    3.448554
-             corr(lrt,_cons) |   .5889754   .1387669      .2539768    .7978006
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417473   .0837011      7.255223    7.583352
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
-. 
-end of do-file
-
-. do "/tmp/SD04733.000000"
-
-. mixed gcse i.boy i.schgend1#i.boy i.schgend3 ///
->     lrt i.schgend2#c.lrt i.schgend3#c.lrt, noconstant ///
->     || school: lrt, covariance(unstructured) mle stddev
-
-Performing EM optimization: 
-
-Performing gradient-based optimization: 
-
-Iteration 0:   log likelihood = -13986.604  
-Iteration 1:   log likelihood = -13986.604  
-
-Computing standard errors:
-
-Mixed-effects ML regression                     Number of obs     =      4,059
-Group variable: school                          Number of groups  =         65
-
-                                                Obs per group:
-                                                              min =          2
-                                                              avg =       62.4
-                                                              max =        198
-
-                                                Wald chi2(7)      =    1012.59
-Log likelihood = -13986.604                     Prob > chi2       =     0.0000
-
---------------------------------------------------------------------------------
-          gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
----------------+----------------------------------------------------------------
-         1.boy |  -.1443277   .9651578    -0.15   0.881    -2.036002    1.747347
-               |
-  schgend1#boy |
-          1 0  |  -.1338175   .5389784    -0.25   0.804    -1.190196    .9225608
-          1 1  |  -1.665861   1.103862    -1.51   0.131    -3.829391    .4976696
-               |
-    1.schgend3 |   1.434888   .6783762     2.12   0.034     .1052953    2.764481
-           lrt |   .5638984     .02724    20.70   0.000      .510509    .6172878
-               |
-schgend2#c.lrt |
-            1  |   -.015932   .0575571    -0.28   0.782    -.1287419    .0968778
-               |
-schgend3#c.lrt |
-            1  |   -.022419   .0448568    -0.50   0.617    -.1103368    .0654987
---------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
------------------------------+------------------------------------------------
-school: Unstructured         |
-                     sd(lrt) |   .1207099   .0189021      .0888081    .1640716
-                   sd(_cons) |   2.819017   .2899136      2.304402    3.448554
-             corr(lrt,_cons) |   .5889754   .1387669      .2539768    .7978006
------------------------------+------------------------------------------------
-                sd(Residual) |   7.417473   .0837011      7.255223    7.583352
-------------------------------------------------------------------------------
-LR test vs. linear model: chi2(3) = 391.20                Prob > chi2 = 0.0000
-
-Note: LR test is conservative and provided only for reference.
-
+.     
 . 
 end of do-file
 

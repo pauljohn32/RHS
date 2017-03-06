@@ -12,6 +12,11 @@ sum
 * 3.3.1
 twoway (scatter measure age, sort)
 
+twoway (line measure age)
+* See the problem? There is "wrap around" connetion from
+* end of line on right to start of next stream on left.
+* ascending chops that connection
+
 sort idnr age
 twoway (line measure age, connect(ascending))
 
