@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.1-gcse/Ex-4.1.log
   log type:  text
- opened on:   6 Mar 2017, 08:45:49
+ opened on:  27 Mar 2017, 17:31:19
 
 . 
 . * London inner schools data
@@ -71,21 +71,22 @@ Group variable: school                          Number of groups  =         65
                                                 Wald chi2(5)      =     803.89
 Log likelihood = -13998.825                     Prob > chi2       =     0.0000
 
--------------------------------------------------------------------------------
-         gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-      schgend |
-   boys only  |   .8546715   1.085021     0.79   0.431    -1.271931    2.981274
-  girls only  |    2.43341   .8433413     2.89   0.004     .7804919    4.086329
-              |
-          lrt |   .5712361   .0271256    21.06   0.000     .5180708    .6244014
-              |
-schgend#c.lrt |
-   boys only  |  -.0230098   .0573895    -0.40   0.688    -.1354911    .0894716
-  girls only  |   -.029544   .0447032    -0.66   0.509    -.1171606    .0580726
-              |
-        _cons |  -.9976073    .506809    -1.97   0.049    -1.990935   -.0042799
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+        gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     schgend |
+  boys only  |   .8546715   1.085021     0.79   0.431    -1.271931    2.981274
+ girls only  |    2.43341   .8433413     2.89   0.004     .7804919    4.086329
+             |
+         lrt |   .5712361   .0271256    21.06   0.000     .5180708    .6244014
+             |
+     schgend#|
+       c.lrt |
+  boys only  |  -.0230098   .0573895    -0.40   0.688    -.1354911    .0894716
+ girls only  |   -.029544   .0447032    -0.66   0.509    -.1171606    .0580726
+             |
+       _cons |  -.9976073    .506809    -1.97   0.049    -1.990935   -.0042799
+------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
@@ -103,9 +104,9 @@ Note: LR test is conservative and provided only for reference.
 
 . 
 . * I noticed mixed has different output format than xtmixed
-. 
+. * Also prevent printing of ridiculous se on random effects
 . mixed gcse i.schgend##c.lrt || school: lrt, /// 
->    covariance(unstructured) mle stddev
+>    covariance(unstructured) mle stddev nostderr
 
 Performing EM optimization: 
 
@@ -113,8 +114,6 @@ Performing gradient-based optimization:
 
 Iteration 0:   log likelihood = -13998.825  
 Iteration 1:   log likelihood = -13998.825  
-
-Computing standard errors:
 
 Mixed-effects ML regression                     Number of obs     =      4,059
 Group variable: school                          Number of groups  =         65
@@ -127,71 +126,87 @@ Group variable: school                          Number of groups  =         65
                                                 Wald chi2(5)      =     803.89
 Log likelihood = -13998.825                     Prob > chi2       =     0.0000
 
--------------------------------------------------------------------------------
-         gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
---------------+----------------------------------------------------------------
-      schgend |
-   boys only  |   .8546715   1.085021     0.79   0.431    -1.271931    2.981274
-  girls only  |    2.43341   .8433413     2.89   0.004     .7804919    4.086329
-              |
-          lrt |   .5712361   .0271256    21.06   0.000     .5180708    .6244014
-              |
-schgend#c.lrt |
-   boys only  |  -.0230098   .0573895    -0.40   0.688    -.1354911    .0894716
-  girls only  |   -.029544   .0447032    -0.66   0.509    -.1171606    .0580726
-              |
-        _cons |  -.9976073    .506809    -1.97   0.049    -1.990935   -.0042799
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+        gcse |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     schgend |
+  boys only  |   .8546715   1.085021     0.79   0.431    -1.271931    2.981274
+ girls only  |    2.43341   .8433413     2.89   0.004     .7804919    4.086329
+             |
+         lrt |   .5712361   .0271256    21.06   0.000     .5180708    .6244014
+             |
+     schgend#|
+       c.lrt |
+  boys only  |  -.0230098   .0573895    -0.40   0.688    -.1354911    .0894716
+ girls only  |   -.029544   .0447032    -0.66   0.509    -.1171606    .0580726
+             |
+       _cons |  -.9976073    .506809    -1.97   0.049    -1.990935   -.0042799
+------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
   Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
 -----------------------------+------------------------------------------------
 school: Unstructured         |
-                     sd(lrt) |   .1199154   .0189129      .0880287    .1633525
-                   sd(_cons) |   2.797934     .28868      2.285672    3.425005
-             corr(lrt,_cons) |   .5967727   .1381314      .2614253    .8035676
+                     sd(lrt) |   .1199154          .             .           .
+                   sd(_cons) |   2.797934          .             .           .
+             corr(lrt,_cons) |   .5967727          .             .           .
 -----------------------------+------------------------------------------------
-                sd(Residual) |   7.441831   .0839662      7.279067    7.608235
+                sd(Residual) |   7.441831          .             .           .
 ------------------------------------------------------------------------------
 LR test vs. linear model: chi2(3) = 381.45                Prob > chi2 = 0.0000
 
 Note: LR test is conservative and provided only for reference.
 
 . 
-end of do-file
-
-. do "/tmp/SD10433.000000"
-
+. 
+. 
+. * Make some plots. 
 . 
 . egen pickone = tag(school)
 
 . 
-end of do-file
+. twoway (scatter gcse lrt), by(schgend)
 
-. do "/tmp/SD10433.000000"
+. 
+. twoway (scatter gcse lrt) , by(schgend, compact legend(off))
 
-. egen pickone = tag(school) 
-variable pickone already defined
-r(110);
+. gsort +school +lrt
 
-end of do-file
+. predict gcsefit, fitted
 
-r(110);
+. * Note difference from "fitted" and "xb" there.  "fitted" includes
+. * random effects
+. 
+. * Trellis plot
+. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
-. do "/tmp/SD10433.000000"
+. 
+. * omit the by for spaghetti
+. twoway (scatter gcse lrt)(line gcsefit lrt, connect(ascending)), ///
+>                 xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predic
+> ted"))
 
-. preserve
+. 
+. 
+. twoway (scatter gcse lrt, msize(small) msymbol(smcircle_hollow) mlwidth(vvthi
+> n)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
-. keep if number <= 6
-number not found
-r(111);
-
-end of do-file
-
-r(111);
-
-. do "/tmp/SD10433.000000"
-
+. * I'm sorry to say that Stata makes this so tedious to color code the 
+. * dots with the school type that I'm stopping in anger.
+. 
+. 
+. 
+. * Goal: create a trellis plot for a subset of the groups
+. * This is the method in RHS p. 237. Creates a marker variable for the group
+. * then assigns random numbers to groups, then sorts, then creates numerical
+. * rank. 
+. * create 1 in first row for each school
+. * egen pickone = tag(school) 
 . set seed 234234
 
 . gen r = uniform() if pickone == 1
@@ -203,12 +218,21 @@ r(111);
 . egen number = mean(num), by(school)
 
 . 
-end of do-file
+. * Here's a partial fail
+. twoway (scatter gcse lrt if number<=6, msymbol(smcircle_hollow) mlwidth(vvthi
+> n)) ///
+>     (line gcsefit lrt, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
-. do "/tmp/SD10433.000000"
+. * Still a fail:
+. twoway (scatter gcse lrt if number<=6, msymbol(smcircle_hollow) mlwidth(vvthi
+> n)) ///
+>     (line gcsefit lrt if number<=6, connect(ascending)), ///
+>     by(school, compact legend(off)) ///
+>     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
-. preserve
-
+.     
 . keep if number <= 6
 (3,654 observations deleted)
 
@@ -216,28 +240,13 @@ end of do-file
 >     (line gcsefit lrt, connect(ascending)), ///
 >     by(school, compact legend(off)) ///
 >     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
-variable gcsefit not found
-r(111);
 
-end of do-file
-
-r(111);
-
-. do "/tmp/SD10433.000000"
-
-. gsort +school +lrt
-
-. predict gcsefit, fitted
-
-. 
-end of do-file
-
-. do "/tmp/SD10433.000000"
-
+. * Oops. destroyed data. How to avoid?
+. * run this as a block
 . preserve
 
 . keep if number <= 6
-(3,654 observations deleted)
+(0 observations deleted)
 
 . twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
 >     (line gcsefit lrt, connect(ascending)), ///
@@ -245,67 +254,9 @@ end of do-file
 >     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
 .  
-. 
-end of do-file
-
-. do "/tmp/SD10433.000000"
-
-. egen number = mean(num), by(school), replace
-variable number already defined
-r(110);
-
-end of do-file
-
-r(110);
-
-. drop number
-
-. do "/tmp/SD10433.000000"
-
-. egen number = mean(num), by(school)
-
-. 
-end of do-file
-
-. do "/tmp/SD10433.000000"
-
 . preserve
-
-. keep if number <= 6
-(3,654 observations deleted)
-
-. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
->     (line gcsefit lrt, connect(ascending)), ///
->     by(school, compact legend(off)) ///
->     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
-
-. 
-end of do-file
-
-. do "/tmp/SD10433.000000"
-
-. preserve
-
-. keep if number <= 6 && number <= 12
-6& invalid name
-r(198);
+already preserved
+r(621);
 
 end of do-file
-
-r(198);
-
-. do "/tmp/SD10433.000000"
-
-. keep if number <= 6 & number <= 12
-(3,654 observations deleted)
-
-. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
->     (line gcsefit lrt, connect(ascending)), ///
->     by(school, compact legend(off)) ///
->     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
-
-.     
-. 
-end of do-file
-
-. exit, clear
+r(621);
