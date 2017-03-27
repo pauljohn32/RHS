@@ -6,6 +6,7 @@ set more off, permanently
 log using Ex-5.1.log, replace text
 
 * Tax preparer data
+* Run download.do, which is just:
 * use http://www.stata-press.com/data/mlmus3/taxprep.dta, clear
 * saveold taxprep.dta12, version(12) replace
 use taxprep.dta12
