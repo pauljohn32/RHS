@@ -26,9 +26,9 @@ tab schgend
 mixed gcse i.schgend##c.lrt || school: lrt, covariance(unstructured) mle
 
 * I noticed mixed has different output format than xtmixed
-
+* Also prevent printing of ridiculous se on random effects
 mixed gcse i.schgend##c.lrt || school: lrt, /// 
-   covariance(unstructured) mle stddev
+   covariance(unstructured) mle stddev nostderr
 
 
 
