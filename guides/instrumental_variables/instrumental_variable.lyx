@@ -1,0 +1,1252 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass scrartcl
+\begin_preamble
+\usepackage[includehead,includefoot]{geometry}
+\geometry{
+lmargin=1in,
+rmargin=1in,
+tmargin=0.75in,
+bmargin=1.0in,
+headheight=0pt,
+headsep=0pt,
+marginparwidth=0pt,
+footskip=1.5\baselineskip,
+}
+
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\lstset{tabsize=2, breaklines=true, 
+  breakatwhitespace=true,
+  %language=R,
+  captionpos=b,
+  frame=single,
+  framerule=0.2pt,
+  framesep=1pt,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  showstringspaces=false,
+  basicstyle=\footnotesize,
+  identifierstyle=,
+  keywordstyle=\bfseries,
+  commentstyle=\color{darkgreen},
+  stringstyle=,
+  backgroundcolor=\color[gray]{0.935}
+}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{babel}
+% Now fancy header/footer settings
+\lhead{}
+\chead{}
+\rhead{}
+\renewcommand{\headrulewidth}{0pt}
+\lfoot{}
+\cfoot{{Page} \thepage { of} \pageref{LastPage}}
+\rfoot{}
+
+\fancypagestyle{firststyle}
+{
+\lfoot{}
+%\cfoot{{Page} \thepage { of} \pageref{LastPage}}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{1425 Jayhawk Blvd.\\470 Watson Library\\ Lawrence, KS 66045-7555}
+\fancyfoot[R]{Phone: 785-864-3353\\ Website: crmda.ku.edu\\ Email: crmda@ku.edu}
+\renewcommand{\footrulewidth}{.1pt}
+}
+
+\pagestyle{fancy}
+
+
+%graphics and such inside floats are centered by default
+\renewenvironment{figure}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{figure}
+ }{%
+   \@float{figure}[#1]%
+ }%
+ \centering
+}{%
+ \end@float
+}
+\renewenvironment{table}[1][]{%
+ \ifthenelse{\equal{#1}{}}{%
+   \@float{table}
+ }{%
+   \@float{table}[#1]%
+ }%
+
+ \centering
+%  \setlength{\@tempdima}{\abovecaptionskip}%
+%  \setlength{\abovecaptionskip}{\belowcaptionskip}%
+% \setlength{\belowcaptionskip}{\@tempdima}%
+}{%
+ \end@float
+}
+
+\thispagestyle{firststyle}
+\usepackage{lipsum}
+
+\usepackage{Sweavel}
+\end_preamble
+\use_default_options false
+\begin_modules
+logicalmkup
+sweave
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding iso8859-15
+\fontencoding global
+\font_roman "lmodern" "default"
+\font_sans "lmss" "default"
+\font_typewriter "lmtt" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 11
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\noindent
+\begin_inset Tabular
+<lyxtabular version="3" rows="1" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="1.6in">
+<column alignment="left" valignment="top" width="3in">
+<column alignment="right" valignment="top" width="2in">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "1in"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\shape smallcaps
+\size giant
+\begin_inset Graphics
+	filename theme/jayhawk.pdf
+	lyxscale 40
+	width 1in
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "3in"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\shape smallcaps
+\size giant
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+Instrumental Variables
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100line%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+Paul Johnson
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="right" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "2in"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\shape smallcaps
+\size giant
+\begin_inset Graphics
+	filename theme/CRMDA_logo.pdf
+	lyxscale 40
+	width 2in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://crmda.ku.edu
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "2in"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\shape smallcaps
+Guide No:
+\shape default
+ XXX
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\vb}[1]{\bm{\mathrm{#1}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+##unlink("tmpout", recursive=T)
+\end_layout
+
+\begin_layout Plain Layout
+
+if(!dir.exists("tmpout")) dir.create("tmpout", showWarnings=FALSE)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% In document Latex options:
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+fvset{listparameters={
+\backslash
+setlength{
+\backslash
+topsep}{0em}}}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+SweaveOpts{prefix.string=tmpout/t,split=T,ae=F,height=3,width=5}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<Roptions, echo=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+opts.orig <- options()
+\end_layout
+
+\begin_layout Plain Layout
+
+options(width=100, prompt=" ", continue="  ")
+\end_layout
+
+\begin_layout Plain Layout
+
+options(useFancyQuotes = FALSE) 
+\end_layout
+
+\begin_layout Plain Layout
+
+set.seed(12345)
+\end_layout
+
+\begin_layout Plain Layout
+
+options(SweaveHooks=list(fig=function() par(ps=10)))
+\end_layout
+
+\begin_layout Plain Layout
+
+pdf.options(onefile=FALSE,family="Times",pointsize=10)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+What's the problem?
+\end_layout
+
+\begin_layout Standard
+Suppose you estimate a model
+\begin_inset Formula 
+\begin{equation}
+y_{i}=\beta_{o}+\beta_{1}X1_{i}+\varepsilon_{i}\label{eq:lm}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unbeknownst to you, there is a devil who corrupts your data.
+ The devil has some unobserved error and it inserts that error into both
+ 
+\begin_inset Formula $X1$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+You thought you had (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:lm"
+
+\end_inset
+
+), but really you have
+\begin_inset Formula 
+\[
+y_{i}=\beta_{o}+\beta_{1}^{bad}(X1_{i}+v_{i})+(\epsilon_{i}+v_{i})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is easy enough to run that regression, but the estimate you get, 
+\begin_inset Formula $\widehat{\beta_{1}^{bad}}$
+\end_inset
+
+ is not a consistent or unbiased estimate of 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+.
+ Why's that?
+\end_layout
+
+\begin_layout Standard
+We violated a basic assumption in regression analysis, which is that the
+ predictor is uncorrelated with the error term.
+ It is plain as day that the correlation between 
+\begin_inset Formula $(X1_{i}+v_{i})$
+\end_inset
+
+ and 
+\begin_inset Formula $(\epsilon_{i}+v_{i})$
+\end_inset
+
+ is not zero.
+ In the regression assumptions, we often glossed over that by asseting that
+ 
+\begin_inset Formula $X1_{i}$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+fixed
+\begin_inset Quotes erd
+\end_inset
+
+ regression (hence, it cannot be correlated with the error term).
+\end_layout
+
+\begin_layout Standard
+Lets make picture on blackboard, try to visualize the bad thing that happens,
+ how the estimate of 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+ is sent sideways.
+\end_layout
+
+\begin_layout Section
+Check the books
+\end_layout
+
+\begin_layout Standard
+In RHS, p.
+ 254, we find a display that explains IV.
+ Their presentation is quite nice, I think.
+ Their idea is that instead of a system with 1 equation, like (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:lm"
+
+\end_inset
+
+), but 
+\begin_inset Formula $X1_{i}$
+\end_inset
+
+ is predictable by a formula like this:
+\begin_inset Formula 
+\[
+X1_{i}=\gamma_{o}+\gamma_{1}Z_{i}+u_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+you actually have a system with 2 equations:
+\begin_inset Formula 
+\begin{align}
+y_{i} & =\beta_{o}+\beta_{1}X1_{i}+\varepsilon_{i}\label{eq:two}\\
+X1_{i} & =\gamma_{o}+\gamma_{1}Z_{i}+u_{i}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Because 
+\begin_inset Formula $X1$
+\end_inset
+
+ is predictable from 
+\begin_inset Formula $Z$
+\end_inset
+
+, it means that the regression devil actually has a sympathetic side.
+ It is not just 
+\begin_inset Formula $v_{i}$
+\end_inset
+
+ popping into our regression model 1.
+ There is actually some structure.
+\end_layout
+
+\begin_layout Standard
+A 
+\begin_inset Quotes eld
+\end_inset
+
+reduced form
+\begin_inset Quotes erd
+\end_inset
+
+ equation re-arranges a system so that the unobserved variables.
+\begin_inset Formula 
+\[
+y_{i}=\beta_{0}+\beta_{1}\{\gamma_{o}+\gamma_{1}Z_{i}+u_{i}\}+\varepsilon_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which rearranges as
+\begin_inset Formula 
+\[
+y_{i}=\beta_{0}+\beta_{1}\gamma_{0}+\beta_{1}\gamma_{1}Z_{i}+\{\beta_{1}u_{i}+\epsilon_{i}\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If we run the regression model using 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ as a predictor, the coefficient we receive is an estimate of 
+\begin_inset Formula $\{\beta_{1}\gamma_{1}\}$
+\end_inset
+
+, not 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+by itself.
+\begin_inset Formula 
+\begin{equation}
+\widehat{\beta_{1}\gamma_{1}}=\frac{Cov(y,Z)}{Var(Z)}\label{eq:numer}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If only we could find a way to get rid of 
+\begin_inset Formula $\gamma_{1}$
+\end_inset
+
+ from that formula! 
+\end_layout
+
+\begin_layout Standard
+Suppose we run a regression
+\begin_inset Formula 
+\[
+X1=\gamma_{o}+\gamma_{1}Z_{i}+u_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and get an estimate
+\begin_inset Formula 
+\begin{equation}
+\hat{\gamma_{1}}=\frac{Cov(X1,Z)}{Var(Z)}\label{eq:denom}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Take the original estimator (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:numer"
+
+\end_inset
+
+) and divide by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:denom"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\frac{\widehat{\beta_{1}\gamma_{1}}}{\widehat{\gamma_{1}}}=\frac{\frac{Cov(y,Z)}{Var(Z)}}{\frac{Cov(X1,Z)}{Var(Z)}}=\frac{Cov(y,Z)}{Cov(X1,Z)}\label{eq:ratio}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Can I give you an intuition?
+\end_layout
+
+\begin_layout Standard
+Beyond the most basic intuition about the ratio (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ratio"
+
+\end_inset
+
+) giving us an estimate of 
+\begin_inset Formula $\beta_{1}$
+\end_inset
+
+, I have not much to say.
+ Maybe there is an intuition.
+\end_layout
+
+\begin_layout Standard
+The problem is that 
+\begin_inset Formula $X1$
+\end_inset
+
+ is correlated with the residual.
+ One can think of IV estimation as a two step process.
+\end_layout
+
+\begin_layout Enumerate
+Stage 1.
+ Create a new variable, 
+\begin_inset Formula $\breve{X1}$
+\end_inset
+
+, from which we have removed the correlation with the residual.
+ 
+\end_layout
+
+\begin_layout Enumerate
+State 2.
+ Replace 
+\begin_inset Formula $X1$
+\end_inset
+
+ with 
+\begin_inset Formula $\breve{X1}$
+\end_inset
+
+ and then run the regression
+\begin_inset Formula 
+\[
+y_{i}=\beta_{o}+\beta_{1}\breve{X}1_{i}+\varepsilon_{i}
+\]
+
+\end_inset
+
+The coefficient we get from that run turns out to be the same as the ratio
+ estimate above.
+\end_layout
+
+\begin_layout Standard
+In stage 1, of course, this all supposes that we have a good predictor for
+ 
+\begin_inset Formula $X1$
+\end_inset
+
+, commonly called 
+\begin_inset Formula $Z$
+\end_inset
+
+, and that 
+\begin_inset Formula $Z$
+\end_inset
+
+ is uncorrelated with the residual 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+.
+ Because 
+\begin_inset Formula $E[Z,\epsilon]=0$
+\end_inset
+
+, we have 
+\begin_inset Quotes eld
+\end_inset
+
+purged
+\begin_inset Quotes erd
+\end_inset
+
+ the correlated part from the model.
+ 
+\end_layout
+
+\begin_layout Standard
+To be explicit, stage 1 estimates a predicted value from
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X1=\gamma_{o}+\gamma_{1}Z_{i}+u_{i}\label{eq:stage1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In stage 2, we let the predicted value 
+\begin_inset Formula $\widehat{X1}$
+\end_inset
+
+ serve as the new, improved 
+\begin_inset Formula $X1$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Why is the predicted value have good as an instrument? Most importantly,
+ 
+\end_layout
+
+\begin_layout Enumerate
+the predicted value is uncorrelated with the regression residual.
+\end_layout
+
+\begin_layout Enumerate
+Because equation (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:stage1"
+
+\end_inset
+
+) does not have 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ in it, the predicted value is, by definition, uncorrelated with 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+How do I know 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ is not in the equation? Well, its is not in there, and
+\end_layout
+
+\begin_layout Enumerate
+We assume that 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ is uncorrelated with 
+\begin_inset Formula $\epsilon_{i}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection*
+Matrices
+\end_layout
+
+\begin_layout Standard
+If you work that out in matrix algebra, letting 
+\begin_inset Formula $\vb X=[1,X1]$
+\end_inset
+
+ and 
+\begin_inset Formula $Z=[1,Z]$
+\end_inset
+
+, the 
+\begin_inset Quotes eld
+\end_inset
+
+usual
+\begin_inset Quotes erd
+\end_inset
+
+ OLS regression estimator 
+\begin_inset Formula 
+\begin{equation}
+(\vb X^{T}\vb X)^{-1}\vb X^{T}y\label{eq:ols}
+\end{equation}
+
+\end_inset
+
+ turns into the IV estimator
+\begin_inset Formula 
+\begin{equation}
+(\vb Z^{T}\vb X)^{-1}\vb Z^{T}y\label{eq:IV}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Of course, if 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ is almost exactly like 
+\begin_inset Formula $\vb X$
+\end_inset
+
+, then the IV estimator is almost just the same as the OLS estimator.
+ 
+\end_layout
+
+\begin_layout Standard
+In the book 
+\emph on
+Microeconometrics Using Stata
+\emph default
+ 2ed, Cameron and Trivedi justify this by saying that the fundamental assumption
+ of instrumental variables regression is that the new variable, 
+\begin_inset Formula $Z$
+\end_inset
+
+, must be uncorrelated with the error term in the original model.
+ The assumption is, for case i
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\{z_{i}^{T}(y_{i}-X1_{i}^{T}\beta)\}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In matrix form, we assert that holds for all 
+\begin_inset Formula $i$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\{Z^{T}(y-\vb X\beta_{1})\}=\vb 0.
+\]
+
+\end_inset
+
+If we simply start with that assertion (a moment condition), 
+\begin_inset Formula 
+\[
+Z^{T}(y-\vb X\beta_{1})\}=\vb 0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Z^{T}y-Z^{T}\vb X\beta_{1}=\vb 0
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\beta_{1}=(\vb Z^{T}\vb X)\vb Z^{-1}y
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Identification
+\end_layout
+
+\begin_layout Description
+Under
+\begin_inset space ~
+\end_inset
+
+identified: We don't have a Z variable that 
+\begin_inset Quotes eld
+\end_inset
+
+works
+\begin_inset Quotes erd
+\end_inset
+
+ as an instrument for 
+\begin_inset Formula $X$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+Exactly
+\begin_inset space ~
+\end_inset
+
+identified: We have exactly one 
+\begin_inset Formula $Z$
+\end_inset
+
+ for each 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ That means the ratio in (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ratio"
+
+\end_inset
+
+) is a unique estimate.
+\end_layout
+
+\begin_layout Description
+Over
+\begin_inset space ~
+\end_inset
+
+identified: Suppose there are several predictors that work for 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ That means we can form several different ratios like (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ratio"
+
+\end_inset
+
+), one for each instrument.
+ In that case, we'd like to either a) get rid of some instruments, or b)
+ blend the instruments together.
+ Two stage least squares is one way to blend these together.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+<<opts20, include=F>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+## Don't delete this.
+ It puts the interactive session options
+\end_layout
+
+\begin_layout Plain Layout
+
+## back the way they were.
+ If this is compiled within a session
+\end_layout
+
+\begin_layout Plain Layout
+
+## it is vital to do this.
+\end_layout
+
+\begin_layout Plain Layout
+
+options(opts.orig)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
