@@ -19,7 +19,8 @@ xtsum
 
 
 
-mixed anti pov momage female childage hispanic black momwork married || id: , covariance(unstructured) mle stddev
+mixed anti pov momage female childage hispanic black momwork married || id: , ///
+                     covariance(unstructured) mle stddev
 estimates store ri1
 
 
@@ -46,7 +47,7 @@ psi
     psi + theta
 
 
-generate icc = 1.1469 / (1.1469 + 1.0127)
+generate icc = 1.1469^2 / (1.1469^2 + 1.0127^2)
 * flabbergasted Stata makes it so difficult to do this programatically
 
 
@@ -68,11 +69,27 @@ foreach var of varlist anti pov momage female childage hispanic black momwork ma
 
 
 mixed anti momage female childage hispanic black ///
-                                               momwork married pov_mn pov_dev || id: , ///
-                                                                          covariance(unstructured) mle stddev
+                    momwork married pov_mn pov_dev || id: , ///
+                    covariance(unstructured) mle stddev
 estimates store ri5
 
 
 * 5.2.5 comparing the between and within estimates
 
 lincom pov_mn - pov_dev
+
+
+
+
+** What to do? Observe next the fact that a fixed effects
+** approach throws out all of the non-time-varying variables
+xtset id occ
+xtreg anti momage female childage hispanic black ///
+                    momwork married pov, ///
+                    fe
+
+
+xthtaylor anti momage female childage hispanic black ///
+                 momwork married pov, endog(momwork pov) ///
+               constant(female hispanic black momage childage momwork married)
+

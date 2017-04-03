@@ -662,6 +662,20 @@ Lets make picture on blackboard, try to visualize the bad thing that happens,
  is sent sideways.
 \end_layout
 
+\begin_layout Standard
+We'd like to replace the observed 
+\begin_inset Formula $X1_{i}$
+\end_inset
+
+ with an improved column of numbers, one which is not correlated with 
+\begin_inset Formula $(\epsilon_{i}+v_{i})$
+\end_inset
+
+.
+ We don't clean up the error term, we instead try to protect our predictor
+ from it.
+\end_layout
+
 \begin_layout Section
 Check the books
 \end_layout
@@ -677,11 +691,12 @@ reference "eq:lm"
 
 \end_inset
 
-), but 
+), now we think of 
 \begin_inset Formula $X1_{i}$
 \end_inset
 
- is predictable by a formula like this:
+ as being an endogenous variable, something that is predictable by a formula
+ like this:
 \begin_inset Formula 
 \[
 X1_{i}=\gamma_{o}+\gamma_{1}Z_{i}+u_{i}
@@ -703,6 +718,34 @@ X1_{i} & =\gamma_{o}+\gamma_{1}Z_{i}+u_{i}\nonumber
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The error terms 
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $u_{i}$
+\end_inset
+
+ are 
+\begin_inset Quotes eld
+\end_inset
+
+correlated
+\begin_inset Quotes erd
+\end_inset
+
+ with each other.
+ Because I have a difficult time saying what exactly correlated means, I
+ shy away from that a bit.
+ I'd rather say there is an omitted variable 
+\begin_inset Formula $v_{i}$
+\end_inset
+
+ going into both of them.
+ But if you like the correlation idea, I don't want to argue against that.
 \end_layout
 
 \begin_layout Standard
@@ -1047,7 +1090,7 @@ usual
  turns into the IV estimator
 \begin_inset Formula 
 \begin{equation}
-(\vb Z^{T}\vb X)^{-1}\vb Z^{T}y\label{eq:IV}
+\beta^{IV}=(\vb Z^{T}\vb X)^{-1}\vb Z^{T}y\label{eq:IV}
 \end{equation}
 
 \end_inset
@@ -1065,7 +1108,102 @@ Of course, if
 \end_inset
 
 , then the IV estimator is almost just the same as the OLS estimator.
- 
+\end_layout
+
+\begin_layout Standard
+The statistical properties of (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:IV"
+
+\end_inset
+
+) are pretty easy to see if we replace 
+\begin_inset Formula $y$
+\end_inset
+
+ with 
+\begin_inset Formula $X\beta+\epsilon$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\vb{\beta}^{IV}=(\vb Z^{T}\vb X)^{-1}\vb Z^{T}(\vb X\vb{\beta}+\epsilon)\label{eq:IV-1}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+=\cancel{(\vb Z^{T}\vb X)^{-1}}\cancel{(\vb Z^{T}X)}\vb{\beta}+(\vb Z^{T}\vb X)^{-1}\vb Z^{T}\epsilon
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We insert 
+\begin_inset Formula $1=\frac{N}{N}$
+\end_inset
+
+ (
+\begin_inset Formula $N$
+\end_inset
+
+ is sample size).
+\begin_inset Formula 
+\[
+=\vb{\beta}+(\frac{1}{N}\vb{Z^{T}}\vb X)^{-1}\frac{1}{N}\vb Z^{T}\epsilon
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By inserting 
+\begin_inset Formula $N$
+\end_inset
+
+ in this way, we can understand the large sample properties of this estimator.
+ If, as 
+\begin_inset Formula $N\rightarrow\infty$
+\end_inset
+
+, the correlation between the instrument and the error shrinks to 0, the
+ second term will vanish.
+ This presupposes that 
+\begin_inset Formula $(\frac{1}{N}\vb{Z^{T}}\vb X)$
+\end_inset
+
+ can be 
+\begin_inset Quotes eld
+\end_inset
+
+solved
+\begin_inset Quotes erd
+\end_inset
+
+ (inverted), which basically requires that 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ is related to 
+\begin_inset Formula $\vb X$
+\end_inset
+
+, no matter how weakly.
 \end_layout
 
 \begin_layout Standard
@@ -1205,6 +1343,73 @@ reference "eq:ratio"
  In that case, we'd like to either a) get rid of some instruments, or b)
  blend the instruments together.
  Two stage least squares is one way to blend these together.
+\end_layout
+
+\begin_layout Section
+Believable examples
+\end_layout
+
+\begin_layout Subsection*
+Exogenous changes in education
+\end_layout
+
+\begin_layout Standard
+Outcome variable is wage.
+ Years of education is a predictor.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+wage_{i}=\beta_{0}+\beta_{1}ed_{i}+\varepsilon_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We suspect that there is an unmeasured variable, 
+\begin_inset Quotes eld
+\end_inset
+
+ability
+\begin_inset Quotes erd
+\end_inset
+
+ which contributes to both wages and years in education (people who are
+ more able perhaps find school easier or more tolerable).
+ Rather than (), we in fact are confronted by the unmeasured ability, which
+ both affects wage and education
+\begin_inset Formula 
+\begin{align*}
+wage_{i} & =\beta_{0}+\beta_{1}ed_{i}+\{\varepsilon_{i}+ability_{i}\}\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As an instrument for 
+\begin_inset Formula $ed_{i}$
+\end_inset
+
+ , we need predictors that affect a person's level of education that do
+ not also belong in the 
+\begin_inset Formula $wage_{i}$
+\end_inset
+
+ equation.
+ Card (1995) suggests distance from a person's home to nearest school as
+ an instrument.
+ In the review essay by Imbens (2014), there is a list of instruments for
+ education that have been suggested.
+ The key thing is that there are variables which seem not related to wages
+ (employers don't pay more when students drive further to school, do they?).
 \end_layout
 
 \begin_layout Standard
