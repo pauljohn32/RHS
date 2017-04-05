@@ -34,6 +34,8 @@ m2.2 <- lmer(lntax ~  timef + prep + ms + hh + depend + age + lntpi + mr +
                emp + (1|subjectf), data = dat, REML = FALSE)
 summary(m2.2)
 
+anova(m2.1, m2.2)
+
 ## Introduce time as a random effect as well, just to see what might happen
 m2.3 <- lmer(lntax ~  0 + prep + ms + hh + depend + age + lntpi + mr +
                emp + (1|subjectf) + (1|timef), data = dat, REML = FALSE)
@@ -113,14 +115,8 @@ dat.plm <- plm.data(dat.orig, indexes = c("subjectf", "time"))
 summary(dat.plm)
 
 ## Note how time gets omitted from the output because the "mean" of time is constant
-plm_b <- plm(lntax ~ time + prep + ms + hh + depend + age + lntpi + mr + emp,
+plm_b <- plm(lntax ~ prep + ms + hh + depend + age + lntpi + mr + emp,
              data = dat, effect = "individual", model = "between", index = "subjectf")
-summary(plm_b)
-
-
-## use dat.plm, silences the warning about time_mn being a constant
-plm_b <- plm(lntax ~ time + prep + ms + hh + depend + age + lntpi + mr + emp,
-             data = dat.plm, effect = "individual", model = "between", index = "subjectf")
 summary(plm_b)
 
 
@@ -142,7 +138,7 @@ coef(summary(m2_w2))[ -grep("subject", names(coef(m2_w2))),]
 ## If you did want to treat time as numeric, you need to rename that variable.
 
 ## Treat time as a factor with fixed coefficients:
-plm_w2 <- plm(lntax ~  time + prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
+plm_w2 <- plm(lntax ~   prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
              effect = "individual", model = "within", index = "subject")
 summary(plm_w2)
 
@@ -165,17 +161,17 @@ summary(plm_w3)
 ## from lmer output These vary in the caluclation of the variance
 ## components
 
-plm_r1 <- plm(lntax ~ time + prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
+plm_r1 <- plm(lntax ~  prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
              effect = "individual", model = "random", index = "subject")
 summary(plm_r1)
 
 ## Compare that to lmer output:
-lmer_r1 <- lmer(lntax ~ timef + prep + ms + hh + depend + age + lntpi + mr + emp + (1|subjectf), data = dat,
+lmer_r1 <- lmer(lntax ~  prep + ms + hh + depend + age + lntpi + mr + emp + (1|subjectf), data = dat,
                 REML=FALSE)
 summary(lmer_r1)
 
 ## Might as well try some alternative "random.method" estimators
-plm_r2 <- plm(lntax ~ timef + prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
+plm_r2 <- plm(lntax ~  prep + ms + hh + depend + age + lntpi + mr + emp, data = dat.plm,
              effect = "individual", model = "random", index = "subject", random.method = "nerlove")
 summary(plm_r2)
 

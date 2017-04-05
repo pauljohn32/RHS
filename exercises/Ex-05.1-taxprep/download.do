@@ -7,7 +7,7 @@ log using download.log, replace text
 
 
 * Tax preparer data
-use http://www.stata-press.com/data/mlmus3/anorexia, clear
+use http://www.stata-press.com/data/mlmus3/taxprep, clear
 saveold taxprep.dta12, version(12) replace
 
 

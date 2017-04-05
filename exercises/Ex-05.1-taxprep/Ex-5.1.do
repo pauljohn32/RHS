@@ -18,20 +18,20 @@ xtsum
 
 help summarize
 
-mixed lntax time prep ms hh depend age lntpi mr emp || subject: , ///
+mixed lntax prep ms hh depend age lntpi mr emp || subject: , ///
     mle covariance(unstructured) stddev
 estimates store re1
 
-xtreg lntax time prep ms hh depend age lntpi mr emp, be
+xtreg lntax prep ms hh depend age lntpi mr emp, be
 * Note time disappears. Figure out why (below)
 estimates store be1
 
-xtreg lntax time prep ms hh depend age lntpi mr emp, fe
+xtreg lntax prep ms hh depend age lntpi mr emp, fe
 estimates store fe1
 predict fe1_u, u
 * When we have the group level data summary below, look at std.dev.(fe1_u)
 
-regress lntax time prep ms hh depend age lntpi mr emp i.subject
+regress lntax prep ms hh depend age lntpi mr emp i.subject
 
 
 

@@ -80,16 +80,16 @@ lincom pov_mn - pov_dev
 
 
 
-
-** What to do? Observe next the fact that a fixed effects
-** approach throws out all of the non-time-varying variables
-xtset id occ
-xtreg anti momage female childage hispanic black ///
-                    momwork married pov, ///
-                    fe
-
-
-xthtaylor anti momage female childage hispanic black ///
-                 momwork married pov, endog(momwork pov) ///
-               constant(female hispanic black momage childage momwork married)
-
+//
+// ** What to do? Observe next the fact that a fixed effects
+// ** approach throws out all of the non-time-varying variables
+// xtset id occ
+// xtreg anti momage female childage hispanic black ///
+//                     momwork married pov, ///
+//                     fe
+//
+//
+// xthtaylor anti momage female childage hispanic black ///
+//                  momwork married pov, endog(momwork pov) ///
+//                constant(female hispanic black momage childage momwork married)
+//
