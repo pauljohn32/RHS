@@ -131,7 +131,7 @@ sweave
 \use_geometry false
 \use_package amsmath 1
 \use_package amssymb 1
-\use_package cancel 0
+\use_package cancel 1
 \use_package esint 1
 \use_package mathdots 0
 \use_package mathtools 0
@@ -1004,7 +1004,19 @@ In stage 2, we let the predicted value
 \end_inset
 
 .
- 
+ What is the value of 
+\begin_inset Formula $\breve{X}1_{i}=\widehat{X1}$
+\end_inset
+
+? Well, obviously
+\begin_inset Formula 
+\[
+\breve{X}1_{i}=\hat{\gamma}_{0}+\hat{\gamma}_{1}Z_{i}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1082,7 +1094,7 @@ usual
  OLS regression estimator 
 \begin_inset Formula 
 \begin{equation}
-(\vb X^{T}\vb X)^{-1}\vb X^{T}y\label{eq:ols}
+\hat{\beta_{OLS}}=(\vb X^{T}\vb X)^{-1}\vb X^{T}y\label{eq:ols}
 \end{equation}
 
 \end_inset
@@ -1090,7 +1102,7 @@ usual
  turns into the IV estimator
 \begin_inset Formula 
 \begin{equation}
-\beta^{IV}=(\vb Z^{T}\vb X)^{-1}\vb Z^{T}y\label{eq:IV}
+\beta_{IV}=(\vb Z^{T}\vb X)^{-1}\vb Z^{T}y\label{eq:IV}
 \end{equation}
 
 \end_inset
@@ -1345,12 +1357,523 @@ reference "eq:ratio"
  Two stage least squares is one way to blend these together.
 \end_layout
 
+\begin_deeper
+\begin_layout Standard
+Some authors suggest that we should just pick 1 instrument 
+\begin_inset Formula $Z$
+\end_inset
+
+ for a predictor.
+ Greene suggests that's a mistake, and suggests instead we should use all
+ instrumental columns and we blend them together by 2SLS (2008, p.
+ 318).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Weak and Invalid Instruments
+\end_layout
+
+\begin_layout Standard
+Hahn and Hausman wrote a series of articles about problems that arise in
+ the use of IV models.
+ This is a review essay about their many projects.
+\end_layout
+
+\begin_layout Standard
+Hahn, Jinyong, and Hausman, Jerry.
+ 2003.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Weak Instruments: Diagnosis and Cures in Empirical Econometrics
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+The American Economic Review
+\emph default
+, Vol.
+ 93, No.
+ 2, pp.
+ .
+\end_layout
+
+\begin_layout Standard
+Hahn, Jinyong, and Hausman, 2005, 
+\begin_inset Quotes eld
+\end_inset
+
+Estimation with Valid and Invalid Instruments
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+Annales d'Économie et de Statistique
+\emph default
+, No.
+ 79/80, pp.
+ 25-57.
+\end_layout
+
+\begin_layout Subsection
+Invalid
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ does belong as a predictor of 
+\begin_inset Formula $\vb y$
+\end_inset
+
+, but we assume it is not, then 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ is an invalid instrument.
+ If we use 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ as an instrument to generate a predicted value of 
+\begin_inset Formula $\vb X$
+\end_inset
+
+, the predictor 
+\begin_inset Formula $\vb{\breve{X}=\hat{X}=Z\hat{\gamma}}$
+\end_inset
+
+ is not helpful.
+ If we replace 
+\begin_inset Formula $X$
+\end_inset
+
+ with that, then we are inserting something that is correlated with the
+ error term.
+\end_layout
+
+\begin_layout Standard
+Jargon: 
+\begin_inset Quotes eld
+\end_inset
+
+exclusion restriction
+\begin_inset Quotes erd
+\end_inset
+
+: making the IV model work requires the assumption–on a theoretical level–that
+ 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ does not belong in the regression prediction of 
+\begin_inset Formula $y$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+Weak
+\end_layout
+
+\begin_layout Standard
+If the instrument 
+\begin_inset Formula $Z$
+\end_inset
+
+ is not highly predictive of 
+\begin_inset Formula $X$
+\end_inset
+
+, then the final estimates with have high standard errors.
+ Even if 
+\begin_inset Formula $X$
+\end_inset
+
+ truly does influence 
+\begin_inset Formula $y$
+\end_inset
+
+, the model does not help us see the effect.
+\end_layout
+
+\begin_layout Standard
+You'll find some caution about IV (or 2SLS) giving biased estimates in the
+ literature.
+ As Hahn and Hausman point out on many occasions, the bias is not worse
+ than OLS.
+ In fact, as the instrument becomes weaker, the 2SLS estimate moves away
+ from the correct value toward the value that OLS gave.
+ As a result, there is no good reason to prefer OLS (it seems to me, anyway).
+ 
+\end_layout
+
+\begin_layout Standard
+In Hahn and Hausman (2003), they consider a weak instrument with 
+\begin_inset Formula $R^{2}=0.01$
+\end_inset
+
+, a very weak instrument, and show that the final estimates of the standard
+ errors are distorted.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+As either the number of instrument grows or the covariance between the structura
+l and reduced-term stochastic disturbances be- comes large, the downward
+ bias in the estimation of 
+\begin_inset Formula $\sigma_{\varepsilon\varepsilon}$
+\end_inset
+
+will become large.
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 121).
+ As Hahn and Hausman observed elsewhere, 
+\begin_inset Quotes eld
+\end_inset
+
+The estimated standard errors for the 2SLS estimator are downward biased,
+ sometimes leading to the mistaken inference that the 2SLS estimates are
+ much more precise than they actually are.
+\begin_inset Quotes erd
+\end_inset
+
+ (2005, p.
+ 37)
+\end_layout
+
+\begin_layout Standard
+If the instrument is invalid–even slightly correlated with the error term–the
+ damage from weak instruments is more dramatic.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Thus, when the 
+\begin_inset Formula $R^{2}$
+\end_inset
+
+ is small (e.g., 0.01), a large amount of bias results which does not decrease
+ with increasing sample size
+\begin_inset Quotes erd
+\end_inset
+
+ (p.
+ 123).
+\end_layout
+
 \begin_layout Section
 Believable examples
 \end_layout
 
+\begin_layout Standard
+This is the most difficult part of IV-based modeling.
+ We need a predictor variable 
+\begin_inset Formula $Z$
+\end_inset
+
+ that 
+\end_layout
+
+\begin_layout Enumerate
+DOES NOT belong as a predictor in the model for 
+\begin_inset Formula $y$
+\end_inset
+
+ which, by implication,means that
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+omitting it from the model for 
+\begin_inset Formula $y$
+\end_inset
+
+ does not make the model wrong
+\end_layout
+
+\begin_layout Enumerate
+omitting the variable, and letting its 'influence' go 'into' the error term
+ does not have any effect.
+ In other words, the error in the original model 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is uncorrelated with the instrumental variable.
+ 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon$
+\end_inset
+
+ can only be 
+\begin_inset Quotes eld
+\end_inset
+
+uncorrelated
+\begin_inset Quotes erd
+\end_inset
+
+ if 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ does not belong in the model for 
+\begin_inset Formula $y$
+\end_inset
+
+ in the first place!
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+DOES serve as a predictor of 
+\begin_inset Formula $X$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+As I have searched for persuasive examples of IV, I have been mostly disappointe
+d.
+ I have found some comfort in the misery of others.
+ William Greene (2008, p.
+ 319) wrote, 
+\begin_inset Quotes eld
+\end_inset
+
+An obvious question is where one is likely to find a suitable set of instrumenta
+l variables.
+ In many time-series settings, lagged values of the variables in the model
+ provide natural candidates.
+ In other cases, the answer is less obvious.
+ The asymptotic covariance matrix of the IV estimator can be rather large
+ if 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ is not highly correlated with 
+\begin_inset Formula $\vb X$
+\end_inset
+
+; the elements of 
+\begin_inset Formula $(\vb Z^{T}\vb X)^{-1}$
+\end_inset
+
+ grow large.
+ Unfortunately there usually is not much choice in the selection of instrumental
+ variables.
+ The choice of 
+\begin_inset Formula $\vb Z$
+\end_inset
+
+ is often ad hoc.
+ There is a bit of a dilemma in this result.
+ It would seem to suggest that the best choices of instruments are variables
+ that are highly correlated with 
+\begin_inset Formula $\vb X$
+\end_inset
+
+.
+ But the more highly correlated a variable is with the problematic columns
+ of 
+\begin_inset Formula $\vb X$
+\end_inset
+
+, the less defensible the claim that these same variables are 
+\emph on
+uncorrelated 
+\emph default
+with the disturbances.
+\begin_inset Quotes erd
+\end_inset
+
+ (2008, 
+\emph on
+Econometric Analysis 6th ed
+\emph default
+, p.
+ 319).
+\end_layout
+
 \begin_layout Subsection*
-Exogenous changes in education
+Greene's Wage example
+\end_layout
+
+\begin_layout Standard
+Greene (2008, p.
+ 320) presents a regression model for wages that depends on personal characteris
+tics as well as weeks worked:
+\begin_inset Formula 
+\[
+ln\,Wage_{it}=\beta_{1}+\ldots+\beta_{4}Wks_{it}+\beta_{5}Occ_{it}+\ldots
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+He then observes that one should not estimate that model, because the variable
+ 
+\begin_inset Formula $Wks_{it}$
+\end_inset
+
+ is probably jointly determined with the wage.
+ That is to say, 
+\begin_inset Formula $Wks$
+\end_inset
+
+ should go up when 
+\begin_inset Formula $ln\,Wage$
+\end_inset
+
+ goes up, and as wages go down, then people will work fewer weeks.
+ He suggests there should be a second equation for weeks worked
+\begin_inset Formula 
+\[
+Wks_{it}=\gamma_{1}+\gamma_{2}lnWage_{it}+\gamma_{3}Ed_{i}+\gamma_{4}Union_{it}+\gamma_{5}Fem_{i}+u_{it}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since 
+\begin_inset Formula $Wks$
+\end_inset
+
+ and 
+\begin_inset Formula $lnWage$
+\end_inset
+
+ are jointly determined, we need instruments for 
+\begin_inset Formula $lnWage$
+\end_inset
+
+ here, and Greene compares 2 selections of instruments.
+ Here's a picture.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Greene-2008-p321.jpg
+	lyxscale 10
+	width 5in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The big point in this is that when we use OLS, and ignore the simultaneity,
+ we find wages do not affect the number of weeks that people work, which
+ seems, well, wrong.
+\end_layout
+
+\begin_layout Standard
+Greene does not delve into the comparison of the two IV estimators, but
+ there is an interesting difference.
+ The first shows a larger wage effect, with a larger standard error, while
+ the second shows a smaller effect with a much much smaller standard error.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Fish Markets
+\end_layout
+
+\begin_layout Standard
+Imbens, Guido W.
+ 2014.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Instrumental Variables: An Econometrician's Perspective
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\emph on
+Statistical Science
+\emph default
+ 29(3): 323–358.
+\end_layout
+
+\begin_layout Standard
+Imbens describes several examples of IV.
+ While studying impact of taxes on demand for fish, for example, the endogenous
+ variables are the price of fish and the quantity supplied to the market.
+ We need instruments to predict quantity that do not include the price of
+ fish.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+To identify the demand function, we look for determinants of the supply
+ of whiting that do not affect the demand for whiting, and, similarly, to
+ identify the supply function we look for determinants of the demand for
+ whiting that do not affect the supply.
+ In this specific case, Graddy (1995, 1996) assumes that weather conditions
+ at sea on the days prior to market 
+\begin_inset Formula $t$
+\end_inset
+
+, denoted by 
+\begin_inset Formula $Z_{t}$
+\end_inset
+
+ , affect supply but do not affect demand.
+ Certainly, it appears reasonable to think that weather is a direct determinant
+ of supply: having high waves and strong winds makes it harder to catch
+ fish.
+ On the other hand, there does not seem to be any reason why demand on day
+ 
+\begin_inset Formula $t$
+\end_inset
+
+, at a given price 
+\begin_inset Formula $p$
+\end_inset
+
+, would be correlated with wave height or wind speed on previous days.
+\begin_inset Quotes erd
+\end_inset
+
+(p.
+ 13)
+\end_layout
+
+\begin_layout Subsection*
+Instruments in wage/education models
+\end_layout
+
+\begin_layout Standard
+Hahn and Hausman (2005) claim that the study of education as an endogenous
+ predictor of wages was initiated by Griliches (1977).
+ This is probably the most well known example of IV, and not a particularly
+ persuasive example, I think, because there are so many competing, confusing
+ claims.
 \end_layout
 
 \begin_layout Standard
@@ -1398,18 +1921,40 @@ As an instrument for
 \begin_inset Formula $ed_{i}$
 \end_inset
 
- , we need predictors that affect a person's level of education that do
- not also belong in the 
+, we need predictors that affect a person's level of education that do not
+ also belong in the 
 \begin_inset Formula $wage_{i}$
 \end_inset
 
  equation.
  Card (1995) suggests distance from a person's home to nearest school as
  an instrument.
+ One might use the educational achievements of the child's parents, or the
+ IQ of the parents.
  In the review essay by Imbens (2014), there is a list of instruments for
  education that have been suggested.
  The key thing is that there are variables which seem not related to wages
  (employers don't pay more when students drive further to school, do they?).
+\end_layout
+
+\begin_layout Standard
+The Hausman-Taylor model extends that IV approach by including fixed individual
+ characteristics in repeated measures data.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Removing potentially correlated instruments has had a substantial effect:
+ the point estimates change and their standard errors increase.
+ All methods which control for correlation with the latent individual effects
+ increase the schooling coefficient over those which do not; and this is
+ certainly not the direction that many people concerned about ability bias
+ would have expected.
+\begin_inset Quotes erd
+\end_inset
+
+(1981, p.
+ 1393).
 \end_layout
 
 \begin_layout Standard
