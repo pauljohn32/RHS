@@ -11,9 +11,10 @@ dat <- foreign::read.dta("respiratory.dta12")
 ##1
 
 
-dat1 <- reshape(dat, direction = "long", varying = c("v1", "v2", "v3", "v4"),
-                   idvar = "patient", sep = "") 
-dat1 <- dat1[order(dat1$patient), ]
+dat1 <- reshape(dat, direction = "long",
+                varying = c("v1", "v2", "v3", "v4"),
+                idvar = "patient", sep = "") 
+dat1 <- dat1[order(dat1$patient, dat1$time), ]
 
 ## Make some factor variables
 dat1$vf <- ordered(dat1$v, levels = c("0", "1", "2", "3", "4"))
@@ -25,7 +26,8 @@ dat1$timef <- factor(dat1$time)
 ##2 ordinal::clmm uses syntax like lme4
 
 m1 <- clmm(vf ~ drugf + genderf + age + bl + (1|patientf),
-             data = dat1, link = "logit", nAGQ = 12, threshold = "flexible")
+           data = dat1, link = "logit", nAGQ = 12,
+           threshold = "flexible")
 
 summary(m1)#estimates match STATA
 
@@ -50,12 +52,14 @@ m1lmmm$eta <- m1lmmm[ , "xb"] + m1lmmm[ , "re"]
 names(m1alpha) <- paste0("tau", names(m1alpha))
 m1lmmm <- cbind(m1lmmm, as.data.frame(t(m1alpha)))
 
-lp <- m1lmmm$eta - m1lmmm[ , names(m1alpha)]
+lp <- - m1lmmm$eta + m1lmmm[ , names(m1alpha)]
 colnames(lp) <- paste0("lp", colnames(lp))
 
 ## Cumulative probabilities
 cp <- exp(lp)/(1 + exp(lp))
 colnames(cp) <- paste0("cp", 0:3)
+head(cp)
+
 
 m1lmmm <- cbind(m1lmmm, lp)
 m1lmmm <- cbind(m1lmmm, cp)
