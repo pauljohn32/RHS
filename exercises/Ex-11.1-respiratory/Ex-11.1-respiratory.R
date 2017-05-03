@@ -24,10 +24,49 @@ dat1$timef <- factor(dat1$time)
 
 ##2 ordinal::clmm uses syntax like lme4
 
-m1 <-   clmm(vf ~ drugf + genderf + age + bl + (1|patientf),
+m1 <- clmm(vf ~ drugf + genderf + age + bl + (1|patientf),
              data = dat1, link = "logit", nAGQ = 12, threshold = "flexible")
 
 summary(m1)#estimates match STATA
+
+m1beta <- m1$beta
+m1alpha <- m1$alpha
+m1re <- ranef(m1)[["patientf"]][, "(Intercept)"]
+m1mm <- model.matrix(m1)
+## previous fails
+m1lm <- lm(v ~ drugf + genderf + age + bl + patient,
+             data = dat1)
+m1lmmm <- model.matrix(m1lm)
+head(m1lmmm)
+
+xb <- m1lmmm[ , names(m1beta)] %*% m1beta
+dimnames(xb) <- list(NULL, "xb")
+m1lmmm <- cbind(m1lmmm, xb = xb)
+m1lmmmre <- m1re[m1lmmm[ , "patient"]]
+m1lmmm <- cbind(m1lmmm, re = m1lmmmre)
+m1lmmm <- as.data.frame(m1lmmm)
+m1lmmm$eta <- m1lmmm[ , "xb"] + m1lmmm[ , "re"]
+
+names(m1alpha) <- paste0("tau", names(m1alpha))
+m1lmmm <- cbind(m1lmmm, as.data.frame(t(m1alpha)))
+
+lp <- m1lmmm$eta - m1lmmm[ , names(m1alpha)]
+colnames(lp) <- paste0("lp", colnames(lp))
+
+## Cumulative probabilities
+cp <- exp(lp)/(1 + exp(lp))
+colnames(cp) <- paste0("cp", 0:3)
+
+m1lmmm <- cbind(m1lmmm, lp)
+m1lmmm <- cbind(m1lmmm, cp)
+## next wrong!
+m1lmmm$pr0 <- m1lmmm$cp0
+m1lmmm$pr1 <- m1lmmm$cp1 - m1lmmm$cp0
+m1lmmm$pr2 <- m1lmmm$cp2 - m1lmmm$cp1
+m1lmmm$pr3 <- m1lmmm$cp3 - m1lmmm$cp2
+m1lmmm$pr4 <- 1 - m1lmmm$cp3
+
+
 
 library(rockchalk)
 outreg(m1, type = "html")
@@ -63,10 +102,11 @@ anova(m2, m3)
 ## Error in UseMethod("predict") : 
 ##  no applicable method for 'predict' applied to an object of class "clmm"
 
+amodl <- m1
 
-m3beta <- m3$beta
-m3alpha <- m3$alpha
-m3re <- ranef(m3)[["patientf"]][, "(Intercept)"]
+amodlbeta <- amodl$beta
+amodlalpha <- amodl$alpha
+amodlre <- ranef(amodl)[["patientf"]][, "(Intercept)"]
 
 ## Need to fit fixed effect model to make easy to get nd object
 m4 <-  lm(v ~ timef*drugf + genderf + age + bl + patient,
@@ -76,7 +116,7 @@ m4 <-  lm(v ~ timef*drugf + genderf + age + bl + patient,
 sampl <- unique(dat1$patient)
 
 nd <- rockchalk::newdata(m4, predVals=list(timef = paste(1:4), patient = sampl))
-nd$re <- m3re[nd$patient]
+nd$re <- amodlre[nd$patient]
 ## Now get v and vf out of original data
 nd <- merge(nd, dat1[ , c("v", "vf", "patient", "timef")], by = c("patient", "timef"), sort = FALSE, all = TRUE) 
 mdmm <- model.matrix(m4, data = nd)
@@ -87,7 +127,7 @@ mdmm <- cbind(mdmm, time = ifelse(mdmm[, "timef2"] == 1, 2,
 
 ## put xb into mdmm matrix
 mdmm <- cbind(mdmm, xb = NA)
-mdmm[ , "xb"]  <- mdmm[ , names(m3beta)] %*% m3beta
+mdmm[ , "xb"]  <- mdmm[ , names(amodlbeta)] %*% amodlbeta
 
 mdmm <- as.data.frame(mdmm)
 
@@ -96,14 +136,14 @@ mdmm$patientf <- as.factor(mdmm$patient)
 
 
 ## Insert random effects
-mdmm$re <- m3re[mdmm[ , "patient"]]
+mdmm$re <- amodlre[mdmm[ , "patient"]]
 mdmm$eta <-mdmm[ , "xb"] + mdmm[ , "re"]
 
-names(m3alpha) <- paste0("tau", names(m3alpha))
-mdmm <- cbind(mdmm, as.data.frame(t(m3alpha)))
+names(amodlalpha) <- paste0("tau", names(amodlalpha))
+mdmm <- cbind(mdmm, as.data.frame(t(amodlalpha)))
 ## lp: linear predictor
 
-lp <- mdmm$eta + mdmm[ , names(m3alpha)]
+lp <- mdmm$eta - mdmm[ , names(amodlalpha)]
 colnames(lp) <- paste0("lp", colnames(lp))
 
 ## Cumulative probabilities

@@ -1,8 +1,8 @@
----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.1-respiratory/Ex-11.1.log
   log type:  text
- opened on:   1 May 2017, 16:39:19
+ opened on:   3 May 2017, 12:33:10
 
 . 
 . * use http://www.stata-press.com/data/mlmus3/respiratory, clear
@@ -24,10 +24,8 @@ xij variables:
 -----------------------------------------------------------------------------
 
 . 
-end of do-file
-
-. do "/tmp/SD13183.000000"
-
+. 
+. * 2 Use meglm, not old tools:
 . 
 . meglm v drug male age bl || patient:, family(ordinal) intpoints(12)
 
@@ -89,4 +87,23 @@ LR test vs. ologit model: chibar2(01) = 130.88        Prob >= chibar2 = 0.0000
 . 
 end of do-file
 
-. exit, clear
+. do "/tmp/SD10422.000000"
+
+. 
+. predict meglm1re, reffect
+(calculating posterior means of random effects)
+(using 12 quadrature points)
+
+. predict meglm1xb, xb
+
+. predict meglm1eta, eta
+(predictions based on fixed effects and posterior means of random effects)
+(using 12 quadrature points)
+
+. predict meglm1mu*, mu
+(predictions based on fixed effects and posterior means of random effects)
+(using 12 quadrature points)
+
+. 
+end of do-file
+
