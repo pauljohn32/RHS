@@ -22,9 +22,14 @@ tab y
 xtset person
 xtlogit y do_want other_self blame express
 
+meglm y do_want other_self blame express || person: , family(binomial)
+
 * 3.
 quietly xtset person
 xtlogit y do_want other_self blame express anger gender
+
+meglm y do_want other_self blame express anger || person: , family(binomial)
+
 
 * 4.
 quietly xtset person

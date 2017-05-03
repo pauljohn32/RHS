@@ -1,8 +1,8 @@
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.1-respiratory/Ex-11.1.log
   log type:  text
- opened on:  27 Apr 2016, 14:10:41
+ opened on:   1 May 2017, 16:39:19
 
 . 
 . * use http://www.stata-press.com/data/mlmus3/respiratory, clear
@@ -10,11 +10,7 @@
 . use respiratory.dta12, clear
 
 .  
-. 
-end of do-file
-
-. do "/tmp/SD06103.000000"
-
+. * 1
 . reshape long v, i(patient) j(visit)
 (note: j = 1 2 3 4)
 
@@ -30,41 +26,12 @@ xij variables:
 . 
 end of do-file
 
-. do "/tmp/SD06103.000000"
+. do "/tmp/SD13183.000000"
 
 . 
-. glm v drug male age bl, family(ordinal)
-incomplete specification of family() and link()
-r(198);
+. meglm v drug male age bl || patient:, family(ordinal) intpoints(12)
 
-end of do-file
-
-r(198);
-
-. do "/tmp/SD06103.000000"
-
-. 
-. glm v drug male age bl, family(ordinal) link(logit)
-command ordinal is unrecognized
-r(199);
-
-end of do-file
-
-r(199);
-
-. do "/tmp/SD06103.000000"
-
-. ologit v drug male age bl, family(ordinal) link(logit)
-option family() not allowed
-r(198);
-
-end of do-file
-
-r(198);
-
-. do "/tmp/SD06103.000000"
-
-. ologit v drug male age bl
+Fitting fixed-effects model:
 
 Iteration 0:   log likelihood = -658.21202  
 Iteration 1:   log likelihood = -587.33678  
@@ -72,32 +39,54 @@ Iteration 2:   log likelihood = -586.10063
 Iteration 3:   log likelihood = -586.09824  
 Iteration 4:   log likelihood = -586.09824  
 
-Ordered logistic regression                     Number of obs     =        444
-                                                LR chi2(4)        =     144.23
-                                                Prob > chi2       =     0.0000
-Log likelihood = -586.09824                     Pseudo R2         =     0.1096
+Refining starting values:
 
+Grid node 0:   log likelihood = -549.72956
+
+Fitting full model:
+
+Iteration 0:   log likelihood = -549.72956  
+Iteration 1:   log likelihood = -524.00577  
+Iteration 2:   log likelihood = -520.94521  
+Iteration 3:   log likelihood = -520.65812  
+Iteration 4:   log likelihood = -520.65653  
+Iteration 5:   log likelihood = -520.65653  
+
+Mixed-effects GLM                               Number of obs     =        444
+Family:                 ordinal
+Link:                     logit
+Group variable:         patient                 Number of groups  =        111
+
+                                                Obs per group:
+                                                              min =          4
+                                                              avg =        4.0
+                                                              max =          4
+
+Integration method: mvaghermite                 Integration pts.  =         12
+
+                                                Wald chi2(4)      =      50.40
+Log likelihood = -520.65653                     Prob > chi2       =     0.0000
 ------------------------------------------------------------------------------
            v |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        drug |   1.232731   .1889745     6.52   0.000     .8623475    1.603114
-        male |  -.3813207   .2345292    -1.63   0.104    -.8409893     .078348
-         age |  -.0141021   .0068178    -2.07   0.039    -.0274648   -.0007394
-          bl |   .9582776   .0969801     9.88   0.000     .7682002    1.148355
+        drug |   2.070046   .4957758     4.18   0.000     1.098344    3.041749
+        male |  -.7683798   .6269034    -1.23   0.220    -1.997088    .4603282
+         age |  -.0296264   .0183174    -1.62   0.106    -.0655278     .006275
+          bl |   1.509191   .2459043     6.14   0.000     1.027227    1.991154
 -------------+----------------------------------------------------------------
-       /cut1 |  -.6927887   .4025638                     -1.481799    .0962219
-       /cut2 |   .2006577    .392648                     -.5689182    .9702335
-       /cut3 |   1.791436    .400908                       1.00567    2.577201
-       /cut4 |   2.948922    .415764                       2.13404    3.763805
+       /cut1 |  -1.494024    1.04868    -1.42   0.154    -3.549399    .5613512
+       /cut2 |   .0039407   1.037155     0.00   0.997    -2.028846    2.036727
+       /cut3 |    2.52051   1.046104     2.41   0.016     .4701841    4.570835
+       /cut4 |   4.396504   1.065107     4.13   0.000     2.308932    6.484076
+-------------+----------------------------------------------------------------
+patient      |
+   var(_cons)|   4.790971   1.070819                       3.09153    7.424611
 ------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 130.88        Prob >= chibar2 = 0.0000
+
+. estimates store meglm1
 
 . 
 end of do-file
-
-. help ologit postestimation
-
-. help ologit
-
-. help ologit postestimation
 
 . exit, clear

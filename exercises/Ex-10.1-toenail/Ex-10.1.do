@@ -18,6 +18,13 @@ meglm outcome treatment month trt_month || patient: , ///
   family(binom) link(probit) intp(12)
 estimates store meglam1
 
+* Fit with gllamm using starting values
+* 1. restore a gllamm fitted model. It cannot find what it wants
+* in output from meglm
+* 2. extract a, the estimates
+* 3. use from(a)
+
+estimates restore gllamm1
 matrix a=e(b)
 gllamm outcome treatment month trt_month, i(patient) ///
   family(binom) link(probit) nip(16) from(a) adapt

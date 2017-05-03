@@ -1,13 +1,11 @@
-------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.2-
-> aggression/Ex-11.2.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.2-aggression/Ex-11.2.log
   log type:  text
- opened on:  26 Apr 2016, 17:56:54
+ opened on:   3 May 2017, 09:43:02
 
 . 
-. * use http://www.stata-press.com/data/mlmus3/aggress
-> ion, clear
+. * use http://www.stata-press.com/data/mlmus3/aggression, clear
 . * saveold aggression.dta12, version(12) replace
 . use aggression.dta12, clear
 
@@ -15,8 +13,7 @@
 .  
 .  *1 
 .  
-.  meglm y do_want other_self blame express || person:
->  , family(ordinal)
+.  meglm y do_want other_self blame express || person: , family(ordinal)
 
 Fitting fixed-effects model:
 
@@ -38,415 +35,94 @@ Iteration 2:   log likelihood = -6421.0674
 Iteration 3:   log likelihood = -6421.0574  
 Iteration 4:   log likelihood = -6421.0574  
 
-Mixed-effects GLM                               Number
->  of obs                                             
->             =                                       
->                    7,584
+Mixed-effects GLM                               Number of obs     =      7,584
 Family:                 ordinal
 Link:                     logit
-Group variable:          person                 Number
->  of groups                                          
->             =                                       
->                      316
+Group variable:          person                 Number of groups  =        316
 
-                                                Obs pe
-> r group:
-                                                      
->         min                                         
->             =                                       
->                       24
-                                                      
->         avg                                         
->             =                                       
->                     24.0
-                                                      
->         max                                         
->             =                                       
->                       24
+                                                Obs per group:
+                                                              min =         24
+                                                              avg =       24.0
+                                                              max =         24
 
-Integration method: mvaghermite                 Integr
-> ation pts.                                          
->             =                                       
->                        7
+Integration method: mvaghermite                 Integration pts.  =          7
 
-                                                Wald c
-> hi2(4)                                              
->             =                                       
->                  1230.11
-Log likelihood = -6421.0574                     Prob >
->  chi2                                               
->             =                                       
->                   0.0000
-------------------------------------------------------
-> ------------------------
-           y |      Coef.   Std. Err.      z    P>|z| 
->     [95% Con                                        
->             f. Interval]
--------------+----------------------------------------
-> ------------------------
-     do_want |  -.6320762   .0497737   -12.70   0.000 
->    -.7296309                                        
->                -.5345216
-  other_self |   1.077302   .0508198    21.20   0.000 
->     .9776974                                        
->                 1.176907
-       blame |   1.241782   .0432377    28.72   0.000 
->     1.157038                                        
->                 1.326526
-     express |    .606386   .0390406    15.53   0.000 
->     .5298677                                        
->                 .6829042
--------------+----------------------------------------
-> ------------------------
-       /cut1 |   .3680488   .0843944     4.36   0.000 
->     .2026388                                        
->                 .5334588
-       /cut2 |   2.184721   .0889107    24.57   0.000 
->     2.010459                                        
->                 2.358982
--------------+----------------------------------------
-> ------------------------
+                                                Wald chi2(4)      =    1230.11
+Log likelihood = -6421.0574                     Prob > chi2       =     0.0000
+------------------------------------------------------------------------------
+           y |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     do_want |  -.6320762   .0497737   -12.70   0.000    -.7296309   -.5345216
+  other_self |   1.077302   .0508198    21.20   0.000     .9776974    1.176907
+       blame |   1.241782   .0432377    28.72   0.000     1.157038    1.326526
+     express |    .606386   .0390406    15.53   0.000     .5298677    .6829042
+-------------+----------------------------------------------------------------
+       /cut1 |   .3680488   .0843944     4.36   0.000     .2026388    .5334588
+       /cut2 |   2.184721   .0889107    24.57   0.000     2.010459    2.358982
+-------------+----------------------------------------------------------------
 person       |
-   var(_cons)|   1.613042   .1582848                  
->     1.330818                                        
->                 1.955116
-------------------------------------------------------
-> ------------------------
-LR test vs. ologit model: chibar2(01) = 1455.27       
-> Prob >= chibar2 =                                   
->                   0.0000
+   var(_cons)|   1.613042   .1582848                      1.330818    1.955116
+------------------------------------------------------------------------------
+LR test vs. ologit model: chibar2(01) = 1455.27       Prob >= chibar2 = 0.0000
 
 .  estimates store meglm1
 
 .  
-.  *2
-.  
-.  
-.  meglm y do_want other_self blame express anger gend
-> er || person: ///
->     , family(ordinal) intpoints(5)
-
-Fitting fixed-effects model:
-
-Iteration 0:   log likelihood = -7708.9369  
-Iteration 1:   log likelihood = -7082.2356  
-Iteration 2:   log likelihood = -7074.4612  
-Iteration 3:   log likelihood = -7074.4503  
-Iteration 4:   log likelihood = -7074.4503  
-
-Refining starting values:
-
-Grid node 0:   log likelihood = -6474.2665
-
-Fitting full model:
-
-Iteration 0:   log likelihood = -6474.2665  
-Iteration 1:   log likelihood = -6409.1116  
-Iteration 2:   log likelihood = -6408.2349  
-Iteration 3:   log likelihood = -6408.2299  
-Iteration 4:   log likelihood =   -6408.23  
-
-Mixed-effects GLM                               Number
->  of obs                                             
->             =                                       
->                    7,584
-Family:                 ordinal
-Link:                     logit
-Group variable:          person                 Number
->  of groups                                          
->             =                                       
->                      316
-
-                                                Obs pe
-> r group:
-                                                      
->         min                                         
->             =                                       
->                       24
-                                                      
->         avg                                         
->             =                                       
->                     24.0
-                                                      
->         max                                         
->             =                                       
->                       24
-
-Integration method: mvaghermite                 Integr
-> ation pts.                                          
->             =                                       
->                        5
-
-                                                Wald c
-> hi2(6)                                              
->             =                                       
->                  1244.58
-Log likelihood =   -6408.23                     Prob >
->  chi2                                               
->             =                                       
->                   0.0000
-------------------------------------------------------
-> ------------------------
-           y |      Coef.   Std. Err.      z    P>|z| 
->     [95% Con                                        
->             f. Interval]
--------------+----------------------------------------
-> ------------------------
-     do_want |   -.632326   .0497747   -12.70   0.000 
->    -.7298827                                        
->                -.5347693
-  other_self |   1.077238   .0508196    21.20   0.000 
->     .9776331                                        
->                 1.176842
-       blame |   1.242153   .0432367    28.73   0.000 
->      1.15741                                        
->                 1.326895
-     express |   .6066666   .0390406    15.54   0.000 
->     .5301484                                        
->                 .6831849
-       anger |   .0731953   .0152119     4.81   0.000 
->     .0433805                                        
->                 .1030101
-      gender |   .3300931   .1730474     1.91   0.056 
->    -.0090735                                        
->                 .6692597
--------------+----------------------------------------
-> ------------------------
-       /cut1 |   1.907222   .3189476     5.98   0.000 
->     1.282096                                        
->                 2.532347
-       /cut2 |   3.723785   .3215526    11.58   0.000 
->     3.093554                                        
->                 4.354017
--------------+----------------------------------------
-> ------------------------
-person       |
-   var(_cons)|   1.475473   .1454631                  
->     1.216223                                        
->                 1.789983
-------------------------------------------------------
-> ------------------------
-LR test vs. ologit model: chibar2(01) = 1332.44       
-> Prob >= chibar2 =                                   
->                   0.0000
-
-.  estimates store meglm2
-
-.  
-.  
-.  *3 I don't know how to do this one in Stata without
->  gllamm
-.  * See below for RHS answer
-.   
-.  
-.  *** From the RHS Teacher manual, these
-.  *** equivalents take much longer!  But #3 gets the 
-> non-parallel lines
-.  *** Exercise 11.2 Verbal-aggression data
 . 
-. * 1.
-. 
-. gllamm y do_want other_self blame express, i(person)
->   ///
->   link(ologit) adapt nip(5)
+end of do-file
 
-Running adaptive quadrature
-Iteration 0:    log likelihood = -6643.5364
-Iteration 1:    log likelihood =  -6438.715
-Iteration 2:    log likelihood = -6421.4428
-Iteration 3:    log likelihood = -6421.0715
-Iteration 4:    log likelihood = -6421.0715
+. do "/tmp/SD07486.000000"
 
-
-Adaptive quadrature has converged, running Newton-Raphson
-Iteration 0:   log likelihood = -6421.0715  
-Iteration 1:   log likelihood = -6421.0715  (backed up)
-Iteration 2:   log likelihood = -6421.0711  
- 
-number of level 1 units = 7584
-number of level 2 units = 316
- 
-Condition Number = 5.0113684
- 
-gllamm model 
- 
-log likelihood = -6421.0711
- 
-------------------------------------------------------------------------------
-           y |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-y            |
-     do_want |  -.6320641   .0497731   -12.70   0.000    -.7296176   -.5345107
-  other_self |   1.077282   .0508186    21.20   0.000     .9776796    1.176885
-       blame |   1.241759   .0432362    28.72   0.000     1.157018    1.326501
-     express |   .6063759   .0390402    15.53   0.000     .5298585    .6828932
--------------+----------------------------------------------------------------
-_cut11       |
-       _cons |   .3687081   .0845297     4.36   0.000     .2030329    .5343833
--------------+----------------------------------------------------------------
-_cut12       |
-       _cons |   2.185346   .0890307    24.55   0.000     2.010849    2.359843
-------------------------------------------------------------------------------
- 
- 
-Variances and covariances of random effects
-------------------------------------------------------------------------------
-
- 
-***level 2 (person)
- 
-    var(1): 1.6135176 (.1578573)
-------------------------------------------------------------------------------
-
- 
-
-. 
-. * 2.
-. matrix a = e(b)
-
-. gllamm y do_want other_self blame express anger gender, ///
->   i(person) link(ologit) from(a) adapt nip(5)
-
-Running adaptive quadrature
-Iteration 0:    log likelihood = -6421.0713
-Iteration 1:    log likelihood = -6409.7004
-Iteration 2:    log likelihood = -6408.2315
-Iteration 3:    log likelihood = -6408.2312
-
-
-Adaptive quadrature has converged, running Newton-Raphson
-Iteration 0:   log likelihood = -6408.2312  
-Iteration 1:   log likelihood = -6408.2305  
-Iteration 2:   log likelihood =   -6408.23  
- 
-number of level 1 units = 7584
-number of level 2 units = 316
- 
-Condition Number = 127.82712
- 
-gllamm model 
- 
-log likelihood = -6408.23
- 
-------------------------------------------------------------------------------
-           y |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-y            |
-     do_want |  -.6323257   .0497747   -12.70   0.000    -.7298824    -.534769
-  other_self |   1.077237   .0508196    21.20   0.000     .9776327    1.176842
-       blame |   1.242152   .0432367    28.73   0.000      1.15741    1.326895
-     express |   .6066664   .0390406    15.54   0.000     .5301482    .6831846
-       anger |   .0731946   .0152128     4.81   0.000     .0433781    .1030112
-      gender |   .3300866   .1730526     1.91   0.056    -.0090902    .6692635
--------------+----------------------------------------------------------------
-_cut11       |
-       _cons |   1.907207   .3189668     5.98   0.000     1.282044    2.532371
--------------+----------------------------------------------------------------
-_cut12       |
-       _cons |    3.72377    .321571    11.58   0.000     3.093502    4.354037
-------------------------------------------------------------------------------
- 
- 
-Variances and covariances of random effects
-------------------------------------------------------------------------------
-
- 
-***level 2 (person)
- 
-    var(1): 1.475453 (.14546628)
-------------------------------------------------------------------------------
-
- 
-
-. estimates store mod2
-
-. 
-. * 3.
-. matrix a = e(b)
-
-. eq thr: do_want
-
-. gllamm y other_self blame express anger gender, i(person) ///
->   link(ologit) thresh(thr) from(a) skip adapt nip(5)
-
-Running adaptive quadrature
-Iteration 0:    log likelihood = -6499.6653
-Iteration 1:    log likelihood = -6408.9465
-Iteration 2:    log likelihood = -6408.1691
-Iteration 3:    log likelihood = -6408.1691
-
-
-Adaptive quadrature has converged, running Newton-Raphson
-Iteration 0:   log likelihood = -6408.1691  
-Iteration 1:   log likelihood = -6408.1682  
-Iteration 2:   log likelihood = -6408.1641  
-Iteration 3:   log likelihood = -6408.1641  
- 
-number of level 1 units = 7584
-number of level 2 units = 316
- 
-Condition Number = 127.82444
- 
-gllamm model 
- 
-log likelihood = -6408.1641
- 
-------------------------------------------------------------------------------
-           y |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-y            |
-  other_self |   1.077334   .0508218    21.20   0.000     .9777248    1.176943
-       blame |   1.242024     .04324    28.72   0.000     1.157275    1.326773
-     express |     .60662   .0390403    15.54   0.000     .5301024    .6831377
-       anger |   .0731687   .0152155     4.81   0.000     .0433469    .1029906
-      gender |   .3296674   .1730746     1.90   0.057    -.0095526    .6688873
--------------+----------------------------------------------------------------
-_cut11       |
-     do_want |    .641099   .0553052    11.59   0.000     .5327029    .7494952
-       _cons |   1.902176   .3193088     5.96   0.000     1.276342     2.52801
--------------+----------------------------------------------------------------
-_cut12       |
-     do_want |   .6160602   .0668195     9.22   0.000     .4850964    .7470241
-       _cons |   3.730255   .3221415    11.58   0.000     3.098869    4.361641
-------------------------------------------------------------------------------
- 
- 
-Variances and covariances of random effects
-------------------------------------------------------------------------------
-
- 
-***level 2 (person)
- 
-    var(1): 1.4757268 (.14548969)
-------------------------------------------------------------------------------
-
- 
-
-. estimates store mod3
-
-. lrtest mod2 mod3
-
-Likelihood-ratio test                                 LR chi2(1)  =      0.13
-(Assumption: mod2 nested in mod3)                     Prob > chi2 =    0.7166
+.  predict meglm1mu, mu
+(predictions based on fixed effects and posterior means of random effects)
+(using 7 quadrature points)
 
 . 
 end of do-file
 
-. predict blup, reffect
-option reffect not allowed
-r(198);
+. do "/tmp/SD07486.000000"
 
-. predict blup, reffects
-option reffects not allowed
-r(198);
+.  predict meglm1xb, xb
 
-. estimates restore meglm1
-(results meglm1 are active now)
+. 
+end of do-file
 
-. predict blup, reffects
+. help meglm
+
+. do "/tmp/SD07486.000000"
+
+.  predict meglm1eta, eta
+(predictions based on fixed effects and posterior means of random effects)
+(using 7 quadrature points)
+
+. 
+end of do-file
+
+. do "/tmp/SD07486.000000"
+
+.  predict meglm1re, reffects
 (calculating posterior means of random effects)
 (using 7 quadrature points)
 
-. sort person
+. 
+end of do-file
+
+. do "/tmp/SD07486.000000"
+
+.  predict meglm1mu*, mu
+(predictions based on fixed effects and posterior means of random effects)
+(using 7 quadrature points)
+
+. 
+end of do-file
+
+. do "/tmp/SD07486.000000"
+
+.  predict meglm1eta*, eta
+(predictions based on fixed effects and posterior means of random effects)
+(using 7 quadrature points)
+
+. 
+end of do-file
 
 . exit, clear

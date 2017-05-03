@@ -13,7 +13,7 @@ rockchalk::summarize(dat)
 
 ## 1. Difference of means among cities in 1984
 ## To match stata, turn of Welch's correction'
-with(dat[dat$year==1984, ], t.test(luclms ~ ez, var.equal = TRUE))
+with(dat[dat$year==1984, ], t.test(luclms ~ ez, var.equal = FALSE))
 
 ##
 m1 <- lm(luclms ~ ez, data = dat[dat$year==1984, ])
@@ -30,13 +30,19 @@ head(dat, 30)
 ## Observe the treated subset
 dat[dat$treated, ]
 
-with(dat[dat$treated, ], t.test(luclms ~ ez, var.equal = TRUE))
+with(dat[dat$treated, ], t.test(luclms ~ ez, var.equal = TRUE), paired = TRUE)
 
-## Don't know where I'm wrong on that one, compared to MLMUS answer
+## I'm wrong on that one, compared to MLMUS answer.
+## Their thing uses a paired t-test, which I ran in class and
+## verified Stata.
+##
 ## I get same mean, but R's t.test output is so sparse I can't see what else
 ## is wrong.
 ## Went on a little goose chase, stopped.
 ## ttest2 <- with(dat[dat$treated, ], t.test(luclms ~ as.factor(year), var.equal = TRUE))
+
+m2 <- lm(luclms ~ ez, data = dat[dat$treated, ])
+summary(m2)
 
 m2 <- lm(luclms ~ ez + as.factor(city), data = dat[dat$treated, ])
 summary(m2)

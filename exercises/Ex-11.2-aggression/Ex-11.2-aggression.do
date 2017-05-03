@@ -14,6 +14,12 @@ use aggression.dta12, clear
  
  meglm y do_want other_self blame express || person: , family(ordinal)
  estimates store meglm1
+ predict meglm1re, reffects
+ predict meglm1xb, xb
+ predict meglm1eta*, eta
+ predict meglm1mu*, mu
+ 
+ gen meglm1pr1
  
  *2
  
@@ -49,3 +55,19 @@ gllamm y other_self blame express anger gender, i(person) ///
   link(ologit) thresh(thr) from(a) skip adapt nip(5)
 estimates store mod3
 lrtest mod2 mod3
+
+
+
+* Now, for my questions. Fit all the "dummy" categories
+
+meglm y do_want other_self blame express ibn.person, family(ordinal) vsquish
+estimates store mod4
+predict mod4pr, xb
+
+estimates restore meglm1
+predict mod1pr, xb
+predict mod1eta, eta
+
+twoway scatter mod1eta mod4pr
+
+
