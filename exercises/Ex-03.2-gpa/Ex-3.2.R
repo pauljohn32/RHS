@@ -1,4 +1,8 @@
-## library(reshape)
+## Paul Johnson
+## 20170515
+
+## Today inserted lattice and ggplot2, lattice still undone.
+
 library(foreign)
 
 gpa <- read.dta("gpa.dta12")
@@ -14,6 +18,44 @@ lm1 <- lm(gpa ~ job + time + highgpa, data = gpa2)
 
 library(rockchalk)
 plotSlopes(lm1, plotx = "time", modx = "job")
+
+## Check an interaction, for fun
+lm2 <- lm(gpa ~ job * time + highgpa, data = gpa2)
+summary(lm2)
+ps2 <- plotSlopes(lm2, plotx = "time", modx = "job", interval = "confidence")
+
+## var named "gpa" may help when plotting, matches DV
+ps2$newdata$gpa <- ps2$newdata$fit
+
+## Just convenience here
+nd <- ps2$newdata
+
+library(lattice)
+dev.new(height=5, width = 9)
+
+xyplot(gpa ~ time | job, data = gpa2,
+       xlab = "Time (semesters) in school",
+       ylab = "Grade Point Average")
+
+## How to add predicted values and CI into xyplot? Too difficult!
+## Sarkar https://stat.ethz.ch/pipermail/r-help/2007-April/130779.html 
+
+
+
+library(ggplot2)
+dev.new(height=5, width = 9)
+p1 <- ggplot(gpa2, aes(x = time, y = gpa))
+p1 <- p1 + geom_point(shape=2, alpha = 0.5)
+p1
+p1 <- p1 + facet_grid(. ~ job)
+p1
+p1 <- p1 + geom_line(data = nd, color = "blue")
+p1
+p1 + theme(strip.background = element_rect(color="red", fill="pink"))
+p1 <- p1 + theme_bw()
+p1
+
+
 
 ##
 #2
