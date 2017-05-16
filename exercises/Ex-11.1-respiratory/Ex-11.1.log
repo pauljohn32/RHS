@@ -1,8 +1,9 @@
---------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.1-respiratory/Ex-11.1.log
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-11.1-respiratory/Ex-1
+> 1.1.log
   log type:  text
- opened on:   3 May 2017, 12:33:10
+ opened on:   3 May 2017, 13:15:06
 
 . 
 . * use http://www.stata-press.com/data/mlmus3/respiratory, clear
@@ -10,23 +11,30 @@
 . use respiratory.dta12, clear
 
 .  
-. * 1
+. 
+end of do-file
+
+. do "/tmp/SD11577.000000"
+
 . reshape long v, i(patient) j(visit)
 (note: j = 1 2 3 4)
 
 Data                               wide   ->   long
------------------------------------------------------------------------------
+----------------------------------------------------------------------
+> -------
 Number of obs.                      111   ->     444
 Number of variables                  10   ->       8
 j variable (4 values)                     ->   visit
 xij variables:
                            v1 v2 ... v4   ->   v
------------------------------------------------------------------------------
+----------------------------------------------------------------------
+> -------
 
 . 
-. 
-. * 2 Use meglm, not old tools:
-. 
+end of do-file
+
+. do "/tmp/SD11577.000000"
+
 . meglm v drug male age bl || patient:, family(ordinal) intpoints(12)
 
 Fitting fixed-effects model:
@@ -50,49 +58,78 @@ Iteration 3:   log likelihood = -520.65812
 Iteration 4:   log likelihood = -520.65653  
 Iteration 5:   log likelihood = -520.65653  
 
-Mixed-effects GLM                               Number of obs     =        444
+Mixed-effects GLM                               Number of obs     =   
+>      444
 Family:                 ordinal
 Link:                     logit
-Group variable:         patient                 Number of groups  =        111
+Group variable:         patient                 Number of groups  =   
+>      111
 
                                                 Obs per group:
-                                                              min =          4
-                                                              avg =        4.0
-                                                              max =          4
+                                                              min =   
+>        4
+                                                              avg =   
+>      4.0
+                                                              max =   
+>        4
 
-Integration method: mvaghermite                 Integration pts.  =         12
+Integration method: mvaghermite                 Integration pts.  =   
+>       12
 
-                                                Wald chi2(4)      =      50.40
-Log likelihood = -520.65653                     Prob > chi2       =     0.0000
-------------------------------------------------------------------------------
-           v |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-        drug |   2.070046   .4957758     4.18   0.000     1.098344    3.041749
-        male |  -.7683798   .6269034    -1.23   0.220    -1.997088    .4603282
-         age |  -.0296264   .0183174    -1.62   0.106    -.0655278     .006275
-          bl |   1.509191   .2459043     6.14   0.000     1.027227    1.991154
--------------+----------------------------------------------------------------
-       /cut1 |  -1.494024    1.04868    -1.42   0.154    -3.549399    .5613512
-       /cut2 |   .0039407   1.037155     0.00   0.997    -2.028846    2.036727
-       /cut3 |    2.52051   1.046104     2.41   0.016     .4701841    4.570835
-       /cut4 |   4.396504   1.065107     4.13   0.000     2.308932    6.484076
--------------+----------------------------------------------------------------
+                                                Wald chi2(4)      =   
+>    50.40
+Log likelihood = -520.65653                     Prob > chi2       =   
+>   0.0000
+----------------------------------------------------------------------
+> --------
+           v |      Coef.   Std. Err.      z    P>|z|     [95% Conf. I
+> nterval]
+-------------+--------------------------------------------------------
+> --------
+        drug |   2.070046   .4957758     4.18   0.000     1.098344    
+> 3.041749
+        male |  -.7683798   .6269034    -1.23   0.220    -1.997088    
+> .4603282
+         age |  -.0296264   .0183174    -1.62   0.106    -.0655278    
+>  .006275
+          bl |   1.509191   .2459043     6.14   0.000     1.027227    
+> 1.991154
+-------------+--------------------------------------------------------
+> --------
+       /cut1 |  -1.494024    1.04868    -1.42   0.154    -3.549399    
+> .5613512
+       /cut2 |   .0039407   1.037155     0.00   0.997    -2.028846    
+> 2.036727
+       /cut3 |    2.52051   1.046104     2.41   0.016     .4701841    
+> 4.570835
+       /cut4 |   4.396504   1.065107     4.13   0.000     2.308932    
+> 6.484076
+-------------+--------------------------------------------------------
+> --------
 patient      |
-   var(_cons)|   4.790971   1.070819                       3.09153    7.424611
-------------------------------------------------------------------------------
-LR test vs. ologit model: chibar2(01) = 130.88        Prob >= chibar2 = 0.0000
+   var(_cons)|   4.790971   1.070819                       3.09153    
+> 7.424611
+----------------------------------------------------------------------
+> --------
+LR test vs. ologit model: chibar2(01) = 130.88        Prob >= chibar2 
+> =                                                                   
+>   0.0000
 
 . estimates store meglm1
 
 . 
 end of do-file
 
-. do "/tmp/SD10422.000000"
+. do "/tmp/SD11577.000000"
 
-. 
 . predict meglm1re, reffect
 (calculating posterior means of random effects)
 (using 12 quadrature points)
+
+. 
+end of do-file
+
+. do "/tmp/SD11577.000000"
 
 . predict meglm1xb, xb
 
@@ -107,3 +144,4 @@ end of do-file
 . 
 end of do-file
 
+. exit, clear

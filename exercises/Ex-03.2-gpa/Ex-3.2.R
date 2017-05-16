@@ -45,14 +45,15 @@ xyplot(gpa ~ time | job, data = gpa2,
 library(ggplot2)
 dev.new(height=5, width = 9)
 p1 <- ggplot(gpa2, aes(x = time, y = gpa))
-p1 <- p1 + geom_point(shape=2, alpha = 0.5)
+p1 <- p1 + geom_point(shape = 1, alpha = 0.5)
 p1
 p1 <- p1 + facet_grid(. ~ job)
 p1
 p1 <- p1 + geom_line(data = nd, color = "blue")
 p1
-p1 + theme(strip.background = element_rect(color="red", fill="pink"))
 p1 <- p1 + theme_bw()
+## Must insert custom theme setting after
+p1 <- p1 + theme(strip.background = element_rect(color="red", fill="pink"))
 p1
 
 

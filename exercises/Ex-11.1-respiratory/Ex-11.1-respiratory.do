@@ -1,5 +1,5 @@
 * Paul Johnson
-* 20160426
+* 20170503
 
 capture log close
 set more off, permanently
@@ -17,6 +17,13 @@ reshape long v, i(patient) j(visit)
 
 meglm v drug male age bl || patient:, family(ordinal) intpoints(12)
 estimates store meglm1
+
+predict meglm1re, reffect
+predict meglm1xb, xb
+predict meglm1eta, eta
+predict meglm1mu*, mu
+
+
 
 * Close enough to gllamm
 gllamm v drug male age bl, i(patient) ///

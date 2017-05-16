@@ -106,7 +106,7 @@ anova(m2, m3)
 ## Error in UseMethod("predict") : 
 ##  no applicable method for 'predict' applied to an object of class "clmm"
 
-amodl <- m1
+amodl <- m3
 
 amodlbeta <- amodl$beta
 amodlalpha <- amodl$alpha
