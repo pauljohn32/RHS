@@ -1,0 +1,347 @@
+---
+title: "Ex-01.1-HSB"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS HSB exercise
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+---
+
+# Data import
+```{r import}
+if (!file.exists("hsb.rds")){
+    download.file("http://pj.freefaculty.org/guides/stat/DataSets/HSB/hsb.rds",
+                  destfile = "hsb2.rds")
+}
+    hsb <- readRDS("hsb.rds")
+    ## Or do it the hard way
+    ## see: http://pj.freefaculty.org/guides/stat/DataSets/HSB/
+    ## library(foreign)
+    ## hsb.url <- "http://www.stata-press.com/data/mlmus3/hsb.dta"
+    ## hsb <- read.dta(hsb.url)
+    ## saveRDS(hsb, "hsb.rds")
+```
+
+# Descriptive Statistics
+	
+## Quick overview
+
+```{r}
+library(rockchalk)
+rockchalk::summarize(hsb)
+```
+
+## Recodes needed
+
+All of these variables present themselves as numeric variables, but
+some are clearly categorical. Female is 0 or 1. The R tradition
+would not have us treat that as a number, but rather it should be a
+factor variable. Same with minority. Lets make factor versions of
+them. So we need to make them into factor variables. 
+
+I'll take some liberty here and rename in a way that is, in my
+opinion, more correct. The variable is "gender" (not female), which
+ takes values Male and Female.
+
+```{r}
+hsb$gender <- factor(hsb$female, levels= c(0, 1), labels = c("Male", "Female"))
+hsb$ethnicity <- factor(hsb$minority, levels = c(0, 1), labels = c("White", "Non-white"))
+hsb$sector <- factor(hsb$sector, levels = c(0, 1), labels = c("Public", "Catholic"))
+```
+
+Double-check the recoding
+
+```{r}
+with(hsb, table(gender, female))
+with(hsb, table(ethnicity, minority))
+```
+
+If you are comfortable with those recodes, you can move on.  I'm going
+ to remove the original variables, just to show I can.
+
+```{r}
+hsb$female <- NULL
+hsb$minority <- NULL
+```
+
+If we were going to do any "multi-level" regressions, we would need
+the school variable as a factor, not as an integer. I'm going to make
+that one into a factor called schoolidf
+
+```{r}
+hsb$schoolidf <- as.factor(hsb$schoolid)
+```
+
+Plainly, there are other variables in the collection that need the same
+treatment, but I'm not bothering with them now. 
+
+```{r}
+rockchalk::summarize(hsb)
+str(hsb)
+```
+
+## Describe Math Achievement with histograms
+
+```{r}
+rockchalk::summarize(hsb$mathach, probs = c(0, .25, .50, .75, 1.0))
+```
+
+```{r}
+with(hsb, hist(mathach))
+```
+
+
+# 1.1.2 School and variable subsets
+
+
+I'll keep some additional variables
+```{r}
+keepers <- c("schoolid", "schoolidf", "mathach", "ses", "ethnicity", "gender")
+hsb2 <- hsb[hsb$schoolid <= 1317, keepers]
+```
+
+```{r}
+summarize(hsb2)
+```
+
+```{r}
+hsbmeans <- aggregate(hsb2[ , c("mathach", "ses")], by = list(schoolidf = hsb2$schoolidf), mean, na.rm = TRUE)
+hsbsds <- aggregate(hsb2[ , c("mathach", "ses")], by = list(schoolidf = hsb2$schoolidf), sd, na.rm = TRUE)
+merge(hsbmeans, hsbsds, by = "schoolidf", suffixes = c("mean", "sd"))                  
+```
+
+
+# Plots
+
+## 1.1.3 histogram
+
+```{r}
+hist(hsb2$mathach, main = "Math achievement", xlab = "Math")
+```
+
+## boxplot
+
+
+```{r}
+plot(mathach ~ gender, data = hsb2)
+```
+
+Note: plot was a shortcut
+
+```{r}
+boxplot(mathach ~ gender, data = hsb2)
+```
+
+Beautify with labels:
+
+```{r}
+bp1 <- boxplot(mathach ~ gender, data = hsb2)
+
+text(1, 14.3, "Median of Male")
+text(2, 12.1, "Median of Female")
+```
+
+
+## 1.1.4 Show a scatterplot of 2 "numeric" variables
+
+I'll adjust range to look like the stata output
+```{r}
+plot(mathach ~ ses, data = hsb2, xlim = c(-2, 2),
+     ylim = c(-10, 30))
+```
+
+## Trellis plot with R lattice
+
+```{r}
+library(lattice)
+xyplot(mathach ~ ses | schoolidf, data = hsb2,
+        xlim = c(-2, 2),
+     ylim = c(-10, 30))
+```
+
+The ggplot2 variant of same
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+ggplot(data = hsb2, aes(x=ses, y=mathach)) +
+  geom_point()
+```
+
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+ggplot(data = hsb2, aes(x=ses, y=mathach)) +
+  geom_point() +
+  facet_wrap(~ schoolid)
+```
+
+
+## Make list of subsets with split and plot them. 
+```{r}
+hsbsplit <- split(hsb2, hsb2$gender)
+
+par(mfrow = c(2,1))
+lapply(hsbsplit, function(subdat){
+    with(subdat, hist(mathach, prob = TRUE,
+                      main = paste("Math Achievement:",
+                                   unique(subdat$gender))))})
+```
+
+```{r}
+lapply(hsbsplit, function(subdat) {
+    with(subdat, hist(ses, prob = TRUE, xlim = c(-4, 3),
+                      main = paste0("SES:", unique(subdat$gender))))})
+```
+
+## 1.1.5 Regression
+
+```{r}
+m0 <- lm(mathach ~ ses, data = hsb2)
+```
+
+```{r, results="hide"}
+m0.or <- outreg(list("Linear Model" = m0), type = "html", browse = FALSE)
+```
+
+```{r, results = "asis"}
+m0.or <- gsub("[ ]{2,}", " ", m0.or)
+cat(m0.or)
+```
+
+```{r}
+confint(m0)
+```
+
+## 1.1.6 Predict
+
+```{r}
+hsb2$yhat <- predict(m0)
+head(hsb2)
+```
+
+```{r}
+plotSlopes(m0, plotx = "ses")
+```
+
+```{r}
+m0.pom <- predictOMatic(m0, interval="confidence")
+m0.pom$ses$mathach <- m0.pom$ses$fit
+m0.pom
+```
+
+Maybe you like a confidence interval as well
+
+```{r}
+plotSlopes(m0, plotx = "ses", interval = "confidence", xlim = c(-2, 2),
+           ylim = c(-10, 30))
+```
+
+
+What best way to get plot for each school.
+
+My plotSlopes approach is not what they want
+
+```{r}
+m1 <- lm(mathach ~ ses * schoolidf, data = hsb2)
+plotSlopes(m1, plotx = "ses", modx = "schoolidf", xlim = c(-2, 2),
+           ylim = c(-10, 30))
+```
+
+```{r}
+xyplot(mathach ~ ses | schoolidf, data = hsb2, type = c("p", "r"))
+```
+
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+ggplot(data = hsb2, aes(x=ses, y=mathach)) + geom_point(alpha=0.5) +
+    geom_line(data = m0.pom$ses) +
+    geom_ribbon(data = m0.pom$ses, aes(ymin = lwr, ymax = upr), fill = "pink", alpha = 0.5)
+```
+
+```{r}
+ggplot(data = hsb2, aes(x=ses, y=mathach)) + geom_point(alpha=0.5) +
+    geom_line(data = m0.pom$ses) +
+    geom_ribbon(data = m0.pom$ses, aes(ymin = lwr, ymax = upr), fill = "pink", alpha = 0.5) +
+    geom_smooth(method="lm", fill = NA) + 
+    facet_wrap(~ schoolidf)
+```
+
+## 1.1.8 Regression with school as a factor
+
+
+I already ran this one in previous, but I used interaction, 
+not an additive model. So here it is, additive!
+
+```{r}
+m2 <- lm(mathach ~ ses + schoolidf, data = hsb2)
+summary(m2)
+```
+
+## Test the school coefficients, jointly
+
+```{r}
+anova(m0, m2)
+```
+
+## 1.1.9 Lets see if there is an interaction between ses and school
+
+```{r}
+m3 <- lm(mathach ~ ses * schoolidf, data = hsb2)
+summary(m3)
+```
+
+
+
+
+## Lets see if there is an interaction between ses and gender
+
+```{r}
+m1 <- lm(mathach ~ ses * gender, data = hsb2)
+summary(m1)
+```
+
+```{r}
+m2 <-  lm(mathach ~ ses + gender, data = hsb2)
+summary(m2)
+```
+
+```{r}
+library(rockchalk)
+plotSlopes(m1, plotx = "ses", modx = "gender")
+```
+```{r}
+plotSlopes(m1, plotx = "ses", modx = "gender", col = c("orange", "blue"))
+```
+
+```{r}
+plotSlopes(m1, plotx = "ses", modx = "gender",
+           col = gray.colors(2, 0.1, 0.5),
+           main = "50 - 48 Shades of Gray")
+```
+
+```{r}
+mycol <- c("black", "gray40")
+mypch <- c(1, 8) 
+plotSlopes(m1, plotx = "ses", modx = "gender", col = mycol, pch = mypch[hsb2$gender])
+```
+
+```{r}
+plotSlopes(m2, plotx = "ses", modx = "gender", col = mycol, pch = mypch[hsb2$gender] )
+```
+
+## Compare the p-value from the anova test  
+
+```{r}
+anova(m1, m2)
+```
