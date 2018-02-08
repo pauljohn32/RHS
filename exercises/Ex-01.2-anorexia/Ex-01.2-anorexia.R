@@ -1,56 +1,23 @@
----
-title: "Ex-01.2-anorexia"
-subtitle: ""
-author:
- - name: Paul Johnson
-   affiliation: CRMDA
-   email: pauljohn@ku.edu
-abstract: >
-    RHS anorexia exercise
-checked_by: "First Last"
-Note to Authors: please_dont_change_the_next 4 lines!
-date: "`r format(Sys.time(), '%b. %e %Y')`"
-output:
-  crmda::crmda_html_document:
-    toc: true
-    toc_depth: 2
-    highlight: haddock
-logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/jayhawk.png
-logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/CRMDAlogo-vert.png
----
-
-# Data import
-```{r import}
+## ----import--------------------------------------------------------------
 library(foreign)
 dat <- read.dta("anorexia.dta12")
 rockchalk::summarize(dat)
-```
 
-# Descriptive Statistics
-	
-Obtain summary statistics for each treatment group. The tidyverse
-loving Jake and Jihong say dplyr to rescue:
-
-```{r}
+## ------------------------------------------------------------------------
 library(dplyr)
 t0.dplyr <- dat %>%
     group_by(treat) %>%
     summarize(N = n(), Preweight = mean(weight1, na.rm = TRUE),
               Postweight = mean(weight2, na.rm = TRUE))
 t0.dplyr
-```
 
-I don't enjoy using dplyr and I dislike %>%, so
-I'd use aggregate() or an lapply-based approach.
-
-```{r}
+## ------------------------------------------------------------------------
 t1 <- aggregate(dat[, c("weight1", "weight2")],
                 by = list(treat = dat$treat), mean, na.rm = TRUE)
 t1[ , "N"] <- table(dat$treat)
 t1
-```
 
-```{r}
+## ------------------------------------------------------------------------
 t2 <- lapply(split(dat, f = dat$treat),
        function(x){
            data.frame(treat = unique(x$treat),
@@ -60,55 +27,33 @@ t2 <- lapply(split(dat, f = dat$treat),
        }
 )
 do.call("rbind", t2)
-```
 
-Exploratory data descriptions with histogram and boxplot
-
-```{r histo}
+## ----histo---------------------------------------------------------------
 library(lattice)
 histogram( ~ weight2 | treat, data = dat)
-```
 
-```{r boxplot}
+## ----boxplot-------------------------------------------------------------
 boxplot(weight2 ~ treat, data = dat)
-```
-# Regression
 
-## re-order factor levels
-
-```{r}
+## ------------------------------------------------------------------------
 dat$treat <- relevel(dat$treat, "contrl")
 contrasts(dat$treat)
-```
 
-## Use lm for regression
-
-
-```{r}
+## ------------------------------------------------------------------------
 m1 <- lm(weight2 ~ weight1 + treat, data = dat)
 summary(m1)
-```
-	
-## rockchalk::predictOMatic 
 
-```{r}
+## ------------------------------------------------------------------------
 library(rockchalk)
 predictOMatic(m1, predVals = c("weight1", "treat"))
-```
 
-## plotSlopes
-
-```{r ps10}
+## ----ps10----------------------------------------------------------------
 plotSlopes(m1, plotx = "weight1", modx = "treat")
-```
 
-```{r ps20}
+## ----ps20----------------------------------------------------------------
 plotSlopes(m1, plotx = "weight1", modx = "treat", interval = "confidence")
-```
 
-## T test for difference between coefficients.
-
-```{r fancyt}
+## ----fancyt--------------------------------------------------------------
 ##' T-test for the difference in 2 regression parameters
 ##'
 ##' This is the one the students call the "fancy t test".
@@ -135,20 +80,14 @@ fancyt <- function(parm1, parm2, model, model.cov = NULL){
     pval <- pt(abs(t), lower.tail = FALSE, df = model$df) * 2
     c(diff = diff, Std.Err. = se, t = t, p = pval)
 }
-```
 
-```{r fancyt20}
+## ----fancyt20------------------------------------------------------------
 fancyt("treatcbt", "treatft", m1)
-```
 
-## Regression diagnostics
-```{r}
+## ------------------------------------------------------------------------
 plot(m1)
-```
 
-## Compare Robust Standard Errors
-
-```{r}
+## ------------------------------------------------------------------------
 ## Exercise asks about homoskedasticity, do robust standard errors
 library(sandwich)
 ## To match stata, we need type HC1
@@ -160,36 +99,26 @@ m1.robust.se
 ## Can compare to HC2 and HC3 in Stata, which are same:
 sqrt(diag(vcovHC(m1, type = "HC2")))
 sqrt(diag(vcovHC(m1, type = "HC3")))
-```
 
-## Fancy t test using the robust standard errors
-
-```{r}
+## ------------------------------------------------------------------------
 fancyt("treatcbt", "treatft", m1, m1.robust)
-```
 
-## Reasonable table, reasonably easy
-
-```{r, results="hide"}
+## ---- results="hide"-----------------------------------------------------
 o1 <- outreg(list("m1 homo" = m1, "m1 robust" = m1 ),
        SElist = list("m1 robust" = m1.robust.se),
        type = "html", browse = FALSE)
 
-```
-```{r o1, results="asis"}
+
+## ----o1, results="asis"--------------------------------------------------
 ##markdown can't render HTML correctly
 o1 <- gsub("[ ]{2,}", " ", o1)
 cat(o1)
-```
 
-## Inspect residuals
-
-```{r}
+## ------------------------------------------------------------------------
 m1.resid <- resid(m1)
 hist(m1.resid)
-```
 
-```{r histplotter}
+## ----histplotter---------------------------------------------------------
 ##' Histogram with added Kernel Density Smooth and Normal Probability
 ##'
 ##' See the working example at
@@ -216,117 +145,51 @@ drawHist <- function(x, main = "Histogram"){
            legend=c("observed density", "normal with observed mean & sd"),
            lty=c(1,2), col=c("black", "red"))
 }
-```
 
-```{r residplot10, fig.height=6}
+## ----residplot10, fig.height=6-------------------------------------------
 drawHist(resid(m1), main = "Regression residuals")
-```
 
-# Add an interaction
-
-## Regression formula: insert *
-
-If you run predictors "x1 * x2", then R will estimate coefficients
-for "x1", "x2", and the product, which R lables as "x1:x2"
-
-```{r m3}
+## ----m3------------------------------------------------------------------
 m3 <- lm(weight2 ~ weight1 * treat, data = dat)
 summary(m3)
-```
 
-## Plot the model with interaction
-
-Interaction causes the slope for the effect of "weight1" to differ for
-each treatment group
-
-```{r m3ps10}
+## ----m3ps10--------------------------------------------------------------
 m3.ps <- plotSlopes(m3, plotx = "weight1", modx = "treat", interval = "confidence")
-```
 
-```{r m3ts10}
+## ----m3ts10--------------------------------------------------------------
 m3.ps.ts <- testSlopes(m3.ps)
-```
 
-## Compare robust standard errors
-
-Get the robust standard errors
-```{r m3robust}
+## ----m3robust------------------------------------------------------------
 m3.robust <- vcovHC(m3)
 m3.robust.se <- sqrt(diag(sandwich(m3)))
-```
 
-```{r m3outreg10, results="hide"}
+## ----m3outreg10, results="hide"------------------------------------------
 o3 <- outreg(list("m3 homo" = m3, "m3 robust" = m3 ),
        SElist = list("m3 robust" = m3.robust.se),
        type = "html")
-```
 
-```{r m3outreg20, results="asis"}
+## ----m3outreg20, results="asis"------------------------------------------
 ## markdown error correction:
 o3 <- gsub("[ ]{2,}", " ", o3)
 cat(o3)
-```
 
-## Conduct some fancy t tests
-
-```{r}
+## ------------------------------------------------------------------------
 fancyt("treatcbt", "treatft", m3, m3.robust)
 fancyt("weight1:treatcbt", "weight1:treatft", m3)
 fancyt("weight1:treatcbt", "weight1:treatft", m3, m3.robust)
-```
 
-
-
-## Inspect residuals 
-
-```{r m3rr, fig.height=6}
+## ----m3rr, fig.height=6--------------------------------------------------
 drawHist(resid(m3), main = "Regression residuals")
-```
 
-## Standard regression diagnostics
-
-```{r}
+## ------------------------------------------------------------------------
 plot(m3)
-```
 
-
-# Followup: are cbt and ft interchangeable?
-
-## I'd consider combining the groups "cbt" and "ft"
-
-```{r}
+## ------------------------------------------------------------------------
 dat$treat2 <- combineLevels(dat$treat, c("cbt", "ft"), newLabel = "cbtorft")
 
 m4 <- lm(weight2 ~ weight1 * treat2, data = dat)
 summary(m4)
-```
 
-Conduct an F test to find out if m3 is preferred to m4
-
-```{r}
+## ------------------------------------------------------------------------
 anova(m3, m4)
-```
-
-These *are* nested models. 
-
-What did we find out? The original model, m3, had predictive formula:
-
-\[
-\widehat{weight2}_i = 92.05 - 0.13weight1_i - 76.47 cbt - 77.23 ft + 0.98 weight1_i \cdot cbt_i + weight1_i\cdot ft_i
-\]
-
-The revised model is based on idea that the "intercepts" for cbt and ft are same, and
-their slopes are same too
-\[
-\widehat{weight2}_i = 92.05 - 0.13weight1_i - 78.75 cbtorft_i - 1.02 weight1_i \cdot cbtorft_i
-\]
-
-The `anova` test is not statistically significant, meaning the second model is
-not "worse" than the first. The usual choice, then, is to keep the simpler
-model.
-
-A counter-argument might be that the funding agency requires us to separately
-estimate the effect of the 2 treatments, so we might we well advised to make a
-table that includes both models. Iti s a little tricky to arrange that table
-with proper labels, however.
 
