@@ -1,0 +1,213 @@
+---
+title: "Ex-02.1-pefr"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS anorexia exercise
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  crmda::crmda_html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/jayhawk.png
+logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/CRMDAlogo-vert.png
+---
+
+# Data import
+```{r import}
+if (!file.exists("pefr.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/pefr.dta",
+                  destfile = "pefr.dta12")
+}
+library(foreign)
+pefr <- read.dta("pefr.dta12")
+```
+
+```{r recode}
+rockchalk::summarize(pefr)
+pefr$id.orig <- pefr$id
+pefr$id <- as.factor(pefr$id)
+```
+
+
+
+## Visualize the imported data
+```{r}
+plot(wp1 ~ id.orig, data = pefr, main = "Wright Peak Flow for all Subjects")
+points(wp2 ~ id, data = pefr, col = "red")
+abline(h = (mean(pefr$wp1) + mean(pefr$wp2)) / 2)
+legend("bottom", legend = c("pre", "post"), col = c("black", "red"),
+       pch = c(1,1), horiz = TRUE)
+```
+
+# 2.1.1a: Reshape
+
+Intention is to create "stacked" versions of "wm" and "wp"
+variables. Try R's built-in reshape, this is an easy case,
+a good one to explore the reshape function.
+
+```{r}
+head(pefr)
+pefrlong <- reshape(pefr, direction="long",
+                    varying = list(c("wp1", "wp2"), c("wm1", "wm2")),
+                    v.names = c("wp", "wm"),
+                    timevar = "occasion")
+head(pefrlong, 10)
+```
+
+# 2.1.1b: mixed model with ML
+
+Set `REML = FALSE` because we want maximum likelihood estimates
+of the variance component.
+
+```{r lmer10}
+library(lme4)
+m1 <- lmer(wp ~ (1|id), data = pefrlong, REML = FALSE)
+summary(m1)
+```
+
+<!-- ```{r lmer20} -->
+<!-- library(lmerTest) -->
+<!-- m1b <- lmer(wp ~ (1|id), data = pefrlong, REML = FALSE) -->
+<!-- summary(m1b) -->
+<!-- ``` -->
+
+```{r confint}
+confint(m1)
+```
+
+# 2.1.2 Compare estimates for the wm and wp variables
+
+First I'll fit the same mixed model with the `wm` outcome
+variable. We need this for comparison.
+
+```{r mw10}
+m2 <- lmer(wm ~ (1|id), data = pefrlong, REML = FALSE)
+summary(m2)
+```
+
+Lets compare the models side-by-side:
+
+```{r outreg10, results = "hide"}
+library(rockchalk)
+or <- outreg(list("Wright Peak flow" = m1, "Mini Wright meter" = m2))
+```
+
+```{r outreg20, results = "asis"}
+or <- gsub("[ ]{2,}", " ", or)
+cat(or)
+```
+
+I did not understand this question in the RHS book, but the answer in
+the teacher's manual points our attention to the estimate of the
+variance of the residual in the fitted models.  They observe that the
+residual error in the Wright peak-flow model (the one using `wp`) is
+15.3, while the residual standard error in the other is 19.9.
+
+The "reliability" of the measurement is the similarity of results when
+applied to an equivalent case.  Here, we assume that the medical
+condition of the patients did not change between occasion 1 and
+occasion 2, so the observed fluctuation in their score is due, by
+definition, to measurement error.
+
+
+# 2.1.3: estimates for predictions of random effects
+
+## Retrieve predictions of the random effects from m1
+
+In the usual GLS interpretation of the mixed model, these are the 
+empirical bayes est. of random intercept (RHS, p. 109-113). They
+were often called "blups", but now it is recommended we refer to
+them as posterior modes.
+
+```{r blups10}
+m1.ranef <- ranef(m1, condVar = TRUE)
+m1.ranef
+```
+That demonstrates the predicted values of the "group-level"
+intercepts, but here a "group" is one patient, observed twice.
+
+There is a very handy way to visualize these random 
+effects built into lme4.  The following is a "dotplot"
+showing the random effects for each `id`. This includes
+"error bars", which use information we will describe next.
+
+```{r dotplot10}
+library(lattice)
+dotplot(m1.ranef)
+```
+
+The dotplot includes error bars to indicate uncertainty, a
+95% confidence interval if you care to call it that. It is
+created by a simple calculation, $ranef +/- 1.96\cdot std.err$.
+Where do the standard errors come from?
+
+The information about uncertainty associated with each posterior mode is tucked
+away inside the object `m1.ranef`.  Here's how I know: I ask
+for the attributes of the object:
+
+```{r blups11a}
+attributes(m1.ranef[["id"]])
+```
+
+If I want to create standard errors, I must extract those variance
+values, and convert them to standard errors by taking the square root
+of each one. Here one way. (See RHS, comparative standard error,
+p. 113-114).
+
+```{r blups11b}
+m1.ranef.se <- sqrt( attr(m1.ranef[["id"]], "postVar")[1,1, ])
+## Not easy. Get the 3-d array from attr(m1.ranef[["id"]], "postVar")
+## Then snip off the part we need with [1, 1, ]
+## Then take square root
+```
+
+## 2.1.3 Compare those random effects with the Mini Wright values
+
+
+```{r mw15}
+m2 <- lmer(wm ~ (1|id), data = pefrlong, REML = FALSE)
+summary(m2)
+m2.ranef <- ranef(m2, condVar = TRUE)
+m2.ranef.se <- sqrt(attr(m2.ranef[["id"]], "postVar")[1,1, ])
+```
+
+```{r mw20}
+## Not too easy to get the random effects as vectors, by themselves
+y <- m1.ranef[["id"]]$`(Intercept)`
+x <- m2.ranef[["id"]]$`(Intercept)`
+plot(y ~ x,
+     ylim = c(-300, 200), xlab = "Mini Wright meter predictions",
+     ylab = "Wright peak flow predictions")
+myx <- lm(y ~ x)
+abline(myx, lty = 2)
+abline(a = 0, b = 1, lty = 3)
+legend("bottom", legend = c("least squares line", "y=x line"),
+       lty = c(2, 3), horiz=TRUE)
+```
+
+
+# 2.1.4 Compare standard errors
+
+The wm method:
+
+```{r}
+m2.ranef.se
+```
+
+```{r}
+m1.ranef.se
+```
+
+Wait. Why are all of those the same number? This does not usually
+happen when there are predictors which differentiate the cases and
+there are different numbers of observations for each group. Here, we
+have exactly 2 observations for each group (person), and the only
+predictor is the `id` and thus the uncertainty for each random effect
+is the same.
