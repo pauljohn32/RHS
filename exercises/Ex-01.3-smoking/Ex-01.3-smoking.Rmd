@@ -1,0 +1,106 @@
+---
+title: "Ex-01.3-smoking"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS smoking exercise
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  crmda::crmda_html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/jayhawk.png
+logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/CRMDAlogo-vert.png
+---
+
+# Data import
+```{r import}
+if (!file.exists("smoking.dta12")){
+    dsname <- "http://www.stata-press.com/data/mlmus3/smoking.dta"
+    download.file(dsname,
+                  destfile = "smoking.dta12")
+}
+library(foreign)
+dat <- read.dta("smoking.dta12")
+rockchalk::summarize(dat)
+dim(dat)
+dat <- dat[dat$idx==1, ]
+dim(dat)
+```
+
+# 1.3.2 Recode
+
+```{r recode10}
+dat$education.num <- ifelse(dat$hsgrad == 1, 1,
+                        ifelse(dat$somecoll == 1, 2,
+                        ifelse(dat$collgrad == 1, 3, 0)))
+dat$education <- factor(dat$education.num, levels = 0:3,
+                        labels = c("none", "hs", "somecoll", "collgrad"))
+table(dat$education, dat$education.num)
+```
+
+# 1.3.3 Summary stats
+
+I thought about going at this by making a newdata structure, but in
+end was more trouble than it was worth.
+
+```{r}
+m1 <- lm(birwt ~ education + male + black, data = dat)
+summary(m1)
+dat2 <- rockchalk::newdata(m1, list("education" = unique(dat$education), "male" = unique(dat$male), "black" = unique(dat$black)))
+```
+
+So I fall back on old split/lapply approach. I don't have patience to
+re-align the output to be in same style, but could do with ftabs or
+table package.  Would be good assignment for GRA.
+
+```{r}
+splits <- split(dat, f = list(dat$male, dat$black, dat$smoke, dat$education), drop = TRUE)
+reslts <- lapply(splits, function(ds){
+    data.frame("male" = unique(ds$male), "black" = unique(ds$black),
+               "smoke" = unique(ds$smoke), "education" = unique(ds$education),
+               "N" = NROW(ds), 
+               "mean" = mean(ds$birwt, na.rm=TRUE), "sd" = sd(ds$birwt, na.rm=TRUE))})
+sumrytable <- do.call("rbind", reslts)
+rownames(sumrytable) <- NULL
+sumrytable
+```
+
+# 1.3.4 boxplots. 
+
+For some reason, I'm not getting this split quite right
+
+```{r boxplot}
+library(lattice)
+bwplot(birwt ~  education + black | smoke + male, data = dat)
+```
+
+
+# 1.3.5 Regression
+
+```{r reg10}
+m1 <- lm(birwt ~ smoke, data = dat)
+summary(m1)
+```
+
+# 1.3.6 Regression #2
+
+```{r reg20}
+m2 <- lm(birwt ~ smoke + mage + male + black + education, data = dat)
+summary(m2)
+```
+
+```{r reg30}
+rockchalk::predictOMatic(m2, "margins", interval = "confidence")
+```
+
+
+```{r reg40}
+rockchalk::predictOMatic(m2, "auto", interval = "confidence")
+```
