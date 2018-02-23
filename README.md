@@ -3,7 +3,6 @@ author: Paul Johnson
 title: Git repository for multi level modeling
 ---
 
-# My students are the best
 
 # RHS
 Exercises and Notes about Rabe-Hesketh &amp; Skrondal Multilevel and Longitudinal Modeling Using Stata
