@@ -1,0 +1,100 @@
+---
+title: "Ex-02.5-grader1"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS grader1 exercise
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  crmda::crmda_html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logoleft.png
+logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logo-vert.png
+---
+
+# Data import
+
+```{r}
+if (!file.exists("grader1.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/grader1.dta",
+                  destfile = "grader1.dta12")
+}
+library(foreign)
+grader1 <- read.dta("grader1.dta12")
+```
+
+# Summarize
+```{r}
+head(grader1)
+
+rockchalk::summarize(grader1)
+
+str(grader1)
+```
+
+
+# Reshape
+```{r}
+grader1long <- reshape(grader1, direction="long",
+                       varying = list(c("grade1", "grade4")),
+                                      v.names = c("grade"),
+                       idvar = "essay",  timevar = "grader", 
+                       times = c(1, 4))
+
+```
+
+# Random Effects models
+
+## Model 1: Random effect for essay
+```{r}
+library(lme4)
+
+m1 <- lmer(grade ~ (1|essay), REML=FALSE, data = grader1long)
+summary(m1)
+```
+
+## The ICC
+The icc can be calcuated after gazing at the output (seems dumb)
+
+```{r}
+2.605/(2.605 +  2.505 )
+```
+
+## Model 2: Dummy variable for grader
+```{r}
+grader1long$grader4 <- factor(ifelse(grader1long$grader == 4, TRUE, FALSE))
+m2 <- lmer(grade ~ grader4 +  (1|essay), REML=FALSE, data = grader1long)
+summary(m2)
+```
+
+## Practice making adequate table
+
+```{r}
+or <- rockchalk::outreg(list("Random Effect" = m1, "Grader Bias" =
+m2), type = "html")
+```
+
+Now some stupid dancing needed b/c bug in html handling of markdown
+
+```{r outreg20, results="asis"}
+or <- gsub("[ ]{2,}", " ", or)
+cat(or)
+```
+
+## Histogram of random effect statements
+
+```{r}
+m2.ranef <- ranef(m2)[["essay"]][ , "(Intercept)"]
+```
+
+
+```{r}
+hist(m2.ranef, breaks = seq(-4, 4, by = 0.3), xlim = c(-4, 4), prob = TRUE)
+```
