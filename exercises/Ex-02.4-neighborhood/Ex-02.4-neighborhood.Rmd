@@ -1,0 +1,151 @@
+---
+title: "Ex-02.4-neighborhood"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS neighborhood exercise
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  crmda::crmda_html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logoleft.png
+logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logo-vert.png
+---
+
+# Data import
+
+```{r}
+dsn <- "neighborhood"
+if (!file.exists(paste0(dsn, ".dta12"))) {
+    download.file(paste0("http://www.stata-press.com/data/mlmus3/", dsn, ".dta"),
+                  destfile = paste0(dsn, ".dta12"))
+}
+library(foreign)
+neighborhood <- read.dta(paste0(dsn, ".dta12"))
+```
+
+# Summarize
+```{r}
+head(neighborhood)
+
+rockchalk::summarize(neighborhood)
+
+str(neighborhood)
+```
+
+
+# Recode to factors
+
+## The dummy variables
+```{r}
+makedummy <- function(x){
+    if (is.integer(x)){
+       xnew <-  as.factor(ifelse(x == 1, TRUE, FALSE))
+       return(xnew)
+    } else {
+        MESSG <- "We refuse to make a numeric into a dummy"
+        warning(MESSG)
+        return(x)
+    }
+}
+
+neighborhood$dadunemp <- makedummy(neighborhood$dadunemp)
+neighborhood$daded <- makedummy(neighborhood$daded)
+```
+
+In a real project, I would not do that verbose method. I'd make
+a vector of names and call in a  for loop like this.
+
+```{r}
+varstofix <- c("momed", "male")
+for (i in varstofix) {
+    neighborhood[ , i] <- makedummy(neighborhood[ , i])
+}
+str(neighborhood)
+```
+
+
+## The integers that will be used for classification variables
+
+```{r}
+varstofix <- c("neighid", "schid")
+for (i in varstofix) {
+    neighborhood[ , paste0(i, "f")] <-as.factor(neighborhood[ , i])
+}
+str(neighborhood)
+```
+
+
+
+# Random Effects models
+
+## Model 1: Nested random effects
+```{r}
+library(lme4)
+
+m1 <- lmer(attain ~ (1|schid), REML=FALSE, data = neighborhood)
+summary(m1)
+
+
+
+```
+
+## The ICC
+The icc can be calcuated after gazing at the output (seems dumb)
+
+```{r}
+0.08874 / (0.08874 + 0.93441)
+```
+Think of that as the correlation of students within a school. RHS
+answer sheet says "In other words, 9% of the variance in attainment
+is between schools."
+
+
+## Model 2: Nested in neighborhood
+```{r}
+m2 <- lmer(attain ~ (1|neighid), REML=FALSE, data = neighborhood)
+summary(m2)
+```
+
+# ML versus REML
+
+```{r}
+m1ml <- lmer(attain ~ (1|schid), data = neighborhood)
+summary(m1ml)
+```
+
+```{r}
+m2ml <- lmer(attain ~ (1|neighid), data = neighborhood)
+summary(m2ml)
+```
+
+
+## Practice making adequate table
+
+
+
+```{r}
+or1 <- rockchalk::outreg(list("REML: m1" = m1, "ML: m1" = m1ml), type = "html")
+or1 <- gsub("[ ]{2,}", " ", or1)
+or2 <- rockchalk::outreg(list("REML: m2" = m2, "ML: m2" = m2ml), type = "html")
+or2 <- gsub("[ ]{2,}", " ", or2)
+```
+
+Here is a table for the regression with school as a random effect:
+```{r, results="asis"}
+cat(or1)
+```
+
+Here is a table when the neighborhood is treated as a random effect:
+
+```{r, results="asis"}
+cat(or2)
+```
+
