@@ -1,0 +1,193 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(foreign)
+> library(lme4)
+Loading required package: Matrix
+> ##library(lmerTest)
+> ##library(plyr)
+> 
+> ##dat <- read.dta("http://www.stata-press.com/data/mlmus3/neighborhood.dta")
+> 
+> dat <- read.dta("neighborhood.dta12")
+> 
+> #1
+> m1 <- lmer(attain ~ (1 | neighid), data = dat, REML = FALSE)
+> summary(m1)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: attain ~ (1 | neighid)
+   Data: dat
+
+     AIC      BIC   logLik deviance df.resid 
+  6422.0   6439.2  -3208.0   6416.0     2307 
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.33164 -0.65532  0.01513  0.58177  2.96174 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ neighid  (Intercept) 0.2015   0.4489  
+ Residual             0.8044   0.8969  
+Number of obs: 2310, groups:  neighid, 524
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  0.08202    0.02844   2.885
+> 
+> ##' Calculate the ICC (Intragroup Correlation Coefficient)
+> ##'
+> ##' Only tricky part is retrieving parts from the fitted lmer object
+> ##'
+> ##' Could redesign this so that the function retrieves the name of
+> ##' the grouping variable.
+> ##' 
+> ##' @param obj Fitted lme4 object
+> ##' @param var A character string with the name of the grouping variable.
+> ##' @return The value of the ICC, psi^2/(theta^2 + psi^2)
+> ##' @author Paul Johnson <pauljohn@@ku.edu>
+> ICC <- function(obj, varname){
++     ## Retrieve variance component psi
++     psi_hat <- unname(attr(VarCorr(obj)[[varname]], "stddev"))
++     ## Std of residual error is theta
++     theta_hat<- attr(VarCorr(obj), "sc")
++     psi_hat^2/(theta_hat^2 + psi_hat^2)
++ }
+> 
+> ICC(m1, "neighid")
+[1] 0.2003543
+> 
+> #2
+> m2 <- lmer(attain ~ deprive + (1 | neighid), data = dat, REML = FALSE)
+> summary(m2)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: attain ~ deprive + (1 | neighid)
+   Data: dat
+
+     AIC      BIC   logLik deviance df.resid 
+  6273.6   6296.6  -3132.8   6265.6     2306 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-2.2846 -0.6513  0.0081  0.5848  3.4957 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ neighid  (Intercept) 0.08579  0.2929  
+ Residual             0.81220  0.9012  
+Number of obs: 2310, groups:  neighid, 524
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  0.09995    0.02367   4.222
+deprive     -0.52077    0.03824 -13.619
+
+Correlation of Fixed Effects:
+        (Intr)
+deprive -0.045
+> #SD of random intercept has decreased, compared to M1
+> # level-1 resid is more or less unchanged. 
+> # one unit increase in deprivation associated with -.5 decrease in attain
+> ICC(m2, "neighid")
+[1] 0.09554012
+> 
+> 
+> #3
+> m3 <- lmer(attain ~ p7vrq + p7read + dadunemp + daded + dadocc + momed +
++                male + deprive + (1 | neighid), data = dat, REML = FALSE)
+> summary(m3)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: attain ~ p7vrq + p7read + dadunemp + daded + dadocc + momed +  
+    male + deprive + (1 | neighid)
+   Data: dat
+
+     AIC      BIC   logLik deviance df.resid 
+  4797.0   4860.2  -2387.5   4775.0     2299 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.9354 -0.6413 -0.0348  0.5706  3.5381 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ neighid  (Intercept) 0.006228 0.07892 
+ Residual             0.456631 0.67574 
+Number of obs: 2310, groups:  neighid, 524
+
+Fixed effects:
+             Estimate Std. Error t value
+(Intercept)  0.080731   0.022959   3.516
+p7vrq        0.027763   0.002256  12.306
+p7read       0.026065   0.001746  14.928
+dadunemp    -0.114896   0.046830  -2.453
+daded        0.140966   0.040810   3.454
+dadocc       0.008239   0.001363   6.044
+momed        0.062405   0.037454   1.666
+male        -0.055381   0.028434  -1.948
+deprive     -0.148123   0.025331  -5.848
+
+Correlation of Fixed Effects:
+         (Intr) p7vrq  p7read dadnmp daded  dadocc momed  male  
+p7vrq    -0.108                                                 
+p7read    0.097 -0.767                                          
+dadunemp -0.228  0.038  0.017                                   
+daded    -0.214  0.002 -0.063 -0.009                            
+dadocc    0.100 -0.056 -0.083  0.123 -0.212                     
+momed    -0.240 -0.017 -0.023  0.002 -0.419 -0.065              
+male     -0.596  0.085 -0.050  0.020 -0.005  0.011 -0.013       
+deprive  -0.026  0.057  0.083 -0.110  0.038  0.155  0.023  0.006
+> 
+> #4
+> 
+> ##' Calculates one variant of an R square for MLM
+> ##'
+> ##' This code was created by a student.
+> ##'
+> ##' Appears to try to calculate the Snidjers and Bosker proposal, a comparison of
+> ##' the null model and the final fitted model estimates.
+> ##'
+> ##' The formula for this is discussed in RHS p. 135. It answers the
+> ##' question "how much less unexplained variance is there in the fitted model (obj1)
+> ##' than in the empty model?"
+> ##' @param obj0 fitted lme4 object, no predictors
+> ##' @param obj1 fitted lme4 object, including predictors
+> ##' @param varname character string for name of grouping variable
+> ##' @return estimate of rsquare
+> ##' @author Paul Johnson <pauljohn@@ku.edu>
+> Rsq <- function(obj0, obj1, varname){
++     if (! varname %in% attr(VarCorr(obj0), "names")){
++         MESSG <- paste0("Grouping variable: \"", varname, "\" omitted from model 0")
++         stop (MESSG)
++     }
++     psi_hat0 <- unname(attr(VarCorr(obj0)[[varname]], "stddev"))
++     theta_hat0<- attr(VarCorr(obj0), "sc")
++     psi_hat1 <- unname(attr(VarCorr(obj1)[[varname]], "stddev"))
++     theta_hat1<- attr(VarCorr(obj1), "sc")
++     rsq <- ((psi_hat0^2 + theta_hat0^2) - (psi_hat1^2 + theta_hat1^2))/(psi_hat0^2 + theta_hat0^2)
++     rsq
++ }
+> 
+> Rsq(m1, m3, "neighid")
+[1] 0.5398603
+> 
+> proc.time()
+   user  system elapsed 
+  2.243   0.032   2.249 
