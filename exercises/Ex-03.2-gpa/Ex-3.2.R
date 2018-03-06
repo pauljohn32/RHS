@@ -5,12 +5,15 @@
 
 library(foreign)
 
+if (!file.exists("gpa.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/gpa.dta",
+                  destfile = "gpa.dta12")
+}
+
 gpa <- read.dta("gpa.dta12")
 
-##reshape(gpa, paste0("job", 1:6), "job", direction = "long")
-
-gpa2 <- reshape(gpa, varying= list(paste0("job", 1:6), paste0("gpa", 1:6)),
-                c("job", "gpa"),  direction = "long")
+gpa2 <- reshape(gpa, varying = list(paste0("job", 1:6), paste0("gpa", 1:6)),
+                v.names = c("job", "gpa"),  direction = "long")
 
 View(gpa2)
 

@@ -3,8 +3,11 @@ library(lme4)
 ##library(lmerTest)
 ##library(plyr)
 
-##dat <- read.dta("http://www.stata-press.com/data/mlmus3/neighborhood.dta")
 
+if (!file.exists("neighborhood.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/neighborhood.dta",
+                  destfile = "neighborhood.dta12")
+}
 dat <- read.dta("neighborhood.dta12")
 
 #1
