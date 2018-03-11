@@ -270,7 +270,8 @@ for(i in vars){
 ##' @param by A grouping variable name or a vector of grouping names
 ##' @param FUN Defaults to the mean, have not tested alternatives
 ##' @param suffix The suffixes to be added to column 1 and column 2
-##' @return new data frame with "x_mn" and "x_dev" added as variables
+##' @return Do you want a new data frame with "x_mn" and "x_dev" added as variables,
+##'         or just the new variables?  This is controversial
 ##' @author Paul Johnson
 ##' @examples
 ##' Suppose you get the MLMUS hsb data frame, somehow
@@ -287,6 +288,9 @@ gmd <- function(dframe, x, by, FUN = mean, suffix = c("_mn", "_dev")){
     for(i in x){
         df2[ , paste0(i, suffix[2])] <- df2[ , i] - df2[ , paste0(i, suffix[1])]
     }
+    ## Returns the whole data set with new columns appended.
+    ## df2
+    ## If you just want the new variables, do this instead
     df2[ , colnames(df2)[!colnames(df2) %in% colnames(dframe)]]
 }
 
@@ -298,6 +302,7 @@ head(xx1)
 ## head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev")])
 xx2 <- gmd(hsb, c("ses", "female"), "schoolidf")
 head(xx2)
+## This is risky because rows might not line up
 hsb <- cbind(hsb, xx2)
 head(hsb[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
 ```

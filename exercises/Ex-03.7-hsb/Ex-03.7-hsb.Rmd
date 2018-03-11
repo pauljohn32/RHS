@@ -1,0 +1,375 @@
+---
+title: "Ex-03.7-hsb"
+subtitle: ""
+author:
+ - name: Paul Johnson
+   affiliation: CRMDA
+   email: pauljohn@ku.edu
+abstract: >
+    RHS hsb
+checked_by: "First Last"
+Note to Authors: please_dont_change_the_next 4 lines!
+date: "`r format(Sys.time(), '%b. %e %Y')`"
+output:
+  stationery::crmda_html_document:
+    toc: true
+    toc_depth: 2
+    highlight: haddock
+logoleft: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logoleft.png
+logoright: /home/pauljohn/R/x86_64-pc-linux-gnu-library/3.4/crmda/theme/logo-vert.png
+---
+
+# Data import
+
+```{r}
+library(foreign)
+if (!file.exists("hsb.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/hsb.dta",
+                  destfile = "hsb.dta12")
+}
+hsb <- read.dta("hsb.dta12")
+```
+
+# Summarize the data import
+```{r}
+head(hsb)
+
+rockchalk::summarize(hsb)
+
+str(hsb)
+if(interactive()) kutils::peek(hsb)
+```
+
+## Create a factor variable for school
+
+I always create a factor when there is danger that a classifier
+variable is coded as an integer.
+
+```{r}
+hsb$schoolidf <- factor(hsb$schoolid)
+```
+
+
+# 3.7.1 Random effect model
+
+```{r}
+library(lme4)
+m1_hs <- lmer(mathach ~ ses + (1 | schoolidf), data = hsb, REML = FALSE)
+summary(m1_hs)
+```
+
+
+# 3.7.3 Create mean of ses and group mean deviations scores.
+
+We are solving part 3 before part 2 because the calculations
+here are helpful in doing part 2, which is next.
+
+The hsb data has columns "mnses" but we have no docuumentation on
+how they are created. I don't trust entirely, so 
+lets create our own group mean and group mean deviations variables.
+
+```{r}
+##' Generate group summaries and individual deviations within groups
+##'
+##' Similar to Stata egen, except more versatile and fun! Will
+##' create a new data frame with 2 columns. Rows match
+##' the rows of the original data frame. 
+##'
+##' Now I return only the new columns
+##' @param dframe a data frame
+##' @param x Variable names or a vector of variable names
+##' @param by A grouping variable name or a vector of grouping names
+##' @param FUN Defaults to the mean, have not tested alternatives
+##' @param suffix The suffixes to be added to column 1 and column 2
+##' @return new data frame with "x_mn" and "x_dev" added as variables
+##' @author Paul Johnson
+##' @examples
+##' Suppose you get the MLMUS hsb data frame, somehow
+##' xx1 <- gmd(hsb, "ses", "schoolidf")
+##' xx2 <- gmd(hsb, c("ses", "female"), "schoolidf")
+##' xx3 <- gmd(hsb, c("ses", "female"), c("schoolidf", "sector"))
+##' xx4 <- gmd(hsb, c("ses", "female"),
+##'                    c("schoolidf"), FUN = median)
+gmd <- function(dframe, x, by, FUN = mean, suffix = c("_mn", "_dev")){
+    meanby <- aggregate(dframe[ , x, drop = FALSE],
+                       dframe[ , by, drop = FALSE], FUN,
+                       na.rm = TRUE)
+    df2 <- merge(dframe, meanby, by = by, suffix = c("", suffix[1]), sort = FALSE)
+    if(!all.equal(rownames(df2), rownames(dframe))){
+        MESSG <- "rows were shuffled"
+        stop(MESSG)
+    }
+    for(i in x){
+        df2[ , paste0(i, suffix[2])] <- df2[ , i] - df2[ , paste0(i, suffix[1])]
+    }
+    ##gives back just the means and deviations part
+    ##df2[ , colnames(df2)[!colnames(df2) %in% colnames(dframe)]]
+    ##gives back whole data frame
+    attr(df2, "meanby") <- meanby
+    df2
+}
+
+hsb2 <- gmd(hsb, c("ses", "female"), "schoolidf")
+head(hsb2[ , c("schoolidf", "ses", "ses_mn", "ses_dev", "female", "female_mn", "female_dev")])
+```
+
+Summary information for school mean SES
+
+```{r}
+rockchalk::summarize(hsb2$ses_mn, digits=6)
+````
+
+
+# 2 Summarize between school and within school SES diversity
+
+The Stata function xtsum produces a table. We can gather same
+informaiton
+
+```{r}
+## overall is individual level information
+(sesmean <- mean(hsb[ , "ses"], na.rm = TRUE))
+(sessd <- sd(hsb[ , "ses"], na.rm = TRUE))
+(sesrange <- range(hsb[ , "ses"], na.rm = TRUE))
+## between is diversity among school means
+sesbyschool <- attr(hsb2, "meanby")[ , "ses", drop=FALSE]
+## sd of school means is called 'between' sd
+(sessdbtschool <- sd(sesbyschool[ , "ses"]))
+(sesrangebtschool <- range(sesbyschool[ , "ses"]))
+## within is name for variety of ses_mn
+sd(hsb2[ , "ses_dev"])
+range(hsb2[ , "ses_dev"])
+```
+
+Stata output has value T-bar, which is the mean of sample sizes
+within schools.
+
+```{r}
+cat("The number of schools is \n")
+(J <- NROW(sesbyschool))
+cat("The average number of students per school is \n")
+Nj <- aggregate(hsb2[ , "ses", drop=FALSE], hsb2[ , "schoolidf", drop = FALSE], NROW)
+mean(Nj[ , "ses"], na.rm = TRUE)
+```
+
+# Linear Mixed Models
+
+The model that uses `ses` without group centring was already
+estimated, `m1_hs`.  
+
+As luck would have it, it is necessary to rerun the same model
+using the `hsb2` data set in order to conduct the hypothesis
+tests.  If we don't do this, the `anova` test will fail, saying
+"Error in anova.merMod(m1_hs, m2_hs) :
+  all models must be fit to the same data object". 
+
+```{r}
+library(lme4)
+m1_hs <- lmer(mathach ~ ses + (1 | schoolidf), data = hsb2, REML = FALSE)
+summary(m1_hs)
+```
+
+The question asks us to find out if the impact os `ses_mn` and
+`ses_dev` are statistically significantly different from each other.
+
+```{r}
+m2_hs <- lmer(mathach ~ ses_mn + ses_dev + (1 | schoolid), data = hsb2, REML = FALSE)
+summary(m2_hs)
+```
+
+## 3.7.4 Comparison of the coefficients
+
+We want to do a hypothesis test to find if the coefficients for `ses_mn`
+and `ses_dev` are the same. We can do this various ways.
+
+Lets experiment.
+
+### My fancy-t test code (adapted)
+
+I'll adapt my fancy t-test code from a previous problem
+(Ex-01.2-anorexia.R). I noticed there were two errors because the
+methods of extracting information are slightly different in
+lme4. Basically, a short-cut I took that worked for `lm` objects was
+not compatible with a mixed model object.  I *think* the changes here
+are backward portable linear models. I may put this in the rockchalk
+package.
+
+```{r fancyt}
+##' T-test for the difference in 2 regression parameters
+##'
+##' This is the one the students call the "fancy t test".
+##'
+##' I did this because I have trouble understanding terminology in
+##' canned functions in other R packages. It has an additional
+##' feature, it can import robust standard errors to conduct the test.
+##' 
+##' @param parm1 A parameter name, in quotes!
+##' @param parm2 Another parameter name, in quotes!
+##' @param model A fitted regression model
+##' @return A vector with the difference, std. err., t-stat,
+##' and p value
+##' @author Paul Johnson
+fancyt <- function(parm1, parm2, model, model.cov = NULL){
+    V <- function(mat, parm1, parm2 = NULL) {
+        if(is.null(parm2)) return (mat[parm1, parm1])
+        else return(mat[parm1, parm2])
+    }
+    if(is.null(model.cov)) model.cov <- vcov(model)
+    ## following does not succeed with lme4 object
+    ## model.coef <- coef(model)[c(parm1, parm2)]
+    model.coef <- coef(summary(model))[c(parm1, parm2), "Estimate"]
+    se <- sqrt(V(model.cov, parm1) + V(model.cov, parm2) - 2*V(model.cov, parm1, parm2))
+    diff <- model.coef %*% c(1, -1)
+    t <-  diff/se
+    df <- df.residual(model)
+    pval <- pt(abs(t), lower.tail = FALSE, df = df) * 2
+    formatC(c(diff = diff, Std.Err. = se, t = t, p = pval))
+}
+```
+
+I get the same results as Stata's lincom function:
+
+```{r}
+fancyt("ses_mn", "ses_dev", m2_hs)
+```
+
+I am not generating a confidence interval for that. You could: 
+`3.674 +/- 1.96 * 0.3754`. The multiplier is a rule of thumb,
+you'd need to figure that out to get your beloved CI.
+
+### multcomp t test
+
+The comparison of coefficients can also be done in various R 
+packages. For example, `multcomp`. The function in multcomp is
+`glht`, which stands for "generalized linear hypothesis test". 
+
+```{r}
+library(multcomp)
+
+m2_hs.mcomp <- glht(m2_hs, linfct = "ses_mn - ses_dev = 0")
+summary(m2_hs.mcomp)
+```
+
+### Likelihood ratio test works as well
+
+The first model, the one that includes only `ses`, is actually
+nested within the second one. The second one estimates 2 coefficients
+for `ses_mn` and `ses_dev`. If we restrict those coefficients to be
+identical, it is the same as estimating `ses`.
+
+```{r}
+anova(m1_hs, m2_hs)
+```
+
+I'm *pretty sure* that there is a reasonable argument in favor of this
+likelihood ratio test, rather than the t-test used by my fancyt or by
+the glht in multcomp.  The reason for this that the distributions and
+the number of degrees of freedom of individual coefficients are still
+controversial, but there is much less controversy about the likelihood
+ratio test here.
+
+Note that the predicted values of the 2 models are not
+identical. That's a symptom of the violation assumption:
+
+```{r, fig=TRUE}
+plot(predict(m1_hs), predict(m2_hs),
+     xlab = "ses only", ylab = "ses_mn and ses_dev")
+```
+
+
+# 3.7.5 Interpretation
+
+In the class notes, I have an explanation for why the estimates of the
+effect of `ses_mn` and `ses_dev` are important. 
+
+Simply put, if the regression model has `ses` as a predictor, we
+should obtain an equivalent estimate if we replace it by two
+mathematically equivalent variables:
+
+\[
+\beta \alpha x_1 \overline{ses}_{j}
+\]
+
+\[
+ses_{ji} = \overline{ses}_{j} + \{ses_{ji} - \overline{ses}_{j}\}
+\]
+
+Note that the previous simply adds and subtracts the same quantity
+on the RHS, $\overline{ses}_{j}$. It stands to reason, then that the
+regression has the same meaning if we include $ses_{ji}$ by itself or
+if we include $\overline{ses}_{j}$ and $\{ses_{ji} -
+\overline{ses}_{j}\}$ as predictors. 
+
+
+The coefficient `ses_mn` is often interpreted as the "between effect",
+meaning the impact of a student belonging in one school. On the other
+hand, `ses_dev` is the status variation between children who are
+"group mean centered" on `ses`.
+
+`ses_mn` summarizes the differences among schools in socio economic 
+status. 
+
+If the coefficients `ses_mn` and `ses_dev` are the same, then 
+we are passing one "specification test" for the multilevel model.
+
+If the coefficients are different, it means the slope of the 
+"within-group" regression line is different from the slope of the
+"between-group" regression line.
+
+
+# 
+
+```{r, fig=TRUE}
+plot(mathach ~ ses, data = hsb)
+```
+
+```{r, fig=TRUE}
+plot(mathach ~ ses, data = hsb2, col = rainbow(hsb2$schoolid))
+```
+
+
+```{r, fig=TRUE}
+lm1 <- lm(mathach ~ ses, data = hsb2)
+rockchalk::plotSlopes(lm1, plotx = "ses", interval = "confidence")
+```
+
+```{r, fig=TRUE}
+lm2 <- lm(mathach ~ ses_mn + ses_dev, data = hsb2)
+rockchalk::plotSlopes(lm2, plotx = "ses_mn", interval = "confidence")
+```
+
+```{r, fig=TRUE}
+lm2 <- lm(mathach ~ ses_mn + ses_dev, data = hsb2)
+rockchalk::plotSlopes(lm2, plotx = "ses_dev", interval = "confidence")
+```
+
+
+
+Check a fixed effects model
+```{r, fig=TRUE, fig.width=10, fig.height=7}
+lm3 <- lm(mathach ~ ses*schoolidf, data = hsb2)
+rockchalk::plotSlopes(lm3, plotx = "ses", modx = "schoolidf", interval = "confidence", plotLegend=FALSE)
+```
+
+
+```{r, fig.width=10, fig.height=7}
+library(lattice)
+xyplot(mathach ~ ses | schoolidf, data = hsb2, type = c("p", "r"))
+```
+
+
+```{r, fig.width=10, fig.height=7}
+library(lattice)
+xyplot(mathach ~ ses | schoolidf, data = hsb2, subset = schoolid < 3000,
+       type = c("p", "r"))
+```
+
+```{r, fig.width=10, fig.height=7}
+xyplot(mathach ~ ses | schoolidf, data = hsb2,
+       subset = schoolid > 3000 & schoolid <= 5000, type = c("p", "r"))
+```
+
+```{r, fig.width=10, fig.height=7}
+xyplot(mathach ~ ses | schoolidf, data = hsb2,
+       subset = schoolid > 5000 & schoolid <= 7000, type = c("p", "r"))
+```
+

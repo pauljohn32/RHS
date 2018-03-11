@@ -1,0 +1,293 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /home/pauljohn/GIT/RHS/exercises/Ex-03.7-hsb/Ex-03.7-hsb.log
+  log type:  text
+ opened on:  11 Mar 2018, 16:34:50
+
+. 
+. * HSB: High School and Beyond
+. use hsb.dta12, replace
+
+. 
+. 
+. 
+. 
+. 
+. quietly xtset schoolid
+
+. xtreg mathach ses, mle
+
+Fitting constant-only model:
+Iteration 0:   log likelihood = -23558.083
+Iteration 1:   log likelihood = -23557.906
+Iteration 2:   log likelihood = -23557.905
+
+Fitting full model:
+Iteration 0:   log likelihood = -23347.536
+Iteration 1:   log likelihood = -23320.625
+Iteration 2:   log likelihood = -23320.502
+Iteration 3:   log likelihood = -23320.502
+
+Random-effects ML regression                    Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+Random effects u_i ~ Gaussian                   Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                LR chi2(1)        =     474.81
+Log likelihood  = -23320.502                    Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ses |     2.3915   .1079665    22.15   0.000     2.179889     2.60311
+       _cons |   12.65762   .1873366    67.57   0.000     12.29045     13.0248
+-------------+----------------------------------------------------------------
+    /sigma_u |   2.174513   .1491538                      1.900976    2.487411
+    /sigma_e |   6.085211   .0513769                      5.985342    6.186745
+         rho |   .1132352   .0139341                       .088226    .1429313
+------------------------------------------------------------------------------
+LR test of sigma_u=0: chibar2(01) = 456.94             Prob >= chibar2 = 0.000
+
+. 
+. 
+. * quietly xtset schoolid
+. xtsum ses
+
+Variable         |      Mean   Std. Dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+ses      overall |  .0001434   .7793552     -3.758      2.692 |     N =    7185
+         between |             .4139706  -1.193946   .8249825 |     n =     160
+         within  |              .660588  -3.650597   2.856222 | T-bar = 44.9063
+
+. 
+. 
+. * To calculate the school-level mean and deviations
+. * for a lot of variables, Stata offers. Here
+. * we don't need to do a log of variables, but 
+. * we can practice by doing ses and female
+. 
+. foreach var of varlist ses female {
+  2.     egen `var'_mn = mean(`var'), by(schoolid)
+  3. }
+
+. 
+. foreach var of varlist ses  female {
+  2.     gen `var'_dev = `var' - `var'_mn
+  3. }
+
+. 
+. 
+. * 3.7.4 asks for xtreg
+. 
+. xtreg mathach ses_dev ses_mn, mle
+
+Fitting constant-only model:
+Iteration 0:   log likelihood = -23558.083
+Iteration 1:   log likelihood = -23557.906
+Iteration 2:   log likelihood = -23557.905
+
+Fitting full model:
+Iteration 0:   log likelihood = -23282.086
+Iteration 1:   log likelihood = -23281.905
+Iteration 2:   log likelihood = -23281.905
+
+Random-effects ML regression                    Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+Random effects u_i ~ Gaussian                   Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                LR chi2(2)        =     552.00
+Log likelihood  = -23281.905                    Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     ses_dev |   2.191172   .1086599    20.17   0.000     1.978202    2.404141
+      ses_mn |   5.865599   .3594015    16.32   0.000     5.161185    6.570013
+       _cons |   12.68359   .1484389    85.45   0.000     12.39266    12.97453
+-------------+----------------------------------------------------------------
+    /sigma_u |   1.626972   .1221224                      1.404391     1.88483
+    /sigma_e |   6.083915    .051336                      5.984126    6.185369
+         rho |   .0667415   .0094508                      .0501259    .0873301
+------------------------------------------------------------------------------
+LR test of sigma_u=0: chibar2(01) = 262.40             Prob >= chibar2 = 0.000
+
+. lincom ses_mn - ses_dev
+
+ ( 1)  - [mathach]ses_dev + [mathach]ses_mn = 0
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.674427   .3754682     9.79   0.000     2.938523    4.410331
+------------------------------------------------------------------------------
+
+. 
+. * Compare xtmixed
+. xtmixed mathach ses_dev ses_mn || schoolid: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -23281.905  
+Iteration 1:   log likelihood = -23281.905  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+                                                Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                Wald chi2(2)      =     673.06
+Log likelihood = -23281.905                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     ses_dev |   2.191172   .1086599    20.17   0.000     1.978202    2.404141
+      ses_mn |   5.865599   .3593651    16.32   0.000     5.161256    6.569942
+       _cons |   12.68359   .1484171    85.46   0.000      12.3927    12.97449
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schoolid: Identity           |
+                   sd(_cons) |   1.626972   .1221231       1.40439    1.884832
+-----------------------------+------------------------------------------------
+                sd(Residual) |   6.083915    .051336      5.984126    6.185369
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 262.40        Prob >= chibar2 = 0.0000
+
+. lincom ses_mn - ses_dev
+
+ ( 1)  - [mathach]ses_dev + [mathach]ses_mn = 0
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.674427   .3754334     9.79   0.000     2.938591    4.410263
+------------------------------------------------------------------------------
+
+. 
+. * Or just mixed
+. 
+. mixed mathach ses_dev ses_mn || schoolid: , mle
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -23281.905  
+Iteration 1:   log likelihood = -23281.905  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+                                                Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                Wald chi2(2)      =     673.06
+Log likelihood = -23281.905                     Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     ses_dev |   2.191172   .1086599    20.17   0.000     1.978202    2.404141
+      ses_mn |   5.865599   .3593651    16.32   0.000     5.161256    6.569942
+       _cons |   12.68359   .1484171    85.46   0.000      12.3927    12.97449
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schoolid: Identity           |
+                  var(_cons) |   2.647039   .3973818       1.97231    3.552592
+-----------------------------+------------------------------------------------
+               var(Residual) |   37.01403   .6246483      35.80976    38.25879
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 262.40        Prob >= chibar2 = 0.0000
+
+. lincom ses_mn - ses_dev
+
+ ( 1)  - [mathach]ses_dev + [mathach]ses_mn = 0
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.674427   .3754334     9.79   0.000     2.938591    4.410263
+------------------------------------------------------------------------------
+
+. 
+. 
+. mixed mathach ses_dev ses_mn || schoolid: , reml
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log restricted-likelihood = -23284.292  
+Iteration 1:   log restricted-likelihood = -23284.292  
+
+Computing standard errors:
+
+Mixed-effects REML regression                   Number of obs     =      7,185
+Group variable: schoolid                        Number of groups  =        160
+
+                                                Obs per group:
+                                                              min =         14
+                                                              avg =       44.9
+                                                              max =         67
+
+                                                Wald chi2(2)      =     669.62
+Log restricted-likelihood = -23284.292          Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     ses_dev |   2.191172   .1086673    20.16   0.000     1.978188    2.404156
+      ses_mn |   5.866174   .3616993    16.22   0.000     5.157256    6.575091
+       _cons |   12.68331   .1493802    84.91   0.000     12.39053    12.97609
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+schoolid: Identity           |
+                  var(_cons) |   2.692529   .4051417      2.004846    3.616093
+-----------------------------+------------------------------------------------
+               var(Residual) |   37.01906   .6247772      35.81455    38.26408
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 265.12        Prob >= chibar2 = 0.0000
+
+. lincom ses_mn - ses_dev
+
+ ( 1)  - [mathach]ses_dev + [mathach]ses_mn = 0
+
+------------------------------------------------------------------------------
+     mathach |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         (1) |   3.675002   .3776705     9.73   0.000     2.934781    4.415222
+------------------------------------------------------------------------------
+
+. 
+. 
+. 
+. 
+. 
+end of do-file

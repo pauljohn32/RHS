@@ -5,29 +5,26 @@ library(foreign)
 library(lme4)
 library(plm)
 
-
-if (file.exists("pups.dta12")){
-    dat <- read.dta("pups.dta12")
-} else {
-    url <- "http://www.stata-press.com/data/mlmus3/pups.dta"
-    dat <- read.dta(url)
-    write.dta(dat, file = "pups.dta12")
-    ## Possibly also
-    ## saveRDS(pups, "pups.rds")
+if (!file.exists("pups.dta12")){
+    download.file("http://www.stata-press.com/data/mlmus3/pups.dta",
+                  destfile = "pups.dta12")
 }
+pups <- read.dta("pups.dta12")
+head(pups)
 
 ## Make factors out of variables 1 through 4. Should I rename
 ## them with f suffix?
-for (i in colnames(dat)[1:4]){
-    dat[ , paste0(i, "f")] <- factor(dat[ , i])
+for (i in colnames(pups)[1:4]){
+    pups[ , paste0(i, "f")] <- factor(pups[ , i])
 }
+head(pups)
 
 #1
-##size <- plyr::count(dat$dam)[, "freq"]
+##size <- plyr::count(pups$dam)[, "freq"]
 
-size <- table(dat$damf)
-dat$size <- as.vector(size[dat$damf])
-## Need as.vector because otherwise this is a table added into data frame.
+size <- table(pups$damf)
+pups$size <- as.vector(size[pups$damf])
+## Need as.vector because otherwise this is a table added into pupsa frame.
 
         
 #2 
@@ -63,29 +60,29 @@ egen_level_2 <- function(dframe, x, grp, FUN = mean, suffix = c("_mn", "_dev")){
     df2[ , colnames(df2)[!colnames(df2) %in% colnames(dframe)]]
 }
 
-dat <- cbind(dat, egen_level_2(dat, "w", "dam"))
-head(dat)
+pups <- cbind(pups, egen_level_2(pups, "w", "dam"))
+head(pups)
 
 
 #3
-plot(w_mn ~ size, data = dat[dat$dosef == "0", ],
+plot(w_mn ~ size, data = pups[pups$dosef == "0", ],
      main = "Mean Weight by Size for Each Dose Group",
      pch = 2, ylab = "mean weight")
-points(w_mn ~ size, data = dat[dat$dosef == "1", ], pch = 3, col = "blue")
-points(w_mn ~ size, data = dat[dat$dosef == "2", ], pch = 6, col = "red")
+points(w_mn ~ size, data = pups[pups$dosef == "1", ], pch = 3, col = "blue")
+points(w_mn ~ size, data = pups[pups$dosef == "2", ], pch = 6, col = "red")
 legend(15,7.25, c("control", "low", "high"), pch =c(2,3,6), col = c("black","blue","red"), cex = .65, bty = 'n')
 
 ## I'd do that in one step, usually
-plot(w_mn ~ size, data = dat,
+plot(w_mn ~ size, data = pups,
      main = "Mean Weight by Size for Each Dose Group",
-     pch = c(2, 3, 6)[dat$dosef],
-     col = c("black", "blue", "red")[dat$dosef],
+     pch = c(2, 3, 6)[pups$dosef],
+     col = c("black", "blue", "red")[pups$dosef],
      ylab = "mean weight")
 
 
 
 #4
-m1 <- lmer(w ~ sex + dosef + size + (1 | dam), data = dat, REML = FALSE)
+m1 <- lmer(w ~ sex + dosef + size + (1 | dam), data = pups, REML = FALSE)
 summary(m1)
 
 #5
@@ -116,7 +113,7 @@ legend(-1, 1, c("density of resid", "density of N(mu, sigma)"), lty=c(1,1), col=
 
 ## MLE versus REML
 
-m1.reml <- lmer(w ~ sex + dosef + size + (1 | dam), data = dat)
+m1.reml <- lmer(w ~ sex + dosef + size + (1 | dam), data = pups)
 summary(m1.reml)
 
 outreg(list("mle" = m1, "reml" = m1.reml), type = "html")
@@ -125,15 +122,25 @@ outreg(list("mle" = m1, "reml" = m1.reml), type = "html")
 
 ## Fixed effects
 
-m1.fe1 <- lm(w ~ sexf + dosef + size + damf, data = dat)
+m1.fe1 <- lm(w ~ sexf + dosef + size + damf, data = pups)
 summary(m1.fe1)
 
 
-m1.fe2 <- lm(w ~ 0 + sexf + dosef + size + damf, data = dat)
+m1.fe2 <- lm(w ~ 0 + sexf + dosef + size + damf, data = pups)
 summary(m1.fe2)
+
+
+m1.fe3 <- lm(w ~ 0 + damf + sexf + dosef + size, data = pups)
+summary(m1.fe3)
+
+View(model.frame(m1.fe3))
+View(model.matrix(m1.fe3))
+
 
 library(plm)
 
-m1.feplm <- plm(w ~ sexf + dosef + size, data = dat,
+## Now lets see what a "within" model means in plm
+m1.feplm <- plm(w ~ sexf + dosef + size, data = pups,
                 index = c("damf"), model = "within")
 
+summary(m1.feplm)

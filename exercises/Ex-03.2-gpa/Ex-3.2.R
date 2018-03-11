@@ -65,7 +65,7 @@ p1
 #2
 
 library(lme4)
-m2 <- lmer(gpa ~ job + time + highgpa + (1|student), data = gpa2)
+m2 <- lmer(gpa ~ sex + job + time + highgpa + (1|student), data = gpa2)
 summary(m2)
 
 resid.m2 <- residuals(m2, type = "response")
@@ -86,13 +86,14 @@ par(mfrow=c(1,1))
 #plotSlopes(m2, plotx = "time", modx = "job")
 
 #4. 
-m3 <- lmer(gpa ~ job + time + highgpa + job:time + highgpa:time + (1|student), data = gpa2)
+m3 <- lmer(gpa ~ job*time + highgpa*time + (1|student), data = gpa2)
 summary(m3)
 #No sig. interactions. 
 
 #5
 re <- ranef(m3)
-raneffs <- unlist(unname(re[[1]]))
+## raneffs <- unlist(unname(re[[1]]))
+raneffs <- re[["student"]][ , "(Intercept)"]
 xx <- seq(min(raneffs), max(raneffs), length.out = 200)
 yy <- dnorm(xx, mean = mean(raneffs), sd = sd(raneffs))
 
