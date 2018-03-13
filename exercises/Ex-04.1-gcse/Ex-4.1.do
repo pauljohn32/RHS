@@ -85,11 +85,11 @@ twoway (scatter gcse lrt if number<=6, msymbol(smcircle_hollow) mlwidth(vvthin))
     by(school, compact legend(off)) ///
     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
     
-keep if number <= 6
-twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
-    (line gcsefit lrt, connect(ascending)), ///
-    by(school, compact legend(off)) ///
-    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
+* keep if number <= 6
+* twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+*    (line gcsefit lrt, connect(ascending)), ///
+*    by(school, compact legend(off)) ///
+*    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 * Oops. destroyed data. How to avoid?
 * run this as a block
 preserve

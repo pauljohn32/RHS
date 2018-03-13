@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  /home/pauljohn/GIT/RHS/exercises/Ex-04.1-gcse/Ex-4.1.log
   log type:  text
- opened on:  27 Mar 2017, 17:31:19
+ opened on:  13 Mar 2018, 15:35:35
 
 . 
 . * London inner schools data
@@ -233,20 +233,17 @@ Note: LR test is conservative and provided only for reference.
 >     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 
 .     
-. keep if number <= 6
-(3,654 observations deleted)
-
-. twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
->     (line gcsefit lrt, connect(ascending)), ///
->     by(school, compact legend(off)) ///
->     xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
-
+. * keep if number <= 6
+. * twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
+> *    (line gcsefit lrt, connect(ascending)), ///
+> *    by(school, compact legend(off)) ///
+> *    xtitle(LRT) ytitle (GCSE) legend(order(1 "observed" 2 "predicted"))
 . * Oops. destroyed data. How to avoid?
 . * run this as a block
 . preserve
 
 . keep if number <= 6
-(0 observations deleted)
+(3,654 observations deleted)
 
 . twoway (scatter gcse lrt, msymbol(smcircle_hollow) mlwidth(vvthin)) ///
 >     (line gcsefit lrt, connect(ascending)), ///

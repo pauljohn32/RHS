@@ -1,0 +1,343 @@
+
+R version 3.4.3 (2017-11-30) -- "Kite-Eating Tree"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##PJ>
+> ##2018-03-13
+> 
+> 
+> library(foreign)
+> library(lme4)
+Loading required package: Matrix
+> library(multcomp)
+Loading required package: mvtnorm
+Loading required package: survival
+Loading required package: TH.data
+Loading required package: MASS
+
+Attaching package: ‘TH.data’
+
+The following object is masked from ‘package:MASS’:
+
+    geyser
+
+> 
+> fn <- "gcse"
+> if (!file.exists(paste0(fn, ".dta12"))) {
++     download.file(paste0("http://www.stata-press.com/data/mlmus3/", fn, ".dta"),
++                   destfile = paste0(fn, ".dta12"))
++ }
+> 
+> gcse <- read.dta("gcse.dta12")
+> gcse$genderf <- factor(gcse$girl, levels = c(0, 1), labels = c("M", "F"))
+> gcse$schgendf <- factor(gcse$schgend, levels = c(1, 2,3), labels = c("coed", "allM", "allF"))
+> gcse$boyschool <- ifelse(gcse$schgendf == "allM", TRUE, FALSE)
+> gcse$girlschool <- ifelse(gcse$schgendf == "allF", TRUE, FALSE)
+> gcse$coedschool <- ifelse(gcse$schgendf == "coed", TRUE, FALSE)
+> # Overview
+> 
+> rockchalk::summarize(gcse)
+Numeric variables
+           school    student     gcse      lrt       girl    schgend   avslrt 
+min           1         1       -36.66    -29.35      0         1        -7.56
+med          29        33         0.04      0.40      1         1        -0.20
+max          65       198        36.66     30.16      1         3         6.38
+mean         31.01     38.70      0         0.02      0.60      1.80      0.02
+sd           18.94     30.26      9.99      9.93      0.49      0.91      3.15
+skewness      0.20      1.63      0        -0.13     -0.41      0.39     -0.20
+kurtosis     -1.23      4.32     -0.02      0.07     -1.83     -1.69     -0.35
+nobs       4059      4059      4059      4059      4059      4059      4059   
+nmissing      0         0         0         0         0         0         0   
+            schav    vrband 
+min           1         1   
+med           2         2   
+max           3         3   
+mean          2.13      1.84
+sd            0.65      0.63
+skewness     -0.13      0.14
+kurtosis     -0.69     -0.57
+nobs       4059      4059   
+nmissing      0         0   
+
+Nonnumeric variables
+  genderf             schgendf           boyschool          
+ F    : 2436         coed : 2169         FALSE: 3546        
+ M    : 1623         allF : 1377         TRUE :  513        
+ nobs : 4059         allM :  513         nobs : 4059        
+ nmiss:    0         nobs : 4059         nmiss:    0        
+ entropy      : 0.97 nmiss:    0         entropy      : 0.55
+ normedEntropy: 0.97 entropy      : 1.39 normedEntropy: 0.55
+                     normedEntropy: 0.88                    
+ girlschool          coedschool      
+ FALSE: 2682         TRUE : 2169     
+ TRUE : 1377         FALSE: 1890     
+ nobs : 4059         nobs : 4059     
+ nmiss:    0         nmiss:    0     
+ entropy      : 0.92 entropy      : 1
+ normedEntropy: 0.92 normedEntropy: 1
+                                     
+> str(gcse)
+'data.frame':	4059 obs. of  14 variables:
+ $ school    : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ student   : num  1 2 3 4 5 6 7 8 9 10 ...
+ $ gcse      : num  2.61 1.34 -17.24 9.68 5.44 ...
+ $ lrt       : num  6.19 2.06 -13.65 2.06 3.71 ...
+ $ girl      : num  1 1 0 1 1 0 0 0 1 0 ...
+ $ schgend   : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ avslrt    : num  1.66 1.66 1.66 1.66 1.66 ...
+ $ schav     : num  2 2 2 2 2 2 2 2 2 2 ...
+ $ vrband    : num  1 2 3 2 2 1 3 2 2 3 ...
+ $ genderf   : Factor w/ 2 levels "M","F": 2 2 1 2 2 1 1 1 2 1 ...
+ $ schgendf  : Factor w/ 3 levels "coed","allM",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ boyschool : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ girlschool: logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+ $ coedschool: logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+ - attr(*, "datalabel")= chr ""
+ - attr(*, "time.stamp")= chr " 6 Aug 2007 10:10"
+ - attr(*, "formats")= chr  "%9.0g" "%9.0g" "%9.0g" "%9.0g" ...
+ - attr(*, "types")= int  254 254 254 254 254 254 254 254 254
+ - attr(*, "val.labels")= chr  "" "" "" "" ...
+ - attr(*, "var.labels")= chr  "" "" "" "" ...
+ - attr(*, "version")= int 8
+> 
+> if(interactive())kutils::peek(gcse)
+> 
+> # Set the problem?
+> 
+> table(gcse$genderf, gcse$schgendf)
+   
+    coed allM allF
+  M 1110  513    0
+  F 1059    0 1377
+> ##    coed allM allF
+> ##  M 1110  513    0
+> ##  F 1059    0 1377
+> 
+> 
+> 
+> ## empty model for fun
+> m1 <- lmer(gcse ~ lrt + (lrt | school), data = gcse, REML = FALSE)
+> summary(m1)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: gcse ~ lrt + (lrt | school)
+   Data: gcse
+
+     AIC      BIC   logLik deviance df.resid 
+ 28021.2  28059.1 -14004.6  28009.2     4053 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8312 -0.6325  0.0340  0.6832  3.4562 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ school   (Intercept)  9.04466 3.0074       
+          lrt          0.01454 0.1206   0.50
+ Residual             55.36533 7.4408       
+Number of obs: 4059, groups:  school, 65
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept) -0.11508    0.39783  -0.289
+lrt          0.55673    0.01994  27.925
+
+Correlation of Fixed Effects:
+    (Intr)
+lrt 0.365 
+> 
+> ## 4.1.1 Fit model from p 212
+> m2 <- lmer(gcse ~ lrt*schgendf + (lrt | school), data = gcse, REML = FALSE)
+> summary(m2)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: gcse ~ lrt * schgendf + (lrt | school)
+   Data: gcse
+
+     AIC      BIC   logLik deviance df.resid 
+ 28017.7  28080.7 -13998.8  27997.7     4049 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8272 -0.6335  0.0336  0.6836  3.4126 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ school   (Intercept)  7.82840 2.7979       
+          lrt          0.01438 0.1199   0.60
+ Residual             55.38088 7.4418       
+Number of obs: 4059, groups:  school, 65
+
+Fixed effects:
+                 Estimate Std. Error t value
+(Intercept)      -0.99761    0.50681  -1.968
+lrt               0.57124    0.02713  21.059
+schgendfallM      0.85467    1.08502   0.788
+schgendfallF      2.43341    0.84334   2.885
+lrt:schgendfallM -0.02301    0.05739  -0.401
+lrt:schgendfallF -0.02954    0.04470  -0.661
+
+Correlation of Fixed Effects:
+            (Intr) lrt    schgnM schgnF lrt:sM
+lrt          0.427                            
+schgendfllM -0.467 -0.200                     
+schgendfllF -0.601 -0.257  0.281              
+lrt:schgndM -0.202 -0.473  0.445  0.121       
+lrt:schgndF -0.259 -0.607  0.121  0.436  0.287
+> 
+> #a. 
+> ## H0 = Beta(girl_school) - (Beta(girlsi) * (Beta(mixed_schl)) = 0
+> 
+> #b.
+> ## H0 = Beta(boy_schl) - (Beta(boysi) * (Beta(mixed_schl)) = 0
+> 
+> #matrix is rank deficient
+> m3 <- lmer(gcse ~ schgendf*lrt + genderf*schgendf + (lrt | school), data = gcse, REML = FALSE)
+fixed-effect model matrix is rank deficient so dropping 2 columns / coefficients
+> summary(m3)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: gcse ~ schgendf * lrt + genderf * schgendf + (lrt | school)
+   Data: gcse
+
+     AIC      BIC   logLik deviance df.resid 
+ 27995.2  28064.6 -13986.6  27973.2     4048 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8406 -0.6349  0.0253  0.6779  3.4239 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ school   (Intercept)  7.94681 2.8190       
+          lrt          0.01457 0.1207   0.59
+ Residual             55.01892 7.4175       
+Number of obs: 4059, groups:  school, 65
+
+Fixed effects:
+                 Estimate Std. Error t value
+(Intercept)      -1.81019    0.53571  -3.379
+schgendfallM      1.66586    1.10386   1.509
+schgendfallF      1.56871    0.86642   1.811
+lrt               0.56390    0.02724  20.701
+genderfF          1.67637    0.33843   4.953
+schgendfallM:lrt -0.01593    0.05756  -0.277
+schgendfallF:lrt -0.02242    0.04486  -0.500
+
+Correlation of Fixed Effects:
+            (Intr) schgnM schgnF lrt    gndrfF schgM:
+schgendfllM -0.485                                   
+schgendfllF -0.499  0.242                            
+lrt          0.419 -0.203 -0.238                     
+genderfF    -0.306  0.149 -0.201 -0.053              
+schgndfllM: -0.198  0.440  0.113 -0.473  0.025       
+schgndfllF: -0.254  0.123  0.417 -0.607  0.032  0.287
+fit warnings:
+fixed-effect model matrix is rank deficient so dropping 2 columns / coefficients
+> 
+> ## Difficult to fit without commiting some sins
+> gcse$boyincoed <- factor(ifelse(gcse$genderf=="M" & gcse$schgendf == "coed", TRUE, FALSE))
+> gcse$girlincoed <- factor(ifelse(gcse$genderf=="F" & gcse$schgendf == "coed", TRUE, FALSE))
+> 
+> gcse$genderspecial <- ifelse(gcse$schgendf == "allM", "b_allM",
++                       ifelse(gcse$schgendf == "allF", "g_allF",
++                       ifelse(gcse$schgendf == "coed" & gcse$genderf == "M", "b_coed",
++                              "g_coed")))
+> table(gcse$genderspecial)
+
+b_allM b_coed g_allF g_coed 
+   513   1110   1377   1059 
+> gcse$genderspecial <- factor(gcse$genderspecial, levels = c("g_coed", "b_coed", "b_allM", "g_allF"))
+> 
+> 
+> m4 <- lmer(gcse ~ 0 +  genderspecial + lrt*schgendf + (lrt|school), data = gcse, REML = FALSE)
+fixed-effect model matrix is rank deficient so dropping 2 columns / coefficients
+> summary(m4)
+Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: gcse ~ 0 + genderspecial + lrt * schgendf + (lrt | school)
+   Data: gcse
+
+     AIC      BIC   logLik deviance df.resid 
+ 27995.2  28064.6 -13986.6  27973.2     4048 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-3.8406 -0.6349  0.0253  0.6779  3.4239 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ school   (Intercept)  7.94681 2.8190       
+          lrt          0.01457 0.1207   0.59
+ Residual             55.01892 7.4175       
+Number of obs: 4059, groups:  school, 65
+
+Fixed effects:
+                    Estimate Std. Error t value
+genderspecialg_coed -0.13382    0.53898  -0.248
+genderspecialb_coed -1.81019    0.53571  -3.379
+genderspecialb_allM -0.14433    0.96516  -0.150
+genderspecialg_allF  1.43489    0.67837   2.115
+lrt                  0.56390    0.02724  20.701
+lrt:schgendfallM    -0.01593    0.05756  -0.277
+lrt:schgendfallF    -0.02242    0.04486  -0.500
+
+Correlation of Fixed Effects:
+            gndrspclg_ gndrspclb_ gndr_M gndr_F lrt    lrt:sM
+gndrspclb_c  0.802                                           
+gndrspclb_M  0.000      0.000                                
+gndrspclg_F  0.000      0.000      0.000                     
+lrt          0.383      0.419      0.000  0.000              
+lrt:schgndM -0.181     -0.198      0.393  0.000 -0.473       
+lrt:schgndF -0.233     -0.254      0.000  0.348 -0.607  0.287
+fit warnings:
+fixed-effect model matrix is rank deficient so dropping 2 columns / coefficients
+> 
+> 
+> library(multcomp)
+> summary(glht(m4, linfct=c("genderspecialb_allM - genderspecialb_coed = 0")))
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Fit: lmer(formula = gcse ~ 0 + genderspecial + lrt * schgendf + (lrt | 
+    school), data = gcse, REML = FALSE)
+
+Linear Hypotheses:
+                                               Estimate Std. Error z value
+genderspecialb_allM - genderspecialb_coed == 0    1.666      1.104   1.509
+                                               Pr(>|z|)
+genderspecialb_allM - genderspecialb_coed == 0    0.131
+(Adjusted p values reported -- single-step method)
+
+> 
+> summary(glht(m4, linfct=c("genderspecialg_allF - genderspecialg_coed = 0")))
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Fit: lmer(formula = gcse ~ 0 + genderspecial + lrt * schgendf + (lrt | 
+    school), data = gcse, REML = FALSE)
+
+Linear Hypotheses:
+                                               Estimate Std. Error z value
+genderspecialg_allF - genderspecialg_coed == 0   1.5687     0.8664   1.811
+                                               Pr(>|z|)  
+genderspecialg_allF - genderspecialg_coed == 0   0.0702 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+> 
+> proc.time()
+   user  system elapsed 
+  3.519   0.060   3.608 
