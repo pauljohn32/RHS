@@ -1,3 +1,9 @@
+## Model 1. The Stata xtreg model "fixed effects" 
+
+Predict uclmslog with the predictors "i.t" (dummy for time) and
+"ez".  The "city" variable goes into the random intercept
+
+. xtset city t
 . xtreg uclmslog i.t ez, fe 
 
 Fixed-effects (within) regression               Number of obs     =        198
@@ -33,7 +39,11 @@ corr(u_i, Xb)  = -0.0039                        Prob > F          =     0.0000
 ------------------------------------------------------------------------------
 F test that all u_i=0: F(21, 167) = 68.94                    Prob > F = 0.0000
 
-. 
+.
+
+
+
+## Create group means and group mean deviations
 . foreach var of varlist uclmslog ez t {
   2.     egen `var'_mn = mean(`var'), by(city)
   3. }
@@ -43,8 +53,12 @@ F test that all u_i=0: F(21, 167) = 68.94                    Prob > F = 0.0000
   2.     gen `var'_dev = `var' - `var'_mn
   3. }
 
+
 
-. 
+## This is the "do it yourself" fixed effects model
+## which we will see is good for coefficients but wrong for hypo tests.
+
+
 . reg uclmslog_dev ez_dev i.t
 
       Source |       SS           df       MS      Number of obs   =       198
@@ -77,6 +91,8 @@ end of do-file
 
 
 
+
+## Now the "Least Squares Dummy Variable" model
 
 . reg uclmslog i.t i.city ez
 
@@ -130,6 +146,9 @@ end of do-file
 . 
 
 
+
+## Eliminate the intercept so we can see an estimate for each city
+
 . reg uclmslog i.t ibn.city ez, noconstant
 
       Source |       SS           df       MS      Number of obs   =       198
@@ -181,9 +200,9 @@ end of do-file
 
 
 
+
 
-
-### Compare to R
+### Compare to the plm package for R
 
 > dat$uclms_l <- log(dat$uclms)
 > 
@@ -233,6 +252,8 @@ F-statistic: 98.5855 on 9 and 167 DF, p-value: < 2.22e-16
 [1] 11.69439
 > sd(m1w.fe)
 [1] 0.5555152
+
+
 
 > dat <- cbind(dat, egen_level_2(dat, c("luclms", "ez"), "city"))
 
@@ -329,7 +350,7 @@ F-statistic: 1.997e+04 on 31 and 167 DF,  p-value: < 2.2e-16
 12.1339424 11.8947908 -0.3216319  0.1354957 -0.2192554 -0.5791517 -0.5917868 
        tf7        tf8        tf9 
 -0.6212648 -0.8889486 -1.2276331 
-> fixef <-m1.pj3.coef[grep("city", names(m1.pj3.coef), value = TRUE)]
+> fixef <- m1.pj3.coef[grep("city", names(m1.pj3.coef), value = TRUE)]
 > mean(fixef)
 [1] 11.69439
 > sd(fixef)
