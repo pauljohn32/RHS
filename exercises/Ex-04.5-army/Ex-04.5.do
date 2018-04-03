@@ -25,7 +25,7 @@ foreach var of varlist cohes lead hrs wbeing{
     gen `var'_dev = `var' - `var'_mn
 }
 
-* I wondered what tsum means by "SD within", here's the answer:
+* I wondered what xtsum means by "SD within", here's the answer:
 * It is SD of group-mean centered data
 sum cohes_dev
 
