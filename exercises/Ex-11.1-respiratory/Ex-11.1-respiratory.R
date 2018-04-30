@@ -78,7 +78,7 @@ predict(m1)
 ##'        using other distribution
 ##' @param cumulative 
 ##' @param ylab Text string to use in column name, default is "y"
-##' @return vector of probabilities
+##' @return vector of probabilities, one for each value of eta
 ##' @author Rune H, Paul Johnson
 predprobs <- function(eta, theta, 
                       inv.link = plogis,
@@ -116,36 +116,34 @@ predprobs(3, c(-1, 0, 1), cumulative = TRUE)
 ## Use that to make predictions, but we need eta and thresholds
 
 ## Extract Thresholds from fitted model
-(m1thold <- m1$alpha)
+(m1.thold <- m1$alpha)
 
 ## To make predprobs, we need eta. Where to get?
 ## Extract slope coefficients
-(m1beta <- m1$beta)
+(m1.beta <- m1$beta)
 ## Extract random effects
-m1re <- ranef(m1)[["patientf"]]["(Intercept)"]
+m1.re <- ranef(m1)[["patientf"]]["(Intercept)"]
 ## The row numbers are values of patientf
 
-## To see where I'm going, inspect
-m1beta
-
-## If you make a small, fake data frame, using inputs
+## Make a small, fake "newdata" frame, using inputs
 ## for first case in data set:
-
 m1newdata <- data.frame(drugfyes = c(1, 0),
                         genderfmale = c(0, 0),
                         age = c(32,32),
                         bl = c(1, 1))
 
 ## These are estimates for drug yes and no, for a male, age 32, 
-(eta0 <- as.matrix(m1newdata) %*% m1beta)
+## "lp" stands for "linear predictor". I'm not calling it eta
+## because there is no random effect
+(lp <- as.matrix(m1newdata) %*% m1.beta)
 
 ## Ignoring the random effect (temporarily), we can make a "respresentative
 ## for a randomly drawn 'average' 'representative' person
 ## drugf = yes:
-predprobs(eta0[1], m1thold)
+predprobs(lp[1], m1.thold)
 
 ## drugf = no:
-predprobs(eta0[2], m1thold)
+predprobs(lp[2], m1.thold)
 
 ## Make a barplot or such.
 
@@ -163,16 +161,20 @@ m1newdata <- data.frame(drugfyes = c(1, 0),
                         age = c(32,32),
                         bl = c(1, 1), patientf = c(1, 1))
 
-m1re.patient1 <- m1re[m1newdata$patientf, ]
-(eta1 <- as.matrix(m1newdata[ , names(m1beta)] ) %*% m1beta +
-          m1re.patient1)
-(pp11 <- predprobs(eta1[1], m1thold))
-(pp12 <- predprobs(eta1[2], m1thold))
+m1.re.patient1 <- m1.re[m1newdata$patientf, ]
+(eta1 <- as.matrix(m1newdata[ , names(m1.beta)] ) %*% m1.beta +
+          m1.re.patient1)
+(pp11 <- predprobs(eta1[1], m1.thold))
+(pp12 <- predprobs(eta1[2], m1.thold))
 barplot(rbind(pp11, pp12), beside = TRUE)
 barplot(pp11)
 barplot(pp12)
 
-## This is a little "precious" because I made a small test
+## Look in the ordinal package vignette clmm2, where there
+## is an interesting plot to display that kind of information
+
+
+## Previous approach is a little "precious" because I made a small test
 ## data set by hand. We might want to be more comprehensive in
 ## creation of this new data frame. Lets get data from the real
 ## data set.
@@ -192,16 +194,16 @@ m1.newmm <- model.matrix( ~  drugf + genderf + age + bl,
                 data = m1lm.newdata)
 m1.newmm <- as.matrix(m1.newmm)
 ## lp := linear predictor
-m1.newmm.lp <- m1.newmm[ , names(m1beta)] %*% m1beta
+m1.newmm.lp <- m1.newmm[ , names(m1.beta)] %*% m1.beta
 m1.fit0 <- data.frame(m1.newmm, lp = m1.newmm.lp)
 head(m1.fit0)
 
 ## Now all we need to do is designate which patient's random
 ## effect is going to apply.
-m1.fit0$ranef <- m1re["3", "(Intercept)"]
+m1.fit0$ranef <- m1.re["3", "(Intercept)"]
 m1.fit0$eta <- m1.fit0$lp + m1.fit0$ranef
 
-m1.predprobs <- predprobs(m1.fit0$eta, m1thold)
+m1.predprobs <- predprobs(m1.fit0$eta, m1.thold)
 ## Look at that, think what it might mean
 
 ## I mean, ontologically, what does this mean? If patient 3's random
@@ -229,26 +231,24 @@ m1.mf <- model.frame(m1lm)
 m1.newmm <- model.matrix( ~ drugf + genderf + age + bl + patient,
                          data = m1.mf)
 ## Calculate X %*% beta
-m1.newmm.lp <- m1.newmm[ , names(m1beta)] %*% m1beta
+m1.newmm.lp <- m1.newmm[ , names(m1.beta)] %*% m1.beta
 ## This is the final result
 m1.fit0 <- data.frame(m1.newmm, lp = m1.newmm.lp)
 head(m1.fit0)
 
-## Place the random effect into that. Clean up the m1re structure
+## Place the random effect into that. Clean up the m1.re structure
 ## to make the data handling a little easier
-m1re$patient <- rownames(m1re)
-colnames(m1re) <- gsub("\\(Intercept\\)", "m1.re", colnames(m1re))
-m1.fit0 <- merge(m1.fit0, m1re, by = "patient")
+m1.re$patient <- rownames(m1.re)
+colnames(m1.re) <- gsub("\\(Intercept\\)", "m1.re", colnames(m1.re))
+m1.fit0 <- merge(m1.fit0, m1.re, by = "patient")
 head(m1.fit0)
 
 m1.fit0$eta <- m1.fit0[ , "lp"] + m1.fit0[ , "m1.re"]
 head(m1.fit0)
 
-m1.predprobs <- predprobs(m1.fit0$eta, m1thold)
-
-m1.allpatients <- data.frame(m1.fit0, m1.predprobs)
-
-
+m1.predprobs <- predprobs(m1.fit0$eta, m1.thold)
+m1.cumprobs <- predprobs(m1.fit0$eta, m1.thold, cumulative = TRUE, ylab = "yc")
+head(m1.cumprobs)
 
 
 
@@ -303,14 +303,14 @@ mx1.thold
 ## thtest <- -coef(mx1)["(Intercept)"]
 ## thtest[2:4] <- coef(mx1)[grep("Threshold", names(coef(mx1)), value = TRUE)] - coef(mx1)["(Intercept)"]
 ## thtest
-## Appear same. Compare above from m1thold, very  close 
+## Appear same. Compare above from m1.thold, very  close 
 
 
 ## Lets use my method above method
 m1.newmm <- model.matrix( ~ drugf + genderf + age + bl + patient,
                          data = m1.mf)
 ## Calculate X %*% beta
-m1.newmm.lp <- m1.newmm[ , names(m1beta)] %*% mx1.beta
+m1.newmm.lp <- m1.newmm[ , names(m1.beta)] %*% mx1.beta
 m1.fit0 <- data.frame(m1.newmm, lp = m1.newmm.lp)
 ## Will need categorical patient below
 m1.fit0$patientf <- as.character(m1.fit0$patient)
@@ -355,7 +355,7 @@ ordinal:::formatVC(ordinal:::varcov(m1))
 outreg(mx1)
 ## Supply that method,
 nobs.mixor <- function(object) NROW(object$W)
-outreg still fails because mixor
+## outreg still fails because mixor
 ## does not supply most of the standard regression methods
 ## we need, or there are errors as from
 ## coef(summary(mx1))
@@ -370,6 +370,7 @@ m2 <- clmm(vf ~ time*drugf + male + age + bl + (1|patient),
            data = resp2, link = "logit", nAGQ = 12, threshold = "flexible")
 summary(m2)
 
+## Time as a factor
 m3 <- clmm(vf ~ timef*drugf + genderf + age + bl + (1|patientf),
            data = resp2, link = "logit", nAGQ = 12, threshold = "flexible")
 summary(m3)
@@ -426,85 +427,76 @@ m3.predprobs <- predprobs(m3.fit0$eta, m3.thold)
 ## If it got the drug. If it is old or young.
 
 m3.patient3 <- data.frame(m3.fit0, m3.predprobs)
+m3.cumprobs <- predprobs(m3.fit0$eta, m3.thold, cumulative=TRUE, ylab="yc")
+head(m3.cumprobs)
+
+m3.patient3 <- data.frame(m3.patient3, m3.cumprobs)
 head(m3.patient3)
 
+## Time as an integer 1, 2, 3, 4, for plotting
+m3.patient3$time <- 1 + (1 * m3.patient3$timef2 +
+                         2 * m3.patient3$timef3 +
+                         3 * m3.patient3$timef4)
 
 
 
 
 
 
+## Now apply Method #2 to get an "allpatients" data set.
 
-amodl <- m3
+m3lm <- lm(v ~ timef*drugf + genderf + age + bl + patient,
+             data = resp2)
+m3.mf <- model.frame(m3lm)
+m3.newmm <- model.matrix( ~ timef*drugf + genderf + age + bl + patient,
+                         data = m3.mf)
+## Calculate X %*% beta
+m3.newmm.lp <- m3.newmm[ , names(m3.beta)] %*% m3.beta
+## This is the final result
+m3.fit0 <- data.frame(m3.newmm, lp = m3.newmm.lp)
+head(m3.fit0)
 
-amodlbeta <- amodl$beta
-amodlthold <- amodl$alpha
-amodlre <- ranef(amodl)[["patientf"]][, "(Intercept)"]
+## Time as integer, for use in plots
+m3.fit0$time <- 1 + (1 * m3.fit0$timef2 +
+                         2 * m3.fit0$timef3 +
+                         3 * m3.fit0$timef4)
 
-## Need to fit fixed effect model to make easy to get nd object
-m4 <-  lm(v ~ timef*drugf + genderf + age + bl + patient,
-           data = resp2)
+## Place the random effect into that. Clean up the m3.re structure
+## to make the data handling a little easier
+m3.re$patient <- rownames(m3.re)
+colnames(m3.re) <- gsub("\\(Intercept\\)", "m3.re", colnames(m3.re))
+m3.fit0 <- merge(m3.fit0, m3.re, by = "patient")
+head(m3.fit0)
 
-##sampl <- sort(sample(1:111, 9, replace = FALSE))
-sampl <- unique(resp2$patient)
+m3.fit0$eta <- m3.fit0[ , "lp"] + m3.fit0[ , "m3.re"]
+head(m3.fit0)
 
-nd <- rockchalk::newdata(m4, predVals=list(timef = paste(1:4), patient = sampl))
-nd$re <- amodlre[nd$patient]
-## Now get v and vf out of original data
-nd <- merge(nd, resp2[ , c("v", "vf", "patient", "timef")], by = c("patient", "timef"), sort = FALSE, all = TRUE) 
-mdmm <- model.matrix(m4, data = nd)
-mdmm <- cbind(mdmm, time = ifelse(mdmm[, "timef2"] == 1, 2,
-                           ifelse(mdmm[ , "timef3"] == 1, 3,
-                           ifelse(mdmm[ , "timef4"] == 1, 4, 1)))
-              )
+m3.predprobs <- predprobs(m3.fit0$eta, m3.thold)
+m3.cumprobs <- predprobs(m3.fit0$eta, m3.thold, cumulative = TRUE, ylab = "yc")
 
-## put xb into mdmm matrix
-mdmm <- cbind(mdmm, xb = NA)
-mdmm[ , "xb"]  <- mdmm[ , names(amodlbeta)] %*% amodlbeta
-
-mdmm <- as.data.frame(mdmm)
-
-## nd needs patientf
-mdmm$patientf <- as.factor(mdmm$patient)
-
-
-## Insert random effects
-mdmm$re <- amodlre[mdmm[ , "patient"]]
-mdmm$eta <-mdmm[ , "xb"] + mdmm[ , "re"]
-
-names(amodlthold) <- paste0("tau", names(amodlthold))
-mdmm <- cbind(mdmm, as.data.frame(t(amodlthold)))
-## lp: linear predictor
-
-lp <- mdmm$eta - mdmm[ , names(amodlthold)]
-colnames(lp) <- paste0("lp", colnames(lp))
-
-## Cumulative probabilities
-cp <- exp(lp)/(1 + exp(lp))
-colnames(cp) <- paste0("cp", 0:3)
-
-mdmm <- cbind(mdmm, lp)
-mdmm <- cbind(mdmm, cp)
-
-mdmm$pr0 <- mdmm$cp0
-mdmm$pr1 <- mdmm$cp1 - mdmm$cp0
-mdmm$pr2 <- mdmm$cp2 - mdmm$cp1
-mdmm$pr3 <- mdmm$cp3 - mdmm$cp2
-mdmm$pr4 <- 1 - mdmm$cp3
+m3.allpatients <- data.frame(m3.fit0, m3.predprobs, m3.cumprobs)
 
 par(mfcol = c(3,3))
 mylty <- c(1,2,3,4)
 par(ask = TRUE)
-for(i in unique(mdmm$patient)){
-    dframe <- mdmm[mdmm$patient == i, ]
+for(i in unique(m3.allpatients$patient)){
+    dframe <- m3.allpatients[m3.allpatients$patient == i, ]
     plot(x = c(1,4), y = c(0,1), type = "n",
-         ylab = "Cum. Prob.", xlab = "Time")
-    for(j in 0:3) {
-        lines(formula(paste0("cp", j, "~ time")) , data = dframe, type = "l", lty = j + 1)
+         ylab = "Cum. Prob.", xlab = "Time",
+         main = paste("Patient", i))
+    for(j in 1:4) {
+        lines(formula(paste0("yc.", j, "~ time")) , data = dframe, type = "l", lty = j + 1)
     }
 }
 dev.off()
 
+
+## TODO: create a plot similar to the one in the clmm2 vignette
+
 library(lattice)
 
 xyplot(cp0 ~ time | patient, data = mdmm[mdmm$patient < 10, ], type = "l")
+
+
+
+
